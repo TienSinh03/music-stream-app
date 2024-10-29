@@ -73,6 +73,25 @@ const trending_list = [
   }
 ];
 
+const popular_artists_list = [
+  {
+    artist:"Elizabeth Hall",
+    image: require('../assets/image/Home - Audio Listing/Image 39.png'),
+    id: "1"
+  },
+  {
+
+    artist:"Brian Thomas",
+    image: require('../assets/image/Home - Audio Listing/Image 40.png'),
+    id: "2"
+  },
+  {
+    artist:"Anthony Taylor",
+    image: require('../assets/image/Home - Audio Listing/Image 41.png'),
+    id: "3"
+  }
+];
+
 // Items with charts
 const Item_Chart = ({ title, location, likes, duration, description, image,navigation }) => (
   
@@ -98,6 +117,20 @@ const Item_Trending = ({title, artist, image, navigation}) => (
   </TouchableOpacity>
 )
 
+// Items with popular artists
+const Item_popular_artists = ({artist, image}) => (
+
+  <View style={{width:'33%', alignItems:'center', marginRight:20}}>
+    <Image source={image} />
+                
+    <Text style={[styles.textNameMainCate,{marginVertical:8}]}>{artist}</Text>
+                
+    {/** button follow */}
+    <TouchableOpacity style ={styles.buttonFL}>
+      <Text style={styles.textButtonFL}>Follow</Text>
+    </TouchableOpacity>
+  </View>
+) 
 
 export default function Home_AudioListing({navigation, route}) {
   return (
@@ -221,9 +254,7 @@ export default function Home_AudioListing({navigation, route}) {
             numColumns={3}
             scrollEnabled={false}
           />
-            
-          
-          
+        
         </View>
 
         {/* Popular artists */}
@@ -238,43 +269,18 @@ export default function Home_AudioListing({navigation, route}) {
           </View>
 
           {/** List popular artists */}
-          <View style ={{display:"flex", flexDirection:'row', alignItems:'center',gap:20}} >
-              
-              <View style={{width:'33%', alignItems:'center'}}>
-                <Image source={require('../assets/image/Home - Audio Listing/Image 39.png')} style={{}}/>
-                
-                <Text style={[styles.textNameMainCate,{marginVertical:8}]}>Jennifer Wilson</Text>
-                
-                {/** button follow */}
-                <TouchableOpacity style ={styles.buttonFL}>
-                  <Text style={styles.textButtonFL}>Follow</Text>
-                </TouchableOpacity>
-              </View>
-
-              
-              <View style={{width:'33%', alignItems:'center'}}>
-                <Image source={require('../assets/image/Home - Audio Listing/Image 40.png')} style={{}}/>
-                
-                <Text style={[styles.textNameMainCate,{marginVertical:8}]}>Elizabeth Hall</Text>
-                
-                {/** button follow */}
-                <TouchableOpacity style ={styles.buttonFL}>
-                  <Text style={styles.textButtonFL}>Follow</Text>
-                </TouchableOpacity>
-              </View>
-
-              
-              <View style={{width:'33%', alignItems:'center'}}>
-                <Image source={require('../assets/image/Home - Audio Listing/Image 41.png')} style={{}}/>
-                
-                <Text style={[styles.textNameMainCate,{marginVertical:8}]}>Anthony Taylor</Text>
-                
-                {/** button follow */}
-                <TouchableOpacity style ={styles.buttonFL}>
-                  <Text style={styles.textButtonFL}>Follow</Text>
-                </TouchableOpacity>
-              </View>
-          </View>
+          <FlatList
+            data={popular_artists_list}
+            renderItem={({item}) =>(
+              <Item_popular_artists
+                artist={item.artist}
+                image={item.image}
+              />
+            )}
+            keyExtractor={item => item.id}
+            numColumns={3}
+            scrollEnabled={false}
+          />
         </View>
       </ScrollView>
 
