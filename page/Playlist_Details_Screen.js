@@ -122,29 +122,29 @@ import {
         <ScrollView style={{marginHorizontal: 20}}>
 
             {/** playlist info and image */}
-            <View style={{marginVertical: 25, display:'flex', flexDirection:'row', alignItems:'center', gap:20}}>
+            <View style={styles.viewInfo}>
                 {/** Image and name playlist */}
-                <ImageBackground source={require('../assets/image/Playlist Details - Audio Listing/Image 50.png')} style={{width:screenWith*0.31,height:screenHeight*0.14, alignItems:'center', justifyContent:'center'}}>
-                    <Text style={{color:'white', fontSize: 22, lineHeight:30,fontWeight:'bold', paddingBottom:15}}>Top 50</Text>
+                <ImageBackground source={require('../assets/image/Playlist Details - Audio Listing/Image 50.png')} style={styles.viewImageList}>
+                    <Text style={styles.textNameList_Image}>Top 50</Text>
                     <Text style={{color:'white', fontSize: 15, fontWeight:'400'}}>Canada</Text>
                 </ImageBackground>
 
                 {/**The information Playlist*/}
                 <View>
                     {/**title Playlist */}
-                    <Text style={{fontSize: 24, lineHeight:30,fontWeight:'bold', color:'#171A1FFF'}}>Top 50 - Canada</Text>
+                    <Text style={styles.textTitleList}>Top 50 - Canada</Text>
                     
                     {/** Tym and total Hours */}
                     <View style={{display:'flex', flexDirection:'row', alignItems:'center', gap:10, marginVertical:5}}>
                         <IconAnt name="hearto" size={18} color="#21c5db"/>
-                        <Text style={{fontSize: 16, lineHeight:24,fontWeight:'400', color:'#565E6CFF', marginRight:8}}>1,234</Text>
+                        <Text style={[styles.text,{marginRight:8}]}>1,234</Text>
 
                         <IconFnA name="circle" size={12} color="#9095A0FF"/>
-                        <Text style={{fontSize: 16, lineHeight:24,fontWeight:'400', color:'#565E6CFF'}}>05:10:18</Text>
+                        <Text style={styles.text}>05:10:18</Text>
                     </View>
 
                     {/** Description */}
-                    <Text style={{fontSize: 16, lineHeight:24,fontWeight:'400', color:'#565E6CFF'}}>Daily chart-toppers update</Text>
+                    <Text style={styles.text}>Daily chart-toppers update</Text>
                 </View>
 
             </View>
@@ -192,7 +192,7 @@ import {
         </ScrollView>
   
         {/** action footer */}
-        <View style={{display:'flex', flexDirection:'row', justifyContent:'space-between', alignItems:'center',paddingHorizontal:55,paddingVertical:20,backgroundColor:'white', borderTopWidth:1, borderColor:'#C4C4C4'}}>
+        <View style={styles.footer}>
           {/** button home */}
           <TouchableOpacity style={{alignItems:'center'}}>
             <IconAnt name="home" size={25} color="#21c5db"/>
@@ -232,5 +232,11 @@ import {
         alignItems: "center",
         flexDirection: "row",
         marginHorizontal:20
-      },
+    },
+    viewInfo:{marginVertical: 25, display:'flex', flexDirection:'row', alignItems:'center', gap:20},
+    viewImageList:{width:screenWith*0.31,height:screenHeight*0.14, alignItems:'center', justifyContent:'center'},
+    textNameList_Image:{color:'white', fontSize: 22, lineHeight:30,fontWeight:'bold', paddingBottom:15},
+    textTitleList:{fontSize: 24, lineHeight:30,fontWeight:'bold', color:'#171A1FFF'},
+    text:{fontSize: 16, lineHeight:24,fontWeight:'400', color:'#565E6CFF'},
+    footer:{display:'flex', flexDirection:'row', justifyContent:'space-between', alignItems:'center',paddingHorizontal:55,paddingVertical:20,backgroundColor:'white', borderTopWidth:1, borderColor:'#C4C4C4'}
 })
