@@ -22,7 +22,53 @@ import IconIon from "react-native-vector-icons/Ionicons";
 const screenWith = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
-export default function App() {
+const chart_list = [
+  {
+    title: "Top 50",
+    location: "Canada",
+    likes: 1234,
+    duration: "05:10:18",
+    description: "Daily chart-toppers update",
+    image: require('../assets/image/Home - Audio Listing/BackGrChart_1.jpg'),
+    id: "1"
+  },
+  {
+    title: "Top 50",
+    location: "USA",
+    likes: 2345,
+    duration: "04:30:22",
+    description: "Trending hits in the USA",
+    image:  require('../assets/image/Home - Audio Listing/BackGrChart_2.png'),
+    id: "2"
+  },
+  {
+    title: "Top 50",
+    location: "UK",
+    likes: 3456,
+    duration: "06:15:40",
+    description: "Popular tracks from the UK",
+    image:  require('../assets/image/Home - Audio Listing/BackGrChart_3.png'),
+    id: "3"
+  }
+];
+
+const Item = ({ title, location, likes, duration, description, image,navigation }) => (
+  
+  <TouchableOpacity style={{width:'33%', marginRight:20}} onPress={() => navigation.navigate({
+    name:'Playlist_Details',
+    params: {title:title, location:location, likes:likes, duration:duration, description:description, image:image}
+  })}>
+    {/** Image and name playlist */}
+    <ImageBackground source={image} style={styles.viewImageList}>
+        <Text style={styles.textNameList_Image}>{title}</Text>
+        <Text style={{color:'white', fontSize: 15, fontWeight:'400'}}>{location}</Text>
+    </ImageBackground>
+    <Text style={[styles.textDes]}>{description}</Text>
+  </TouchableOpacity>
+)
+
+
+export default function Home_AudioListing({navigation, route}) {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={{marginLeft: 20}}>
@@ -101,26 +147,22 @@ export default function App() {
           </View>
 
           {/** List chart */}
-          <View style ={{display:"flex", flexDirection:'row', alignItems:'center',gap:20}} >
-
-              {/** Top 50 Canada */}
-              <TouchableOpacity style={{width:'33%'}}>
-                <Image source={require('../assets/image/Home - Audio Listing/Container 31.png')} style={{}}/>
-                <Text style={[styles.textDes]}>Daily chart-toppers update</Text>
-              </TouchableOpacity>
-
-              {/** Top 50 Global */}
-              <TouchableOpacity style={{width:'33%'}}>
-                <Image source={require('../assets/image/Home - Audio Listing/Container 32.png')} style={{}}/>
-                <Text style={[styles.textDes]}>Daily chart-toppers update</Text>
-              </TouchableOpacity>
-
-              {/** Top 50 Trending */}
-              <TouchableOpacity style={{width:'33%'}}>
-                <Image source={require('../assets/image/Home - Audio Listing/Container 33.png')} style={{}}/>
-                <Text style={[styles.textDes]}>Daily chart-toppers update</Text>
-              </TouchableOpacity>
-          </View>
+          <FlatList 
+              data={chart_list}
+              renderItem={({item}) =>(
+                <Item 
+                  title={item.title} 
+                  location={item.location} 
+                  likes={item.likes} 
+                  duration={item.duration} 
+                  description={item.description} 
+                  image={item.image} 
+                  navigation={navigation}/>
+              )}
+              keyExtractor={item => item.id}
+              numColumns={3}
+              scrollEnabled={false}
+          />
         </View>
 
         {/* Trending albums */}
@@ -298,5 +340,8 @@ const styles = StyleSheet.create({
   },
   nameArists:{fontSize:16, lineHeight:22, fontWeight:'400', color:'#9095A0FF'},
   buttonFL:{alignItems:'center', backgroundColor:'#171A1FFF', borderRadius:18},
-  textButtonFL:{fontSize:16, lineHeight:22, fontWeight:'400', color:'white', paddingHorizontal:12, paddingVertical:8}
+  textButtonFL:{fontSize:16, lineHeight:22, fontWeight:'400', color:'white', paddingHorizontal:12, paddingVertical:8},
+
+  viewImageList:{width:screenWith*0.31,height:screenHeight*0.14, alignItems:'center', justifyContent:'center'},
+  textNameList_Image:{color:'white', fontSize: 22, lineHeight:30,fontWeight:'bold', paddingBottom:15},
 });
