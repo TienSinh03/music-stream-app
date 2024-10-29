@@ -52,7 +52,29 @@ const chart_list = [
   }
 ];
 
-const Item = ({ title, location, likes, duration, description, image,navigation }) => (
+const trending_list = [
+  {
+    title: "ME",
+    artist:"Jessica Gonzalez",
+    image: require('../assets/image/Home - Audio Listing/Image 45.png'),
+    id: "1"
+  },
+  {
+    title: "Magna nost",
+    artist:"Brian Thomas",
+    image: require('../assets/image/Home - Audio Listing/Image 46.png'),
+    id: "2"
+  },
+  {
+    title: "Magna nost",
+    artist:"Christopher Brown",
+    image: require('../assets/image/Home - Audio Listing/Image 47.png'),
+    id: "3"
+  }
+];
+
+// Items with charts
+const Item_Chart = ({ title, location, likes, duration, description, image,navigation }) => (
   
   <TouchableOpacity style={{width:'33%', marginRight:20}} onPress={() => navigation.navigate({
     name:'Playlist_Details',
@@ -64,6 +86,15 @@ const Item = ({ title, location, likes, duration, description, image,navigation 
         <Text style={{color:'white', fontSize: 15, fontWeight:'400'}}>{location}</Text>
     </ImageBackground>
     <Text style={[styles.textDes]}>{description}</Text>
+  </TouchableOpacity>
+)
+
+// Items with trending albums
+const Item_Trending = ({title, artist, image, navigation}) => (
+  <TouchableOpacity style={{width:'33%', marginRight:20}}>
+    <Image source={image} style={{}}/>
+    <Text style={[styles.textNameMainCate,{marginTop:5}]}>{title}</Text>
+    <Text style={styles.nameArists}>{artist}</Text>
   </TouchableOpacity>
 )
 
@@ -150,7 +181,7 @@ export default function Home_AudioListing({navigation, route}) {
           <FlatList 
               data={chart_list}
               renderItem={({item}) =>(
-                <Item 
+                <Item_Chart 
                   title={item.title} 
                   location={item.location} 
                   likes={item.likes} 
@@ -176,26 +207,23 @@ export default function Home_AudioListing({navigation, route}) {
           </View>
 
           {/** List trending albums */}
-          <View style ={{display:"flex", flexDirection:'row', alignItems:'center',gap:20}} >
+          <FlatList
+            data={trending_list}
+            renderItem={({item}) =>(
+              <Item_Trending
+                title={item.title}
+                artist={item.artist}
+                image={item.image}
+                navigation={navigation}
+              />
+            )}
+            keyExtractor={item => item.id}
+            numColumns={3}
+            scrollEnabled={false}
+          />
             
-              <TouchableOpacity style={{width:'33%'}}>
-                <Image source={require('../assets/image/Home - Audio Listing/Image 45.png')} style={{}}/>
-                <Text style={[styles.textNameMainCate,{marginTop:5}]}>ME</Text>
-                <Text style={styles.nameArists}>Jessica Gonzalez</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity style={{width:'33%'}}>
-                <Image source={require('../assets/image/Home - Audio Listing/Image 46.png')} style={{}}/>
-                <Text style={[styles.textNameMainCate,{marginTop:5}]}>Magna nost</Text>
-                <Text style={styles.nameArists}>Brian Thomas</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity style={{width:'33%'}}>
-                <Image source={require('../assets/image/Home - Audio Listing/Image 47.png')} style={{}}/>
-                <Text style={[styles.textNameMainCate,{marginTop:5}]}>Magna nost</Text>
-                <Text style={styles.nameArists}>Christopher Brown</Text>
-              </TouchableOpacity>
-          </View>
+          
+          
         </View>
 
         {/* Popular artists */}
