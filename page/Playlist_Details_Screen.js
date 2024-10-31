@@ -19,61 +19,12 @@ import {
   import IconIon from "react-native-vector-icons/Ionicons";
   import IconFnA from "react-native-vector-icons/FontAwesome";
   import IconEnty from "react-native-vector-icons/Entypo";
+
+  import { chart_list } from "../data/data_audio";
   
   const screenWith = Dimensions.get("window").width;
   const screenHeight = Dimensions.get("window").height;
 
-
-  const songs = [
-    {
-      title: "FLOWER",
-      artist: "Jessica Gonzalez",
-      plays: 2.1,
-      duration: "3:26",
-      image: require("../assets/image/Playlist Details - Audio Listing/Image 51.png"),
-      id: "1",
-    },
-    {
-      title: "Shape of You",
-      artist: "Anthony Taylor",
-      plays: 68,
-      duration: "3:35",
-      image: require("../assets/image/Playlist Details - Audio Listing/Image 52.png"),
-      id: "2",
-    },
-    {
-      title: "Blinding Lights",
-      artist: "Brian Bailey",
-      plays: 93,
-      duration: "4:39",
-      image: require("../assets/image/Playlist Details - Audio Listing/Image 53.png"),
-      id: "3",
-    },
-    {
-      title: "Levitating",
-      artist: "Anthony Taylor",
-      plays: 9,
-      duration: "7:48",
-      image: require("../assets/image/Playlist Details - Audio Listing/Image 54.png"),
-      id: "4",
-    },
-    {
-      title: "Astronaut in the Ocean",
-      artist: "Pedro Moreno",
-      plays: 23,
-      duration: "3:36",
-      image: require("../assets/image/Playlist Details - Audio Listing/Image 55.png"),
-      id: "5",
-    },
-    {
-      title: "Dynamite",
-      artist: "Elena Jimenez",
-      plays: 10,
-      duration: "6:22",
-      image: require("../assets/image/Playlist Details - Audio Listing/Image 56.png"),
-      id: "6",
-    },
-  ];
   
 
   const Item = ({ title, artist, plays, duration, image }) => (
@@ -107,6 +58,9 @@ import {
 )
   
   export default function Playlist_Details({navigation,route}) {
+
+    const charts = chart_list.find((item) => item.id === route.params?.data);
+
     return (
       <SafeAreaView style={styles.container}>
         {/* Header */}
@@ -119,32 +73,32 @@ import {
                     <IconFe name="cast" size={25} color="#9095A0FF"/>
                 </TouchableOpacity>
         </View>
-        <ScrollView style={{marginHorizontal: 20}}>
+        <ScrollView style={{marginHorizontal: 20}} showsVerticalScrollIndicator={false}>
 
             {/** playlist info and image */}
             <View style={styles.viewInfo}>
                 {/** Image and name playlist */}
-                <ImageBackground source={route.params?.image} style={styles.viewImageList}>
-                    <Text style={styles.textNameList_Image}>{route.params?.title}</Text>
-                    <Text style={{color:'white', fontSize: 15, fontWeight:'400'}}>{route.params?.location}</Text>
+                <ImageBackground source={charts.image} style={styles.viewImageList}>
+                    <Text style={styles.textNameList_Image}>{charts.title}</Text>
+                    <Text style={{color:'white', fontSize: 15, fontWeight:'400'}}>{charts.location}</Text>
                 </ImageBackground>
 
                 {/**The information Playlist*/}
                 <View>
                     {/**title Playlist */}
-                    <Text style={styles.textTitleList}>{route.params?.title} - {route.params?.location}</Text>
+                    <Text style={styles.textTitleList}>{charts.title} - {charts.location}</Text>
                     
                     {/** Tym and total Hours */}
                     <View style={{display:'flex', flexDirection:'row', alignItems:'center', gap:10, marginVertical:5}}>
                         <IconAnt name="hearto" size={18} color="#21c5db"/>
-                        <Text style={[styles.text,{marginRight:8}]}>{route.params?.likes}</Text>
+                        <Text style={[styles.text,{marginRight:8}]}>{charts.likes}</Text>
 
                         <IconFnA name="circle" size={12} color="#9095A0FF"/>
-                        <Text style={styles.text}>{route.params?.duration}</Text>
+                        <Text style={styles.text}>{charts.duration}</Text>
                     </View>
 
                     {/** Description */}
-                    <Text style={styles.text}>{route.params?.description}</Text>
+                    <Text style={styles.text}>{charts.description}</Text>
                 </View>
 
             </View>
@@ -180,7 +134,7 @@ import {
             {/** List Audio */}
             <View style ={{marginTop:25}}>
                 <FlatList
-                    data={songs}
+                    data={charts.songs}
                     key={item => item.id}
                     renderItem={({ item }) => (
                         <Item title={item.title} artist={item.artist} plays={item.plays} duration={item.duration} image={item.image} />
@@ -260,7 +214,7 @@ import {
         justifyContent: "space-between",
         alignItems: "center",
         flexDirection: "row",
-        marginHorizontal:20
+        paddingHorizontal:20
     },
     viewInfo:{marginVertical: 25, display:'flex', flexDirection:'row', alignItems:'center', gap:20},
     viewImageList:{width:screenWith*0.31,height:screenHeight*0.14, alignItems:'center', justifyContent:'center'},

@@ -18,86 +18,21 @@ import IconFe from "react-native-vector-icons/Feather";
 import IconAnt from "react-native-vector-icons/AntDesign";
 import IconIon from "react-native-vector-icons/Ionicons";
 
+import { chart_list,popular_artists_list,trending_list } from "../data/data_audio";
+
+
 
 const screenWith = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
-const chart_list = [
-  {
-    title: "Top 50",
-    location: "Canada",
-    likes: 1234,
-    duration: "05:10:18",
-    description: "Daily chart-toppers update",
-    image: require('../assets/image/Home - Audio Listing/BackGrChart_1.jpg'),
-    id: "1"
-  },
-  {
-    title: "Top 50",
-    location: "USA",
-    likes: 2345,
-    duration: "04:30:22",
-    description: "Trending hits in the USA",
-    image:  require('../assets/image/Home - Audio Listing/BackGrChart_2.png'),
-    id: "2"
-  },
-  {
-    title: "Top 50",
-    location: "UK",
-    likes: 3456,
-    duration: "06:15:40",
-    description: "Popular tracks from the UK",
-    image:  require('../assets/image/Home - Audio Listing/BackGrChart_3.png'),
-    id: "3"
-  }
-];
 
-const trending_list = [
-  {
-    title: "ME",
-    artist:"Jessica Gonzalez",
-    image: require('../assets/image/Home - Audio Listing/Image 45.png'),
-    id: "1"
-  },
-  {
-    title: "Magna nost",
-    artist:"Brian Thomas",
-    image: require('../assets/image/Home - Audio Listing/Image 46.png'),
-    id: "2"
-  },
-  {
-    title: "Magna nost",
-    artist:"Christopher Brown",
-    image: require('../assets/image/Home - Audio Listing/Image 47.png'),
-    id: "3"
-  }
-];
-
-const popular_artists_list = [
-  {
-    artist:"Elizabeth Hall",
-    image: require('../assets/image/Home - Audio Listing/Image 39.png'),
-    id: "1"
-  },
-  {
-
-    artist:"Brian Thomas",
-    image: require('../assets/image/Home - Audio Listing/Image 40.png'),
-    id: "2"
-  },
-  {
-    artist:"Anthony Taylor",
-    image: require('../assets/image/Home - Audio Listing/Image 41.png'),
-    id: "3"
-  }
-];
 
 // Items with charts
-const Item_Chart = ({ title, location, likes, duration, description, image,navigation }) => (
+const Item_Chart = ({ title, location, likes, duration, description, image,navigation,id }) => (
   
-  <TouchableOpacity style={{width:'33%', marginRight:20}} onPress={() => navigation.navigate({
+  <TouchableOpacity style={{width:'30%'}} onPress={() => navigation.navigate({
     name:'Playlist_Details',
-    params: {title:title, location:location, likes:likes, duration:duration, description:description, image:image}
+    params: {data: id}
   })}>
     {/** Image and name playlist */}
     <ImageBackground source={image} style={styles.viewImageList}>
@@ -110,7 +45,7 @@ const Item_Chart = ({ title, location, likes, duration, description, image,navig
 
 // Items with trending albums
 const Item_Trending = ({title, artist, image, navigation}) => (
-  <TouchableOpacity style={{width:'33%', marginRight:20}}>
+  <TouchableOpacity style={{width:'30%', marginRight:20}}>
     <Image source={image} style={{}}/>
     <Text style={[styles.textNameMainCate,{marginTop:5}]}>{title}</Text>
     <Text style={styles.nameArists}>{artist}</Text>
@@ -120,7 +55,7 @@ const Item_Trending = ({title, artist, image, navigation}) => (
 // Items with popular artists
 const Item_popular_artists = ({artist, image}) => (
 
-  <View style={{width:'33%', alignItems:'center', marginRight:20}}>
+  <View style={{width:'30%', alignItems:'center', marginRight:20}}>
     <Image source={image} />
                 
     <Text style={[styles.textNameMainCate,{marginVertical:8}]}>{artist}</Text>
@@ -135,7 +70,7 @@ const Item_popular_artists = ({artist, image}) => (
 export default function Home_AudioListing({navigation, route}) {
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView style={{marginLeft: 20}}>
+      <ScrollView  style={{marginLeft: 20}} showsVerticalScrollIndicator={false}>
         {/* Header */}
         <View style={styles.header}>
           {/* Image lyrics */}
@@ -211,22 +146,27 @@ export default function Home_AudioListing({navigation, route}) {
           </View>
 
           {/** List chart */}
-          <FlatList 
-              data={chart_list}
-              renderItem={({item}) =>(
-                <Item_Chart 
-                  title={item.title} 
-                  location={item.location} 
-                  likes={item.likes} 
-                  duration={item.duration} 
-                  description={item.description} 
-                  image={item.image} 
-                  navigation={navigation}/>
-              )}
-              keyExtractor={item => item.id}
-              numColumns={3}
-              scrollEnabled={false}
-          />
+          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+                <FlatList 
+                    data={chart_list}
+                    renderItem={({item}) =>(
+                      <Item_Chart 
+                        key={item.id}
+                        id={item.id}
+                        title={item.title} 
+                        location={item.location} 
+                        likes={item.likes} 
+                        duration={item.duration} 
+                        description={item.description} 
+                        image={item.image} 
+                        navigation={navigation}/>
+                    )}
+                    keyExtractor={item => item.id}
+                    numColumns={3}
+                    scrollEnabled={false}
+                />
+          </ScrollView>
+          
         </View>
 
         {/* Trending albums */}
@@ -240,20 +180,22 @@ export default function Home_AudioListing({navigation, route}) {
           </View>
 
           {/** List trending albums */}
-          <FlatList
-            data={trending_list}
-            renderItem={({item}) =>(
-              <Item_Trending
-                title={item.title}
-                artist={item.artist}
-                image={item.image}
-                navigation={navigation}
-              />
-            )}
-            keyExtractor={item => item.id}
-            numColumns={3}
-            scrollEnabled={false}
-          />
+          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+            <FlatList
+              data={trending_list}
+              renderItem={({item}) =>(
+                <Item_Trending
+                  title={item.title}
+                  artist={item.artist}
+                  image={item.image}
+                  navigation={navigation}
+                />
+              )}
+              keyExtractor={item => item.id}
+              numColumns={3}
+              scrollEnabled={false}
+            />
+          </ScrollView>
         
         </View>
 
@@ -269,18 +211,20 @@ export default function Home_AudioListing({navigation, route}) {
           </View>
 
           {/** List popular artists */}
-          <FlatList
-            data={popular_artists_list}
-            renderItem={({item}) =>(
-              <Item_popular_artists
-                artist={item.artist}
-                image={item.image}
-              />
-            )}
-            keyExtractor={item => item.id}
-            numColumns={3}
-            scrollEnabled={false}
-          />
+          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+            <FlatList
+              data={popular_artists_list}
+              renderItem={({item}) =>(
+                <Item_popular_artists
+                  artist={item.artist}
+                  image={item.image}
+                />
+              )}
+              keyExtractor={item => item.id}
+              numColumns={3}
+              scrollEnabled={false}
+            />
+          </ScrollView>
         </View>
       </ScrollView>
 
