@@ -195,4 +195,4 @@ const chart_list = [
   ];
 
   
-    export { chart_list, trending_list, popular_artists_list };
+    export { chart_list, trending_list, popular_artists_list,songs };

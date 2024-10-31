@@ -20,7 +20,7 @@ import {
   import IconFnA from "react-native-vector-icons/FontAwesome";
   import IconEnty from "react-native-vector-icons/Entypo";
 
-  import { chart_list } from "../data/data_audio";
+  import { chart_list,songs } from "../data/data_audio";
   
   const screenWith = Dimensions.get("window").width;
   const screenHeight = Dimensions.get("window").height;
@@ -60,8 +60,8 @@ import {
   
   export default function Playlist_Details({navigation,route}) {
 
-    const charts = route.params?.dataCharts ? route.params?.dataCharts : chart_list.find((item) => item.id === route.params?.data);
-
+    const songsByChart = songs.filter((item) => item.chart_id === route.params?.idChart);
+    const charts = chart_list.find((item) => item.id === route.params?.idChart);
     const dataSongId = route.params?.dataFindId ? route.params?.dataFindId : null;
 
     const [song, setSong] = useState();
@@ -69,7 +69,7 @@ import {
     const handelSongByID = (id) => {
         var song= songs.find((item) => item.id === id);
         setSong(song);
-        navigation.navigate("PlayanAudio", {dataFindId: song, dataCharts: charts});
+        navigation.navigate("PlayanAudio", {dataFindId: song, idChart: route.params?.idChart});
     }
 
     return (
@@ -145,7 +145,7 @@ import {
             {/** List Audio */}
             <View style ={{marginTop:25}}>
                 <FlatList
-                    data={charts.songs}
+                    data={songsByChart}
                     key={item => item.id}
                     renderItem={({ item }) => (
                         <Item 
@@ -178,7 +178,7 @@ import {
 
                     {/**  */}
                     <View style={{display:'flex', flexDirection:'row', alignItems:'center', gap:6}}>
-                        <Text style={{fontSize: 14, lineHeight:24,fontWeight:'400', color:'white', marginRight:8}}>Me</Text>
+                        <Text style={{fontSize: 14, lineHeight:24,fontWeight:'400', color:'white', marginRight:8}}>{route.params?.albumsSong.title}</Text>
                         
                         {/**duration */}
                         <IconFnA name="circle" size={10} color="white"/>

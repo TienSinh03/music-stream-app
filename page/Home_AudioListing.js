@@ -32,7 +32,7 @@ const Item_Chart = ({ title, location, likes, duration, description, image,navig
   
   <TouchableOpacity style={{width:'30%'}} onPress={() => navigation.navigate({
     name:'Playlist_Details',
-    params: {data: id}
+    params: {idChart: id}
   })}>
     {/** Image and name playlist */}
     <ImageBackground source={image} style={styles.viewImageList}>

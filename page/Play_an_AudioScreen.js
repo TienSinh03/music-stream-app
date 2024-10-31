@@ -20,8 +20,8 @@ import {
   import IconFnA from "react-native-vector-icons/FontAwesome";
   import IconEnty from "react-native-vector-icons/Entypo";
 
-  import { chart_list } from "../data/data_audio";
-import Icon from "react-native-vector-icons/Feather";
+  import { trending_list } from "../data/data_audio";
+    import Icon from "react-native-vector-icons/Feather";
   
   const screenWith = Dimensions.get("window").width;
   const screenHeight = Dimensions.get("window").height;
@@ -29,6 +29,8 @@ import Icon from "react-native-vector-icons/Feather";
   export default function PlayanAudio({navigation, route}) {
 
     const song = route.params?.dataFindId;
+
+    const albums = trending_list.find((item) => item.id === song.albums_id);
 
     return (
         <SafeAreaView style={styles.container}>
@@ -39,7 +41,7 @@ import Icon from "react-native-vector-icons/Feather";
                     <Text style={styles.textHeader}>Play</Text>
                     <IconAnt name="down" size={24} color="white" onPress={() => navigation.navigate({
                         name: 'Playlist_Details',
-                        params: { dataFindId: song, dataCharts: route.params?.dataCharts },
+                        params: { dataFindId: song, idChart: route.params?.idChart, albumsSong: albums },
                     })}/>
                 </View>
 
