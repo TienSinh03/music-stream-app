@@ -65,11 +65,18 @@ import {
     const dataSongId = route.params?.dataFindId ? route.params?.dataFindId : null;
 
     const [song, setSong] = useState();
+    
+    const [selectedPause, setSelectedPause] = useState(false);
 
+    useEffect(() => {
+        setSelectedPause(route.params?.selectedPause);
+    }, [route.params?.selectedPause]);
+
+    // Find song by id
     const handelSongByID = (id) => {
         var song= songs.find((item) => item.id === id);
         setSong(song);
-        navigation.navigate("PlayanAudio", {dataFindId: song, idChart: route.params?.idChart});
+        navigation.navigate("PlayanAudio", {dataFindId: song, idChart: route.params?.idChart, selectedPause: selectedPause, image: song.image});
     }
 
     return (
@@ -136,7 +143,7 @@ import {
                     </TouchableOpacity>
                         
                     {/** button play */}
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => handelSongByID("1")}>
                         <Image source={require('../assets/image/Playlist Details - Audio Listing/Icon Button 2.png')} style={{width: 60, height: 60}}/>
                     </TouchableOpacity>
                 </View>
@@ -163,8 +170,14 @@ import {
             </View>
         </ScrollView>
 
+         {/** music playing screen small */}           
         {(dataSongId) ?
-            <TouchableOpacity style ={{backgroundColor:'#171A1FFF', width:'100%', display:'flex', flexDirection:'row', alignItems:'center', justifyContent:'space-between', padding:15}}>
+            <TouchableOpacity style ={{backgroundColor:'#171A1FFF', width:'100%', display:'flex', flexDirection:'row', alignItems:'center', justifyContent:'space-between', padding:15}}
+                onPress={() => navigation.navigate(
+                    "PlayanAudio", 
+                    {dataFindId: dataSongId, idChart: route.params?.idChart, selectedPause: selectedPause}
+                )}
+            >
                 
             {/** Image and infor music playing */}
             <View style={{display:'flex', flexDirection:'row', alignItems:'center', gap:15}}>
@@ -189,7 +202,11 @@ import {
 
             <View style={{flexDirection:'row', alignItems:'center', gap:25}}>
                 <IconAnt name="hearto" size={24} color="white"/>
-                <IconFe name="play" size={24} color="white"/>
+
+                <TouchableOpacity onPress={() => setSelectedPause(!selectedPause)}>
+                    {selectedPause ? <IconFe name="pause" size={24} color="white"/> : <IconFe name="play" size={24} color="white"/>}
+                </TouchableOpacity>
+                
             </View>      
             </TouchableOpacity>
         : null}

@@ -28,6 +28,8 @@ import {
 
   export default function PlayanAudio({navigation, route}) {
 
+    const [selectedPause, setSelectedPause] = useState(route.params?.selectedPause);
+
     const song = route.params?.dataFindId;
 
     const albums = trending_list.find((item) => item.id === song.albums_id);
@@ -35,13 +37,13 @@ import {
     return (
         <SafeAreaView style={styles.container}>
             {/* Background Image */}
-            <ImageBackground source={require('../assets/image/Play an Audio/Image 58.png')} resizeMode="cover" style={styles.imageBackground}>
+            <ImageBackground source={song.image} resizeMode="cover" style={styles.imageBackground}>
                 {/* Header */}
                 <View style ={styles.viewHeader}>
                     <Text style={styles.textHeader}>Play</Text>
                     <IconAnt name="down" size={24} color="white" onPress={() => navigation.navigate({
                         name: 'Playlist_Details',
-                        params: { dataFindId: song, idChart: route.params?.idChart, albumsSong: albums },
+                        params: { dataFindId: song, idChart: route.params?.idChart, albumsSong: albums, selectedPause: selectedPause, image: song.image},
                     })}/>
                 </View>
 
@@ -72,8 +74,8 @@ import {
                         </TouchableOpacity>
 
                         {/** Button play*/}
-                        <TouchableOpacity onPress={()=>{}}>
-                            <IconFnA name="play-circle" size={90} color="white" />
+                        <TouchableOpacity onPress={()=>setSelectedPause(!selectedPause)}>
+                            {selectedPause ? <IconFnA name="pause-circle" size={90} color="white" /> : <IconFnA name="play-circle" size={90} color="white" /> } 
                         </TouchableOpacity>
 
                         {/** Button stepforward*/}
