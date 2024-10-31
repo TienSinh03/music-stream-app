@@ -25,10 +25,11 @@ import {
   const screenWith = Dimensions.get("window").width;
   const screenHeight = Dimensions.get("window").height;
 
-  
 
-  const Item = ({ title, artist, plays, duration, image }) => (
-    <TouchableOpacity style={{display:'flex', flexDirection:'row', alignItems:'center', justifyContent:'space-between',marginBottom:25}}>
+  const Item = ({ title, artist, plays, duration, image,setFindSong }) => (
+    <TouchableOpacity style={{display:'flex', flexDirection:'row', alignItems:'center', justifyContent:'space-between',marginBottom:25}}
+        onPress={() => setFindSong()}
+    >
         <View style={{flexDirection:'row', alignItems:'center', gap:15}}>
             {/** Image music */}
             <Image source={image} style={{width:70, height:70}}/>
@@ -59,7 +60,17 @@ import {
   
   export default function Playlist_Details({navigation,route}) {
 
-    const charts = chart_list.find((item) => item.id === route.params?.data);
+    const charts = route.params?.dataCharts ? route.params?.dataCharts : chart_list.find((item) => item.id === route.params?.data);
+
+    const dataSongId = route.params?.dataFindId ? route.params?.dataFindId : null;
+
+    const [song, setSong] = useState();
+
+    const handelSongByID = (id) => {
+        var song= songs.find((item) => item.id === id);
+        setSong(song);
+        navigation.navigate("PlayanAudio", {dataFindId: song, dataCharts: charts});
+    }
 
     return (
       <SafeAreaView style={styles.container}>
@@ -137,7 +148,14 @@ import {
                     data={charts.songs}
                     key={item => item.id}
                     renderItem={({ item }) => (
-                        <Item title={item.title} artist={item.artist} plays={item.plays} duration={item.duration} image={item.image} />
+                        <Item 
+                        title={item.title} 
+                        artist={item.artist} 
+                        plays={item.plays} 
+                        duration={item.duration} 
+                        image={item.image}
+                        setFindSong={() => handelSongByID(item.id)}
+                         />
                     )}
                     keyExtractor={item => item.id}
                     scrollEnabled={false}
@@ -145,17 +163,18 @@ import {
             </View>
         </ScrollView>
 
-        <TouchableOpacity style ={{backgroundColor:'#171A1FFF', width:'100%', display:'flex', flexDirection:'row', alignItems:'center', justifyContent:'space-between', padding:15}}>
-            
+        {(dataSongId) ?
+            <TouchableOpacity style ={{backgroundColor:'#171A1FFF', width:'100%', display:'flex', flexDirection:'row', alignItems:'center', justifyContent:'space-between', padding:15}}>
+                
             {/** Image and infor music playing */}
             <View style={{display:'flex', flexDirection:'row', alignItems:'center', gap:15}}>
                 {/** Image music */}
-                <Image source={require('../assets/image/Playlist Details - Audio Listing/Image 57.png')} style={{width: 50, height: 50}}/>
+                <Image source={dataSongId.image} style={{width: 50, height: 50}}/>
 
                 {/** Infor */}
                 <View style={{flexDirection:'column'}}>
                     {/** Name music */}
-                    <Text style={{fontSize: 16, lineHeight:24,fontWeight:'500', color:'white'}}>FLOWER</Text>
+                    <Text style={{fontSize: 16, lineHeight:24,fontWeight:'500', color:'white'}}>{dataSongId.title}</Text>
 
                     {/**  */}
                     <View style={{display:'flex', flexDirection:'row', alignItems:'center', gap:6}}>
@@ -163,7 +182,7 @@ import {
                         
                         {/**duration */}
                         <IconFnA name="circle" size={10} color="white"/>
-                        <Text style={{fontSize: 14, lineHeight:24,fontWeight:'400', color:'white'}}>Jessica Gonzalez</Text>
+                        <Text style={{fontSize: 14, lineHeight:24,fontWeight:'400', color:'white'}}>{dataSongId.artist}</Text>
                     </View>
                 </View>
             </View>  
@@ -172,7 +191,9 @@ import {
                 <IconAnt name="hearto" size={24} color="white"/>
                 <IconFe name="play" size={24} color="white"/>
             </View>      
-        </TouchableOpacity>
+            </TouchableOpacity>
+        : null}
+        
   
         {/** action footer */}
         <View style={styles.footer}>

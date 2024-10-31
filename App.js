@@ -19,7 +19,7 @@ export default function App() {
     // <Playlist_Details/>
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Main">
-        <Stack.Screen name="Home_AudioListing" component={PlayanAudio} options = {{headerShown:false}} />
+        <Stack.Screen name="Home_AudioListing" component={Home_AudioListing} options = {{headerShown:false}} />
         <Stack.Screen name="Playlist_Details" component={Playlist_Details}  options = {{headerShown:false}} />
         <Stack.Screen name="PlayanAudio" component={PlayanAudio}  options = {{headerShown:false}} />
       </Stack.Navigator>

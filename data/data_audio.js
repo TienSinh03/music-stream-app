@@ -118,5 +118,81 @@ const chart_list = [
     }
   ];
 
+
+  const songs = [
+    {
+      title: "FLOWER",
+      artist: "Jessica Gonzalez",
+      plays: 2.1,
+      duration: "3:26",
+      image: require("../assets/image/Playlist Details - Audio Listing/Image 51.png"),
+      like: 12,
+      comment: 450,
+      albums_id: "1",
+      chart_id: "1",
+      id: "1",
+    },
+    {
+      title: "Shape of You",
+      artist: "Anthony Taylor",
+      plays: 68,
+      duration: "3:35",
+      image: require("../assets/image/Playlist Details - Audio Listing/Image 52.png"),
+      like: 12,
+      comment: 450,
+      albums_id: "1",
+      chart_id: "1",
+      id: "2",
+    },
+    {
+      title: "Blinding Lights",
+      artist: "Brian Bailey",
+      plays: 93,
+      duration: "4:39",
+      image: require("../assets/image/Playlist Details - Audio Listing/Image 53.png"),
+      like: 12,
+      comment: 450,
+      albums_id: "1",
+      chart_id: "1",
+      id: "3",
+    },
+    {
+      title: "Levitating",
+      artist: "Anthony Taylor",
+      plays: 9,
+      duration: "7:48",
+      image: require("../assets/image/Playlist Details - Audio Listing/Image 54.png"),
+      like: 12,
+      comment: 450,
+      albums_id: "1",
+      chart_id: "1",
+      id: "4",
+    },
+    {
+      title: "Astronaut in the Ocean",
+      artist: "Pedro Moreno",
+      plays: 23,
+      duration: "3:36",
+      image: require("../assets/image/Playlist Details - Audio Listing/Image 55.png"),
+      like: 12,
+      comment: 450,
+      albums_id: "1",
+      chart_id: "1",
+      id: "5",
+    },
+    {
+      title: "Dynamite",
+      artist: "Elena Jimenez",
+      plays: 10,
+      duration: "6:22",
+      image: require("../assets/image/Playlist Details - Audio Listing/Image 56.png"),
+      like: 12,
+      comment: 450,
+      albums_id: "1",
+      chart_id: "1",
+      id: "6",
+    },
+  ];
+
   
     export { chart_list, trending_list, popular_artists_list };

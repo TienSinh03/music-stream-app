@@ -27,6 +27,9 @@ import Icon from "react-native-vector-icons/Feather";
   const screenHeight = Dimensions.get("window").height;
 
   export default function PlayanAudio({navigation, route}) {
+
+    const song = route.params?.dataFindId;
+
     return (
         <SafeAreaView style={styles.container}>
             {/* Background Image */}
@@ -34,20 +37,23 @@ import Icon from "react-native-vector-icons/Feather";
                 {/* Header */}
                 <View style ={styles.viewHeader}>
                     <Text style={styles.textHeader}>Play</Text>
-                    <IconAnt name="down" size={24} color="white" onPress={() => navigation.goBack()}/>
+                    <IconAnt name="down" size={24} color="white" onPress={() => navigation.navigate({
+                        name: 'Playlist_Details',
+                        params: { dataFindId: song, dataCharts: route.params?.dataCharts },
+                    })}/>
                 </View>
 
                 {/* View play music */}
                 <View style ={styles.viewPlayMusic}>
-                    <Text style={styles.nameMusic}>FLOWER</Text>
-                    <Text style={styles.nameArtist}>Jessica Gonzalez</Text>
+                    <Text style={styles.nameMusic}>{song.title}</Text>
+                    <Text style={styles.nameArtist}>{song.artist}</Text>
 
                     {/** Image lyric and duration */}
                     <View style ={{marginVertical:25}}>
                         <Image source={require('../assets/image/Play an Audio/Group 4.png')} resizeMode="stretch" style={{width:'100%', }}/>
                         <View style={styles.viewLyric}>
-                            <Text style={{color:'white', fontSize:16, lineHeight:22, fontWeight:'400'}}>0:06</Text>
-                            <Text style={{color:'#9095A0FF', fontSize:16, lineHeight:22, fontWeight:'400'}}>03:20</Text>
+                            <Text style={{color:'white', fontSize:16, lineHeight:22, fontWeight:'400'}}>0:00</Text>
+                            <Text style={{color:'#9095A0FF', fontSize:16, lineHeight:22, fontWeight:'400'}}>{song.duration}</Text>
                         </View>
                     </View>
 
