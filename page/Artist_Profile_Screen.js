@@ -25,7 +25,6 @@ import {
   const screenWith = Dimensions.get("window").width;
   const screenHeight = Dimensions.get("window").height;
 
-
   const Item = ({ title, artist, plays, duration, image,setFindSong }) => (
     <TouchableOpacity style={{display:'flex', flexDirection:'row', alignItems:'center', justifyContent:'space-between',marginBottom:25}}
         onPress={() => setFindSong()}
@@ -57,17 +56,15 @@ import {
         </TouchableOpacity>
     </TouchableOpacity>
 )
-  
-  export default function Playlist_Details({navigation,route}) {
 
-    const songsByChart = songs.filter((item) => item.chart_id === route.params?.idChart);
-    const charts = chart_list.find((item) => item.id === route.params?.idChart);
+  export default function Artist_Profile_Screen({ navigation,route }) {
+
+    const songsByChart = songs.filter((item) => item.artist === "4");
+    // const charts = chart_list.find((item) => item.id === route.params?.idChart);
     const dataSongId = route.params?.dataFindId ? route.params?.dataFindId : null;
 
-    
     const [song, setSong] = useState();
 
-    
     const [selectedPause, setSelectedPause] = useState(false);
 
     useEffect(() => {
@@ -93,58 +90,32 @@ import {
                 artist: handelArtistByID(song.artist).artistName
             });
     }
-
-    
-
-    return (
-      <SafeAreaView style={styles.container}>
-        {/* Header */}
-        <View style={styles.header}>
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <IconAnt name="left" size={25} color="#9095A0FF"/>
-                </TouchableOpacity>
-
-                <TouchableOpacity>
-                    <IconFe name="cast" size={25} color="#9095A0FF"/>
-                </TouchableOpacity>
-        </View>
+    return(
+        <SafeAreaView style={styles.container}>
+            {/* Header */}
+            <View style={styles.header}>
+                    <TouchableOpacity onPress={() => navigation.goBack()}>
+                        <IconAnt name="left" size={25} color="#9095A0FF"/>
+                    </TouchableOpacity>
+            </View>
         <ScrollView style={{marginHorizontal: 20}} showsVerticalScrollIndicator={false}>
 
-            {/** playlist info and image */}
-            <View style={styles.viewInfo}>
-                {/** Image and name playlist */}
-                <ImageBackground source={charts.image} style={styles.viewImageList}>
-                    <Text style={styles.textNameList_Image}>{charts.title}</Text>
-                    <Text style={{color:'white', fontSize: 15, fontWeight:'400'}}>{charts.location}</Text>
-                </ImageBackground>
-
-                {/**The information Playlist*/}
-                <View>
-                    {/**title Playlist */}
-                    <Text style={styles.textTitleList}>{charts.title} - {charts.location}</Text>
-                    
-                    {/** Tym and total Hours */}
-                    <View style={{display:'flex', flexDirection:'row', alignItems:'center', gap:10, marginVertical:5}}>
-                        <IconAnt name="hearto" size={18} color="#21c5db"/>
-                        <Text style={[styles.text,{marginRight:8}]}>{charts.likes}</Text>
-
-                        <IconFnA name="circle" size={12} color="#9095A0FF"/>
-                        <Text style={styles.text}>{charts.duration}</Text>
-                    </View>
-
-                    {/** Description */}
-                    <Text style={styles.text}>{charts.description}</Text>
+            {/** artist info */}
+            <View style={{display:'flex',flexDirection:'column', alignItems:'center',justifyContent:'center', marginTop:20}}>
+                <Image source={require('../assets/image/Artist Profile/Image user.png')} style={{width:screenWith*0.54, height:screenHeight*0.238, borderRadius:120}}/>
+                <View style={{marginVertical:25}}>
+                    <Text style={{textAlign:'center',fontSize:40,lineHeight:48, fontWeight:'bold', color:'#171A1FFF'}}>Ryan Young</Text>
+                    <Text style={{textAlign:'center',fontSize:18, fontWeight:'400', color:'#9095A0FF'}}>65.1K Followers</Text>
                 </View>
-
             </View>
 
             {/** action play */}
             <View style={{display:'flex', flexDirection:'row', alignItems:'center', justifyContent:'space-between'}}>
 
-                <View style={{flexDirection:'row', alignItems:'center', justifyContent:'space-between', width:'30%'}}>
-                    {/** button tym */}
-                    <TouchableOpacity>
-                        <IconAnt name="hearto" size={20} color="#21c5db" />
+                <View style={{flexDirection:'row', alignItems:'center', justifyContent:'space-between', width:'40%'}}>
+                    {/** button follow */}
+                    <TouchableOpacity style ={styles.buttonFL}>
+                        <Text style={styles.textButtonFL}>Follow</Text>
                     </TouchableOpacity>
                         
                     {/** button menu */}
@@ -166,28 +137,7 @@ import {
                 </View>
             </View>
 
-            {/** List Audio */}
-            <View style ={{marginTop:25}}>
-                <FlatList
-                    data={songsByChart}
-                    key={item => item.id}
-                    renderItem={({ item }) => (
-                        <Item 
-                        title={item.title} 
-                        artist={handelArtistByID(item.artist).artistName} 
-                        plays={item.plays} 
-                        duration={item.duration} 
-                        image={item.image}
-                        setFindSong={() => handelSongByID(item.id)}
-                         />
-                    )}
-                    keyExtractor={item => item.id}
-                    scrollEnabled={false}
-                />
-            </View>
-        </ScrollView>
-
-         {/** music playing screen small */}           
+            {/** music playing screen small */}           
         {(dataSongId) ?
             <TouchableOpacity style ={{backgroundColor:'#171A1FFF', width:'100%', display:'flex', flexDirection:'row', alignItems:'center', justifyContent:'space-between', padding:15}}
                 onPress={() => navigation.navigate(
@@ -227,6 +177,30 @@ import {
             </View>      
             </TouchableOpacity>
         : null}
+
+            {/** List Audio */}
+            <View style ={{marginTop:25}}>
+                <FlatList
+                    data={songsByChart}
+                    key={item => item.id}
+                    renderItem={({ item }) => (
+                        <Item 
+                        title={item.title} 
+                        artist={handelArtistByID(item.artist).artistName} 
+                        plays={item.plays} 
+                        duration={item.duration} 
+                        image={item.image}
+                        setFindSong={() => handelSongByID(item.id)}
+                         />
+                    )}
+                    keyExtractor={item => item.id}
+                    scrollEnabled={false}
+                />
+            </View>
+            
+        </ScrollView>
+
+         
         
   
         {/** action footer */}
@@ -264,6 +238,9 @@ import {
       flex: 1,
       marginTop: StatusBar.currentHeight,
     },
+    buttonFL:{alignItems:'center', borderColor:'#9095A0FF', borderRadius:22, borderWidth:1},
+    textButtonFL:{fontSize:16, lineHeight:22, fontWeight:'400', color:'#9095A0FF', paddingHorizontal:18, paddingVertical:10},
+
     header: {
         display: "flex",
         justifyContent: "space-between",
@@ -271,10 +248,5 @@ import {
         flexDirection: "row",
         paddingHorizontal:20
     },
-    viewInfo:{marginVertical: 25, display:'flex', flexDirection:'row', alignItems:'center', gap:20},
-    viewImageList:{width:screenWith*0.31,height:screenHeight*0.14, alignItems:'center', justifyContent:'center'},
-    textNameList_Image:{color:'white', fontSize: 22, lineHeight:30,fontWeight:'bold', paddingBottom:15},
-    textTitleList:{fontSize: 24, lineHeight:30,fontWeight:'bold', color:'#171A1FFF'},
-    text:{fontSize: 16, lineHeight:24,fontWeight:'400', color:'#565E6CFF'},
     footer:{display:'flex', flexDirection:'row', justifyContent:'space-between', alignItems:'center',paddingHorizontal:55,paddingVertical:20,backgroundColor:'white', borderTopWidth:1, borderColor:'#C4C4C4'}
 })
