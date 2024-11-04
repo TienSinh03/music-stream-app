@@ -11,45 +11,72 @@ import {
   StatusBar,
   Dimensions,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import IconFe from "react-native-vector-icons/Feather";
 import IconAnt from "react-native-vector-icons/AntDesign";
 import IconIon from "react-native-vector-icons/Ionicons";
 import IconFnA from "react-native-vector-icons/FontAwesome";
+import { songs } from "../data/data_audio";
 
 const screenWidth = Dimensions.get("window").width;
 
 export default function MyLibrary() {
+  const [isFollowing, setIsFollowing] = useState(false);
+
+  const toggleFollow = () => {
+    setIsFollowing(!isFollowing);
+  };
+
+  const renderSongItem = ({ item }) => (
+    <TouchableOpacity style={styles.musicItem}>
+      <View style={styles.musicInfo}>
+        <Image source={item.image} style={styles.musicImage} />
+        <View>
+          <Text style={styles.musicTitle}>{item.title}</Text>
+          <Text style={styles.musicArtist}>{item.artist}</Text>
+          <View style={styles.musicDetails}>
+            <IconFe name="play" size={16} color="#9095A0FF" />
+            <Text style={styles.musicDetailText}>{item.plays}</Text>
+            <IconFnA name="circle" size={10} color="#9095A0FF" />
+            <Text style={styles.musicDetailText}>{item.duration}</Text>
+          </View>
+        </View>
+      </View>
+      <TouchableOpacity>
+        <IconAnt name="heart" size={15} style={styles.userIcon} color="#01bdd6" />
+      </TouchableOpacity>
+    </TouchableOpacity>
+  );
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView}>
-        {/* Search Bar */}
+      <View style={{  flexDirection: "row",  alignItems: "center", justifyContent: "space-between"}}>
+        <Text style={styles.artistName}>Your Library</Text>
         <View style={styles.inputSearch}>
-          <IconFe name="search" size={20} color="#BCC1CAFF" />
-          <TextInput
-            placeholder="What you want to listen to"
+            <TextInput
+            placeholder="What you want to library"
             style={styles.textInputSearch}
-          />
+            />
+            <IconFe name="search" size={20} color="#BCC1CAFF" />
         </View>
+      </View>
 
-        {/* Category Row */}
+
         <View style={styles.categoryContainer}>
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.categoryRow}
           >
-            {["Playlists", "New tag", "Songs", "Albums", "Artists", "Artists","Artists","Artists"].map(
-              (item) => (
-                <TouchableOpacity key={item} style={styles.category}>
-                  <Text style={styles.categoryText}>{item}</Text>
-                </TouchableOpacity>
-              )
-            )}
+            {["Playlists", "New tag", "Songs", "Albums", "Artists"].map(item => (
+              <TouchableOpacity key={item} style={styles.category}>
+                <Text style={styles.categoryText}>{item}</Text>
+              </TouchableOpacity>
+            ))}
           </ScrollView>
         </View>
 
-        {/* Artist Item */}
         <TouchableOpacity style={styles.artistRow}>
           <Image
             source={require("../assets/image/Audio Listing - Search Results/Image 85.png")}
@@ -63,62 +90,45 @@ export default function MyLibrary() {
               <Text style={styles.followersText}>1.234K Followers</Text>
             </View>
           </View>
-          <TouchableOpacity style={styles.followButton}>
-            <Text style={styles.followButtonText}>Follow</Text>
+          <TouchableOpacity style={styles.followButton} onPress={toggleFollow}>
+            <Text style={styles.followButtonText}>
+              {isFollowing ? 'Unfollow' : 'Follow'}
+            </Text>
           </TouchableOpacity>
         </TouchableOpacity>
 
-        {/* Music Item */}
-        {[...Array(6)].map((_, index) => (
-          <MusicItem key={index} />
-        ))}
+        <FlatList
+          data={songs}
+          renderItem={renderSongItem}
+          keyExtractor={(item) => item.id.toString()}
+          scrollEnabled={false}
+          style={{ marginBottom: 80 }} // Avoid content being hidden by footer
+        />
       </ScrollView>
 
-      {/* Footer */}
       <View style={styles.footer}>
-        {[
-          { icon: <IconAnt name="home" />, label: "Home" },
-          { icon: <IconFe name="search" color="#21c5db" />, label: "Search" },
-          { icon: <IconAnt name="switcher" />, label: "Feed" },
-          { icon: <IconIon name="library-outline" />, label: "Library" },
-        ].map((item, index) => (
-          <TouchableOpacity key={index} style={styles.footerButton}>
-            {item.icon}
-            <Text style={index === 1 ? styles.footerTextActive : styles.footerText}>{item.label}</Text>
+          <TouchableOpacity style={styles.footerButton}>
+            <IconAnt name="home" size={25} color="#565E6CFF" />
+            <Text style={styles.footerText}>Home</Text>
           </TouchableOpacity>
-        ))}
-      </View>
+          <TouchableOpacity style={styles.footerButton}>
+            <IconFe name="search" size={25} color="#565E6CFF" />
+            <Text style={styles.footerText}>Search</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.footerButton}>
+            <IconAnt name="switcher" size={25} color="#565E6CFF" />
+            <Text style={styles.footerText}>Feed</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.footerButton}>
+            <IconIon name="library-outline" size={25} color="#21c5db" />
+            <Text style={styles.footerTextActive}>Library</Text>
+          </TouchableOpacity>
+        </View>
     </SafeAreaView>
   );
 }
 
-// Reusable MusicItem Component
-const MusicItem = () => (
-  <TouchableOpacity style={styles.musicItem}>
-    <View style={styles.musicInfo}>
-      <Image
-        source={require("../assets/image/Audio Listing - Search Results/Image 84.png")}
-        style={styles.musicImage}
-      />
-      <View>
-        <Text style={styles.musicTitle}>Title</Text>
-        <Text style={styles.musicArtist}>Artist</Text>
-        <View style={styles.musicDetails}>
-          <IconFe name="play" size={16} color="#9095A0FF" />
-          <Text style={styles.musicDetailText}>playsM</Text>
-          <IconFnA name="circle" size={10} color="#9095A0FF" />
-          <Text style={styles.musicDetailText}>duration</Text>
-        </View>
-      </View>
-    </View>
-    <TouchableOpacity>
-      <Image
-        source={require("../assets/image/Playlist Details - Audio Listing/Menu 5 2.png")}
-        style={styles.menuIcon}
-      />
-    </TouchableOpacity>
-  </TouchableOpacity>
-);
+// Styles remain unchanged
 
 const styles = StyleSheet.create({
   container: {
@@ -141,7 +151,7 @@ const styles = StyleSheet.create({
   },
   textInputSearch: {
     marginLeft: 10,
-    flex: 1,
+    // flex: 1,
     color: "#171A1FFF",
   },
   categoryContainer: {
@@ -194,7 +204,7 @@ const styles = StyleSheet.create({
   },
   followButton: {
     padding: 10,
-    backgroundColor: "#21c5db",
+    backgroundColor: "#171a1f",
     borderRadius: 15,
   },
   followButtonText: {
