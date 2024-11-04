@@ -11,7 +11,7 @@ import PlayanAudio from './page/Play_an_AudioScreen';
 
 import AudioListing_SearchResultsScreen from './page/AudioListing_SearchResultsScreen';
 import MyLibrary from './page/MyLibrary';
-
+import MyLibrary_Playlist from './page/MyLibrary_Playlist';
 
 import Artist_Profile_Screen from './page/Artist_Profile_Screen';
 
@@ -25,10 +25,15 @@ export default function App() {
 
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home_AudioListing">
-        <Stack.Screen name="Home_AudioListing" component={MyLibrary} options={{ headerShown: false }} />
+        <Stack.Screen name="Home_AudioListing" component={MyLibrary_Playlist} options={{ headerShown: false }} />
         <Stack.Screen name="Playlist_Details" component={Playlist_Details} options={{ headerShown: false }} />  
         <Stack.Screen name="AudioListing_SearchResultsScreen" component={AudioListing_SearchResultsScreen} options={{ headerShown: false }} />
         <Stack.Screen name="MyLibrary" component={MyLibrary} options={{ headerShown: false }} />
+        {/* hiển thị thanh dieu huong */}
+        <Stack.Screen name="MyLibrary_Playlist" component={MyLibrary_Playlist} options={{ headerShown: true }} />
+        
+
+
         {/* MyLibrary */}
         <Stack.Screen
           name="PlayanAudio"
