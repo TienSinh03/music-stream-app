@@ -20,7 +20,7 @@ import {
   import IconFnA from "react-native-vector-icons/FontAwesome";
   import IconEnty from "react-native-vector-icons/Entypo";
 
-  import { trending_list } from "../data/data_audio";
+  import { albumsSong } from "../data/data_audio";
     import Icon from "react-native-vector-icons/Feather";
   
   const screenWith = Dimensions.get("window").width;
@@ -32,7 +32,7 @@ import {
 
     const song = route.params?.dataFindId;
 
-    const albums = trending_list.find((item) => item.id === song.albums_id);
+    const albums = albumsSong.find((item) => item.id === song.albums_id);
 
     return (
         <SafeAreaView style={styles.container}>
@@ -43,14 +43,14 @@ import {
                     <Text style={styles.textHeader}>Play</Text>
                     <IconAnt name="down" size={24} color="white" onPress={() => navigation.navigate({
                         name: 'Playlist_Details',
-                        params: { dataFindId: song, idChart: route.params?.idChart, albumsSong: albums, selectedPause: selectedPause, image: song.image},
+                        params: { dataFindId: song, idChart: route.params?.idChart, albumsSong: albums, selectedPause: selectedPause, image: song.image, artist: route.params?.artist},
                     })}/>
                 </View>
 
                 {/* View play music */}
                 <View style ={styles.viewPlayMusic}>
                     <Text style={styles.nameMusic}>{song.title}</Text>
-                    <Text style={styles.nameArtist}>{song.artist}</Text>
+                    <Text style={styles.nameArtist}>{route.params?.artist}</Text>
 
                     {/** Image lyric and duration */}
                     <View style ={{marginVertical:25}}>
@@ -100,7 +100,7 @@ import {
                                 <TouchableOpacity onPress={()=>{}}>
                                     <IconAnt name="hearto" size={26} color="white" />
                                 </TouchableOpacity>
-                                <Text style={{color:'#9095A0FF', fontSize:16, lineHeight:22, fontWeight:'400'}}>12k</Text>
+                                <Text style={{color:'#9095A0FF', fontSize:16, lineHeight:22, fontWeight:'400'}}>{song.like}</Text>
                             </View>
                             
 
@@ -109,7 +109,7 @@ import {
                                 <TouchableOpacity onPress={()=>{}}>
                                     <Image source={require('../assets/image/Play an Audio/F chat 1.png')} style={{width:26, height:26}}/>
                                 </TouchableOpacity>
-                                <Text style={{color:'#9095A0FF', fontSize:16, lineHeight:22, fontWeight:'400'}}>450</Text>
+                                <Text style={{color:'#9095A0FF', fontSize:16, lineHeight:22, fontWeight:'400'}}>{song.comment}</Text>
                             </View>
                         </View>
                         

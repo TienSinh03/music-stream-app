@@ -18,7 +18,7 @@ import IconFe from "react-native-vector-icons/Feather";
 import IconAnt from "react-native-vector-icons/AntDesign";
 import IconIon from "react-native-vector-icons/Ionicons";
 
-import { chart_list,popular_artists_list,trending_list } from "../data/data_audio";
+import { chart_list,artists,albumsSong } from "../data/data_audio";
 
 
 
@@ -182,7 +182,7 @@ export default function Home_AudioListing({navigation, route}) {
           {/** List trending albums */}
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
             <FlatList
-              data={trending_list}
+              data={albumsSong}
               renderItem={({item}) =>(
                 <Item_Trending
                   title={item.title}
@@ -213,7 +213,7 @@ export default function Home_AudioListing({navigation, route}) {
           {/** List popular artists */}
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
             <FlatList
-              data={popular_artists_list}
+              data={artists}
               renderItem={({item}) =>(
                 <Item_popular_artists
                   artist={item.artist}

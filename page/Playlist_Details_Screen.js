@@ -20,7 +20,7 @@ import {
   import IconFnA from "react-native-vector-icons/FontAwesome";
   import IconEnty from "react-native-vector-icons/Entypo";
 
-  import { chart_list,songs } from "../data/data_audio";
+  import { chart_list,songs, artists } from "../data/data_audio";
   
   const screenWith = Dimensions.get("window").width;
   const screenHeight = Dimensions.get("window").height;
@@ -64,7 +64,9 @@ import {
     const charts = chart_list.find((item) => item.id === route.params?.idChart);
     const dataSongId = route.params?.dataFindId ? route.params?.dataFindId : null;
 
+    
     const [song, setSong] = useState();
+
     
     const [selectedPause, setSelectedPause] = useState(false);
 
@@ -72,12 +74,27 @@ import {
         setSelectedPause(route.params?.selectedPause);
     }, [route.params?.selectedPause]);
 
+
+    // Find artist by id
+    const handelArtistByID = (id) => {
+        var artist= artists.find((item) => item.id === id);
+        return artist;
+    }
+
     // Find song by id
     const handelSongByID = (id) => {
-        var song= songs.find((item) => item.id === id);
+        var song = songs.find((item) => item.id === id);
         setSong(song);
-        navigation.navigate("PlayanAudio", {dataFindId: song, idChart: route.params?.idChart, selectedPause: selectedPause, image: song.image});
+        navigation.navigate("PlayanAudio", 
+            {   dataFindId: song, 
+                idChart: route.params?.idChart, 
+                selectedPause: selectedPause, 
+                image: song.image, 
+                artist: handelArtistByID(song.artist).artistName
+            });
     }
+
+    
 
     return (
       <SafeAreaView style={styles.container}>
@@ -143,7 +160,7 @@ import {
                     </TouchableOpacity>
                         
                     {/** button play */}
-                    <TouchableOpacity onPress={() => handelSongByID("1")}>
+                    <TouchableOpacity onPress={() => handelSongByID(songsByChart[0].id)}>
                         <Image source={require('../assets/image/Playlist Details - Audio Listing/Icon Button 2.png')} style={{width: 60, height: 60}}/>
                     </TouchableOpacity>
                 </View>
@@ -157,7 +174,7 @@ import {
                     renderItem={({ item }) => (
                         <Item 
                         title={item.title} 
-                        artist={item.artist} 
+                        artist={handelArtistByID(item.artist).artistName} 
                         plays={item.plays} 
                         duration={item.duration} 
                         image={item.image}
@@ -175,7 +192,7 @@ import {
             <TouchableOpacity style ={{backgroundColor:'#171A1FFF', width:'100%', display:'flex', flexDirection:'row', alignItems:'center', justifyContent:'space-between', padding:15}}
                 onPress={() => navigation.navigate(
                     "PlayanAudio", 
-                    {dataFindId: dataSongId, idChart: route.params?.idChart, selectedPause: selectedPause}
+                    {dataFindId: dataSongId, idChart: route.params?.idChart, selectedPause: selectedPause, artist: route.params?.artist}
                 )}
             >
                 
@@ -195,7 +212,7 @@ import {
                         
                         {/**duration */}
                         <IconFnA name="circle" size={10} color="white"/>
-                        <Text style={{fontSize: 14, lineHeight:24,fontWeight:'400', color:'white'}}>{dataSongId.artist}</Text>
+                        <Text style={{fontSize: 14, lineHeight:24,fontWeight:'400', color:'white'}}>{route.params?.artist}</Text>
                     </View>
                 </View>
             </View>  

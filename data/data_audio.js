@@ -78,7 +78,7 @@ const chart_list = [
     }
   ];
   
-  const trending_list = [
+  const albumsSong = [
     {
       title: "ME",
       artist:"Jessica Gonzalez",
@@ -99,22 +99,52 @@ const chart_list = [
     }
   ];
   
-  const popular_artists_list = [
+  const artists = [
     {
-      artist:"Elizabeth Hall",
+      artistName:"Elizabeth Hall",
       image: require('../assets/image/Home - Audio Listing/Image 39.png'),
       id: "1"
     },
     {
   
-      artist:"Brian Thomas",
+      artistName:"Brian Thomas",
       image: require('../assets/image/Home - Audio Listing/Image 40.png'),
       id: "2"
     },
     {
-      artist:"Anthony Taylor",
+      artistName:"Anthony Taylor",
       image: require('../assets/image/Home - Audio Listing/Image 41.png'),
       id: "3"
+    },
+    {
+      artistName:"Ryan Young",
+      image: require('../assets/image/Artist Profile/Image user.png'),
+      id: "4"
+    },
+    {
+      artistName:"Jessica Gonzalez",
+      image: require('../assets/image/Artist Profile/Image user.png'),
+      id: "5"
+    },
+    {
+      artistName:"Brian Bailey",
+      image: require('../assets/image/Artist Profile/Image user.png'),
+      id: "6"
+    },
+    {
+      artistName:"Perdro Moreno",
+      image: require('../assets/image/Artist Profile/Image user.png'),
+      id: "7"
+    },
+    {
+      artistName:"Elena Jimenez",
+      image: require('../assets/image/Artist Profile/Image user.png'),
+      id: "8"
+    },
+    {
+      artistName:"John Smith",
+      image: require('../assets/image/Artist Profile/Image user.png'),
+      id: "9"
     }
   ];
 
@@ -122,7 +152,7 @@ const chart_list = [
   const songs = [
     {
       title: "FLOWER",
-      artist: "Jessica Gonzalez",
+      artist: "5",
       plays: 2.1,
       duration: "3:26",
       image: require("../assets/image/Playlist Details - Audio Listing/Image 51.png"),
@@ -134,7 +164,7 @@ const chart_list = [
     },
     {
       title: "Shape of You",
-      artist: "Anthony Taylor",
+      artist: "3",
       plays: 68,
       duration: "3:35",
       image: require("../assets/image/Playlist Details - Audio Listing/Image 52.png"),
@@ -146,7 +176,7 @@ const chart_list = [
     },
     {
       title: "Blinding Lights",
-      artist: "Brian Bailey",
+      artist: "6",
       plays: 93,
       duration: "4:39",
       image: require("../assets/image/Playlist Details - Audio Listing/Image 53.png"),
@@ -158,7 +188,7 @@ const chart_list = [
     },
     {
       title: "Levitating",
-      artist: "Anthony Taylor",
+      artist: "3",
       plays: 9,
       duration: "7:48",
       image: require("../assets/image/Playlist Details - Audio Listing/Image 54.png"),
@@ -170,7 +200,7 @@ const chart_list = [
     },
     {
       title: "Astronaut in the Ocean",
-      artist: "Pedro Moreno",
+      artist: "7",
       plays: 23,
       duration: "3:36",
       image: require("../assets/image/Playlist Details - Audio Listing/Image 55.png"),
@@ -182,7 +212,7 @@ const chart_list = [
     },
     {
       title: "Dynamite",
-      artist: "Elena Jimenez",
+      artist: "8",
       plays: 10,
       duration: "6:22",
       image: require("../assets/image/Playlist Details - Audio Listing/Image 56.png"),
@@ -191,8 +221,68 @@ const chart_list = [
       albums_id: "1",
       chart_id: "1",
       id: "6",
+    },  
+    {
+      title: "Let you free",
+      artist: "4",
+      plays: 68,
+      duration: "03:35",
+      image: require("../assets/image/Artist Profile/Image 66.png"),
+      like: 50,
+      comment: 600,
+      albums_id: "2",
+      chart_id: "2",
+      id: "7",
+    }, 
+    {
+      title: "Blinding Lights",
+      artist: "4",
+      plays: 93,
+      duration: "04:39",
+      image: require("../assets/image/Artist Profile/Image 67.png"),
+      like: 50,
+      comment: 600,
+      albums_id: "2",
+      chart_id: "2",
+      id: "8",
+    }, 
+    {
+      title: "Levitating",
+      artist: "4",
+      plays: 93,
+      duration: "04:39",
+      image: require("../assets/image/Artist Profile/Image 68.png"),
+      like: 50,
+      comment: 600,
+      albums_id: "2",
+      chart_id: "2",
+      id: "9",
+    }, 
+    {
+      title: "Astronaut in the Ocean",
+      artist: "4",
+      plays: 93,
+      duration: "03:36",
+      image: require("../assets/image/Artist Profile/Image 69.png"),
+      like: 50,
+      comment: 600,
+      albums_id: "2",
+      chart_id: "2",
+      id: "10",
+    },
+    {
+      title: "Dynamite",
+      artist: "4",
+      plays: 93,
+      duration: "06:22",
+      image: require("../assets/image/Artist Profile/Image 70.png"),
+      like: 50,
+      comment: 600,
+      albums_id: "2",
+      chart_id: "2",
+      id: "11",
     },
   ];
 
   
-    export { chart_list, trending_list, popular_artists_list,songs };
+    export { chart_list, albumsSong, artists,songs };
