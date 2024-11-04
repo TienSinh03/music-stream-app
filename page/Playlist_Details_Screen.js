@@ -233,7 +233,7 @@ import {
         {/** action footer */}
         <View style={styles.footer}>
           {/** button home */}
-          <TouchableOpacity style={{alignItems:'center'}}>
+          <TouchableOpacity style={{alignItems:'center'}} onPress={() => navigation.popToTop()}>
             <IconAnt name="home" size={25} color="#21c5db"/>
             <Text style={{fontSize:14, lineHeight:24, fontWeight:'400', color:'#21c5db'}}>Home</Text>
           </TouchableOpacity>

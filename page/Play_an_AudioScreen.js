@@ -66,7 +66,9 @@ import {
                 {/* View play music */}
                 <View style ={styles.viewPlayMusic}>
                     <Text style={styles.nameMusic}>{song.title}</Text>
-                    <Text style={styles.nameArtist}>{route.params?.artist}</Text>
+                    <TouchableOpacity style={{opacity:1}} onPress={() => navigation.navigate('ArtistProfile')}>
+                        <Text style={styles.nameArtist}>{route.params?.artist}</Text>
+                    </TouchableOpacity>
 
                     {/** Image lyric and duration */}
                     <View style ={{marginVertical:25}}>
