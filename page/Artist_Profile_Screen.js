@@ -63,6 +63,7 @@ import {
     // const charts = chart_list.find((item) => item.id === route.params?.idChart);
     const dataSongId = route.params?.dataFindId ? route.params?.dataFindId : null;
 
+    console.log(route.params?.albumsSong.title);
     const [song, setSong] = useState();
 
     const [selectedPause, setSelectedPause] = useState(false);
@@ -84,10 +85,10 @@ import {
         setSong(song);
         navigation.navigate("PlayanAudio", 
             {   dataFindId: song, 
-                idChart: route.params?.idChart, 
                 selectedPause: selectedPause, 
                 image: song.image, 
-                artist: handelArtistByID(song.artist).artistName
+                artist: handelArtistByID(song.artist).artistName,
+                previousScreen: 'ArtistProfile'
             });
     }
     return(
@@ -137,7 +138,29 @@ import {
                 </View>
             </View>
 
-            {/** music playing screen small */}           
+            {/** List Audio */}
+            <View style ={{marginTop:25}}>
+                <FlatList
+                    data={songsByChart}
+                    key={item => item.id}
+                    renderItem={({ item }) => (
+                        <Item 
+                        title={item.title} 
+                        artist={handelArtistByID(item.artist).artistName} 
+                        plays={item.plays} 
+                        duration={item.duration} 
+                        image={item.image}
+                        setFindSong={() => handelSongByID(item.id)}
+                         />
+                    )}
+                    keyExtractor={item => item.id}
+                    scrollEnabled={false}
+                />
+            </View>
+            
+        </ScrollView>
+
+         {/** music playing screen small */}           
         {(dataSongId) ?
             <TouchableOpacity style ={{backgroundColor:'#171A1FFF', width:'100%', display:'flex', flexDirection:'row', alignItems:'center', justifyContent:'space-between', padding:15}}
                 onPress={() => navigation.navigate(
@@ -178,29 +201,6 @@ import {
             </TouchableOpacity>
         : null}
 
-            {/** List Audio */}
-            <View style ={{marginTop:25}}>
-                <FlatList
-                    data={songsByChart}
-                    key={item => item.id}
-                    renderItem={({ item }) => (
-                        <Item 
-                        title={item.title} 
-                        artist={handelArtistByID(item.artist).artistName} 
-                        plays={item.plays} 
-                        duration={item.duration} 
-                        image={item.image}
-                        setFindSong={() => handelSongByID(item.id)}
-                         />
-                    )}
-                    keyExtractor={item => item.id}
-                    scrollEnabled={false}
-                />
-            </View>
-            
-        </ScrollView>
-
-         
         
   
         {/** action footer */}

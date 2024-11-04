@@ -87,10 +87,11 @@ import {
         setSong(song);
         navigation.navigate("PlayanAudio", 
             {   dataFindId: song, 
-                idChart: route.params?.idChart, 
+                idChart: route.params?.idChart,
                 selectedPause: selectedPause, 
                 image: song.image, 
-                artist: handelArtistByID(song.artist).artistName
+                artist: handelArtistByID(song.artist).artistName,
+                previousScreen: 'Playlist_Details'
             });
     }
 

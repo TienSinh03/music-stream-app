@@ -13,6 +13,8 @@ import {
     Dimensions,
   } from "react-native";
   import React, { useEffect, useState } from "react";
+  import { CommonActions } from '@react-navigation/native';
+
   
   import IconFe from "react-native-vector-icons/Feather";
   import IconAnt from "react-native-vector-icons/AntDesign";
@@ -34,6 +36,7 @@ import {
 
     const albums = albumsSong.find((item) => item.id === song.albums_id);
 
+    console.log(route.params?.previousScreen);
     return (
         <SafeAreaView style={styles.container}>
             {/* Background Image */}
@@ -41,10 +44,23 @@ import {
                 {/* Header */}
                 <View style ={styles.viewHeader}>
                     <Text style={styles.textHeader}>Play</Text>
-                    <IconAnt name="down" size={24} color="white" onPress={() => navigation.navigate({
-                        name: 'Playlist_Details',
-                        params: { dataFindId: song, idChart: route.params?.idChart, albumsSong: albums, selectedPause: selectedPause, image: song.image, artist: route.params?.artist},
-                    })}/>
+                    <IconAnt name="down" size={24} color="white"
+                        onPress={() => {
+                            navigation.dispatch(
+                                CommonActions.navigate({
+                                    name: route.params?.previousScreen === "Playlist_Details" ? "Playlist_Details" : "ArtistProfile",
+                                    params: { 
+                                        dataFindId: song, 
+                                        albumsSong: albums, 
+                                        idChart: route.params?.idChart,
+                                        selectedPause: selectedPause, 
+                                        image: song.image, 
+                                        artist: route.params?.artist
+                                    }
+                                })
+                            );
+                        }}
+                    />
                 </View>
 
                 {/* View play music */}
