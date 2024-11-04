@@ -20,12 +20,18 @@ import {
   import IconFnA from "react-native-vector-icons/FontAwesome";
   import IconEnty from "react-native-vector-icons/Entypo";
   
-  import { chart_list, songs } from "../data/data_audio";
+import { songs } from "../data/data_audio";
   
   const screenWidth = Dimensions.get("window").width;
   const screenHeight = Dimensions.get("window").height;
+
+
+
+  
   
   export default function AudioListing_SearchResultsScreen({ navigation, route }) {
+
+    console.log(songs);
     return (
       <SafeAreaView style={styles.container}>
         <ScrollView style={styles.scrollView}>
@@ -36,8 +42,9 @@ import {
                 style={styles.textInputSearch}
                 />
           </View>
+
           <View style={styles.categoryRow}>
-          <View style={styles.category}>
+            <View style={styles.category}>
               <Text style={styles.categoryText}>All</Text>
             </View>
             <View style={styles.category}>
@@ -51,7 +58,11 @@ import {
             </View>
           </View>
   
+
+            {/* gọi data_audio_list cho tac_gia */}
+
           <TouchableOpacity style={styles.artistRow}>
+            {/* img tac gia */}
             <Image
             
               source={require("../assets/image/Audio Listing - Search Results/Image 85.png")}
@@ -59,9 +70,11 @@ import {
               style={styles.artistImage}
             />
             <View style={styles.artistInfo}>
+              {/* tac gia */}
               <Text style={styles.artistName}>Mer Watson</Text>
               <View style={styles.followersRow}>
                 <IconAnt name="user" size={15} style={styles.userIcon} />
+                {/* so nguoi theo doi tac gia */}
                 <Text style={styles.followersText}>1.234K Followers</Text>
               </View>
             </View>
@@ -70,23 +83,35 @@ import {
             </TouchableOpacity>
           </TouchableOpacity>
   
-          <TouchableOpacity style={{display:'flex', flexDirection:'row', alignItems:'center', justifyContent:'space-between',marginBottom:25}}>
+
+
+          {/* gọi data_audio_list cho chart_list */}
+        <FlatList
+          data={songs} 
+          key={(item) => item.id}
+          renderItem={({ item }) => (
+    
+            <TouchableOpacity style={{display:'flex', flexDirection:'row', alignItems:'center', justifyContent:'space-between',marginBottom:25}}>
             <View style={{flexDirection:'row', alignItems:'center', gap:15}}>
                     {/** Image music */}
-                    <Image  source={require("../assets/image/Audio Listing - Search Results/Image 84.png")} style={{width:70, height:70}}/>
+                    <Image source={item.image} style={{width:70, height:70}}/>
                     {/** The information music */}
                     <View style={{flexDirection:'column'}}>
                         {/** Name music */}
-                        <Text style={{fontSize: 16, lineHeight:24,fontWeight:'500', color:'#171A1FFF'}}>title</Text>
-                        <Text style={{fontSize: 14, lineHeight:24,fontWeight:'400', color:'#565E6CFF'}}>artist</Text>
+                        <Text style={{fontSize: 16, lineHeight:24,fontWeight:'500', color:'#171A1FFF'}}>{item.title}</Text>
+                        {/* tac gia */}
+                        <Text style={{fontSize: 14, lineHeight:24,fontWeight:'400', color:'#565E6CFF'}}>{item.artist}</Text>
                         {/** views and duration */}
                         <View style={{display:'flex', flexDirection:'row', alignItems:'center', gap:6}}>
                             <IconFe name="play" size={16} color="#9095A0FF"/>
-                            <Text style={{fontSize: 14, lineHeight:24,fontWeight:'400', color:'#565E6CFF', marginRight:8}}>playsM</Text>
+                            {/* songuoixem */}
+                            <Text style={{fontSize: 14, lineHeight:24,fontWeight:'400', color:'#565E6CFF', marginRight:8}}>{item.plays}</Text>
                             
                             {/**duration */}
                             <IconFnA name="circle" size={10} color="#9095A0FF"/>
-                            <Text style={{fontSize: 14, lineHeight:24,fontWeight:'400', color:'#565E6CFF'}}>duration</Text>
+                            {/* thoi gia */}
+          
+                            <Text style={{fontSize: 14, lineHeight:24,fontWeight:'400', color:'#565E6CFF'}}>{item.duration}</Text>
                         </View>
                     </View>
             </View>
@@ -94,98 +119,23 @@ import {
             <TouchableOpacity>
                 <Image source={require('../assets/image/Playlist Details - Audio Listing/Menu 5 2.png')} style={{width: 25, height: 25}}/>
             </TouchableOpacity>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={{display:'flex', flexDirection:'row', alignItems:'center', justifyContent:'space-between',marginBottom:25}}>
-            <View style={{flexDirection:'row', alignItems:'center', gap:15}}>
-                    {/** Image music */}
-                    <Image  source={require("../assets/image/Audio Listing - Search Results/Image 87.png")} style={{width:70, height:70}}/>
-                    {/** The information music */}
-                    <View style={{flexDirection:'column'}}>
-                        {/** Name music */}
-                        <Text style={{fontSize: 16, lineHeight:24,fontWeight:'500', color:'#171A1FFF'}}>title</Text>
-                        <Text style={{fontSize: 14, lineHeight:24,fontWeight:'400', color:'#565E6CFF'}}>artist</Text>
-                        {/** views and duration */}
-                        <View style={{display:'flex', flexDirection:'row', alignItems:'center', gap:6}}>
-                            <IconFe name="play" size={16} color="#9095A0FF"/>
-                            <Text style={{fontSize: 14, lineHeight:24,fontWeight:'400', color:'#565E6CFF', marginRight:8}}>playsM</Text>
-                            
-                            {/**duration */}
-                            <IconFnA name="circle" size={10} color="#9095A0FF"/>
-                            <Text style={{fontSize: 14, lineHeight:24,fontWeight:'400', color:'#565E6CFF'}}>duration</Text>
-                        </View>
-                    </View>
-            </View>
-                {/** button menu */}
-            <TouchableOpacity>
-                <Image source={require('../assets/image/Playlist Details - Audio Listing/Menu 5 2.png')} style={{width: 25, height: 25}}/>
-            </TouchableOpacity>
-
-
-        </TouchableOpacity>
-
-        <TouchableOpacity style={{display:'flex', flexDirection:'row', alignItems:'center', justifyContent:'space-between',marginBottom:25}}>
-            <View style={{flexDirection:'row', alignItems:'center', gap:15}}>
-                    {/** Image music */}
-                    <Image  source={require("../assets/image/Audio Listing - Search Results/Image 88.png")} style={{width:70, height:70}}/>
-                    {/** The information music */}
-                    <View style={{flexDirection:'column'}}>
-                        {/** Name music */}
-                        <Text style={{fontSize: 16, lineHeight:24,fontWeight:'500', color:'#171A1FFF'}}>title</Text>
-                        <Text style={{fontSize: 14, lineHeight:24,fontWeight:'400', color:'#565E6CFF'}}>artist</Text>
-                        {/** views and duration */}
-                        <View style={{display:'flex', flexDirection:'row', alignItems:'center', gap:6}}>
-                            <IconFe name="play" size={16} color="#9095A0FF"/>
-                            <Text style={{fontSize: 14, lineHeight:24,fontWeight:'400', color:'#565E6CFF', marginRight:8}}>playsM</Text>
-                            
-                            {/**duration */}
-                            <IconFnA name="circle" size={10} color="#9095A0FF"/>
-                            <Text style={{fontSize: 14, lineHeight:24,fontWeight:'400', color:'#565E6CFF'}}>duration</Text>
-                        </View>
-                    </View>
-            </View>
-                {/** button menu */}
-            <TouchableOpacity>
-                <Image source={require('../assets/image/Playlist Details - Audio Listing/Menu 5 2.png')} style={{width: 25, height: 25}}/>
-            </TouchableOpacity>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={{display:'flex', flexDirection:'row', alignItems:'center', justifyContent:'space-between',marginBottom:25}}>
-            <View style={{flexDirection:'row', alignItems:'center', gap:15}}>
-                    {/** Image music */}
-                    <Image  source={require("../assets/image/Audio Listing - Search Results/Image 88.png")} style={{width:70, height:70}}/>
-                    {/** The information music */}
-                    <View style={{flexDirection:'column'}}>
-                        {/** Name music */}
-                        <Text style={{fontSize: 16, lineHeight:24,fontWeight:'500', color:'#171A1FFF'}}>title</Text>
-                        <Text style={{fontSize: 14, lineHeight:24,fontWeight:'400', color:'#565E6CFF'}}>artist</Text>
-                        {/** views and duration */}
-                        <View style={{display:'flex', flexDirection:'row', alignItems:'center', gap:6}}>
-                            <IconFe name="play" size={16} color="#9095A0FF"/>
-                            <Text style={{fontSize: 14, lineHeight:24,fontWeight:'400', color:'#565E6CFF', marginRight:8}}>playsM</Text>
-                            
-                            {/**duration */}
-                            <IconFnA name="circle" size={10} color="#9095A0FF"/>
-                            <Text style={{fontSize: 14, lineHeight:24,fontWeight:'400', color:'#565E6CFF'}}>duration</Text>
-                        </View>
-                    </View>
-            </View>
-                {/** button menu */}
-            <TouchableOpacity>
-                <Image source={require('../assets/image/Playlist Details - Audio Listing/Menu 5 2.png')} style={{width: 25, height: 25}}/>
-            </TouchableOpacity>
-        </TouchableOpacity>
+        </TouchableOpacity>       
+    
+          )}
+          keyExtractor={(item) => item.id}
+          scrollEnabled={false}
+            />
 
         </ScrollView>
   
         <View style={styles.footer}>
           <TouchableOpacity style={styles.footerButton}>
-            <IconAnt name="home" size={25} color="#21c5db" />
-            <Text style={styles.footerTextActive}>Home</Text>
+            <IconAnt name="home" size={25} color="#565E6CFF" />
+            <Text style={styles.footerText}>Home</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.footerButton}>
-            <IconFe name="search" size={25} color="#565E6CFF" />
-            <Text style={styles.footerText}>Search</Text>
+            <IconFe name="search" size={25} color="#21c5db" />
+            <Text style={styles.footerTextActive}>Search</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.footerButton}>
             <IconAnt name="switcher" size={25} color="#565E6CFF" />
