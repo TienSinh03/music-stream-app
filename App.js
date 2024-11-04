@@ -24,7 +24,7 @@ export default function App() {
 
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home_AudioListing">
-        <Stack.Screen name="Home_AudioListing" component={Artist_Profile_Screen} options={{ headerShown: false }} />
+        <Stack.Screen name="Home_AudioListing" component={Home_AudioListing} options={{ headerShown: false }} />
         <Stack.Screen name="Playlist_Details" component={Playlist_Details} options={{ headerShown: false }} />  
         <Stack.Screen name="AudioListing_SearchResultsScreen" component={AudioListing_SearchResultsScreen} options={{ headerShown: false }} />
         <Stack.Screen name="MyLibrary" component={MyLibrary} options={{ headerShown: false }} />

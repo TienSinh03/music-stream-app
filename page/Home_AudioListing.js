@@ -68,6 +68,15 @@ const Item_popular_artists = ({artist, image}) => (
 ) 
 
 export default function Home_AudioListing({navigation, route}) {
+
+  // get random artists
+  const getPopularArtists = (artistsList) => {
+    return artistsList.slice(0, 3);
+  };
+  
+  const artistsPopuplar = getPopularArtists(artists);
+  console.log(artistsPopuplar);
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView  style={{marginLeft: 20}} showsVerticalScrollIndicator={false}>
@@ -213,7 +222,7 @@ export default function Home_AudioListing({navigation, route}) {
           {/** List popular artists */}
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
             <FlatList
-              data={artists}
+              data={artistsPopuplar}
               renderItem={({item}) =>(
                 <Item_popular_artists
                   artist={item.artist}
@@ -221,7 +230,7 @@ export default function Home_AudioListing({navigation, route}) {
                 />
               )}
               keyExtractor={item => item.id}
-              numColumns={3}
+              numColumns={6}
               scrollEnabled={false}
             />
           </ScrollView>
@@ -231,7 +240,7 @@ export default function Home_AudioListing({navigation, route}) {
       {/** action footer */}
       <View style={{display:'flex', flexDirection:'row', justifyContent:'space-between', alignItems:'center',paddingHorizontal:55,paddingVertical:20,backgroundColor:'white', borderTopWidth:1, borderColor:'#C4C4C4'}}>
         {/** button home */}
-        <TouchableOpacity style={{alignItems:'center'}}>
+        <TouchableOpacity style={{alignItems:'center'}} onPress={() => navigation.popToTop()}>
           <IconAnt name="home" size={25} color="#21c5db"/>
           <Text style={{fontSize:14, lineHeight:24, fontWeight:'400', color:'#21c5db'}}>Home</Text>
         </TouchableOpacity>
