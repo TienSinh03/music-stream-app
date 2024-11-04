@@ -11,6 +11,9 @@ import PlayanAudio from './page/Play_an_AudioScreen';
 
 import AudioListing_SearchResultsScreen from './page/AudioListing_SearchResultsScreen';
 
+import Artist_Profile_Screen from './page/Artist_Profile_Screen';
+
+
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -20,7 +23,7 @@ export default function App() {
 
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home_AudioListing">
-        <Stack.Screen name="Home_AudioListing" component={Home_AudioListing} options={{ headerShown: false }} />
+        <Stack.Screen name="Home_AudioListing" component={Artist_Profile_Screen} options={{ headerShown: false }} />
         <Stack.Screen name="Playlist_Details" component={Playlist_Details} options={{ headerShown: false }} />  
         <Stack.Screen name="AudioListing_SearchResultsScreen" component={AudioListing_SearchResultsScreen} options={{ headerShown: false }} />
 
@@ -31,6 +34,8 @@ export default function App() {
             ...TransitionPresets.FadeFromBottomAndroid, // Hiệu ứng trượt từ dưới lên khi mở màn hình và từ trên xuống khi quay lại
           }}
         />
+        <Stack.Screen name="ArtistProfile" component={Artist_Profile_Screen} options={{ headerShown: false }} />
+
       </Stack.Navigator>
     </NavigationContainer>
   );
