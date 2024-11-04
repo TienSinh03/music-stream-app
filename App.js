@@ -10,10 +10,11 @@ import Playlist_Details from './page/Playlist_Details_Screen';
 import PlayanAudio from './page/Play_an_AudioScreen';
 
 import AudioListing_SearchResultsScreen from './page/AudioListing_SearchResultsScreen';
-
 import MyLibrary from './page/MyLibrary';
 
+
 import Artist_Profile_Screen from './page/Artist_Profile_Screen';
+
 
 const Stack = createStackNavigator();
 
@@ -29,7 +30,9 @@ export default function App() {
         <Stack.Screen name="AudioListing_SearchResultsScreen" component={AudioListing_SearchResultsScreen} options={{ headerShown: false }} />
         <Stack.Screen name="MyLibrary" component={MyLibrary} options={{ headerShown: false }} />
         {/* MyLibrary */}
-        <Stack.Screen name="PlayanAudio" component={PlayanAudio}
+        <Stack.Screen
+          name="PlayanAudio"
+          component={PlayanAudio}
           options={{
             headerShown: false,
             gestureDirection: 'vertical', // Cấu hình hướng vuốt
