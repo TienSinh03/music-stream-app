@@ -13,6 +13,8 @@ import {
   Dimensions,
 } from "react-native";
 import React, { useEffect, useState } from "react";
+import { v4 as uuidv4 } from 'uuid';
+
 
 import IconFe from "react-native-vector-icons/Feather";
 import IconAnt from "react-native-vector-icons/AntDesign";
@@ -56,10 +58,20 @@ export default function SearchAudio({ navigation, route,}) {
             albums.title.toLowerCase().includes(trimmedInput)
         );
 
+        const combinedResults = [
+            ...filteredSongs.map((song) => ({ ...song, type: 'song'})),
+            ...filteredAlbums.map((album) => ({ ...album, type: 'album' })),
+            ...filteredArtists.map((artist) => ({ ...artist, type: 'artist' })),
+          ];
         // Kết hợp kết quả
-        setSearchResults([...filteredSongs, ...filteredArtists, ...filteredAlbums]);
+        setSearchResults(combinedResults);
     };
 
+    console.log(searchResults);
+
+    const handleEnterSearchResults = () => {
+        navigation.navigate('AudioListing_SearchResultsScreen', { query: searchResults, text: inputText });
+    }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -73,10 +85,11 @@ export default function SearchAudio({ navigation, route,}) {
           onBlur={() => setIsFocused(false)}
           value={inputText}
           onChangeText={handleSearch}
+          onSubmitEditing={handleEnterSearchResults}
         />
 
         {inputText.length > 0 ?
-            <TouchableOpacity onPress={() => setInputText('')}>
+            <TouchableOpacity onPress={() => {setInputText(''), setSearchResults([])}}>
                 <IconFnA name="x-circle-fill" size={20} style={styles.cancelIcon} />
             </TouchableOpacity>
         : null}
@@ -101,14 +114,14 @@ export default function SearchAudio({ navigation, route,}) {
       <View style={styles.footer}>
           {/** button home */}
           <TouchableOpacity style={{alignItems:'center'}} onPress={() => navigation.popToTop()}>
-            <IconAnt name="home" size={25} color="#21c5db"/>
-            <Text style={{fontSize:14, lineHeight:24, fontWeight:'400', color:'#21c5db'}}>Home</Text>
+            <IconAnt name="home" size={25} color="#565E6CFF"/>
+            <Text style={{fontSize:14, lineHeight:24, fontWeight:'400', color:'#565E6CFF'}}>Home</Text>
           </TouchableOpacity>
   
           {/** button search */}
           <TouchableOpacity style={{alignItems:'center'}}>
-            <IconFe name="search" size={25} color="#565E6CFF"/>
-            <Text style={{fontSize:14, lineHeight:24, fontWeight:'400', color:'#565E6CFF'}}>Search</Text>
+            <IconFe name="search" size={25} color="#21c5db"/>
+            <Text style={{fontSize:14, lineHeight:24, fontWeight:'400', color:'#21c5db'}}>Search</Text>
           </TouchableOpacity> 
   
           {/** button feed */}
