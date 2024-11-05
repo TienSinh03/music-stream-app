@@ -48,7 +48,7 @@ import {
                         onPress={() => {
                             navigation.dispatch(
                                 CommonActions.navigate({
-                                    name: route.params?.previousScreen === "Playlist_Details" ? "Playlist_Details" : "ArtistProfile",
+                                    name: route.params?.previousScreen,
                                     params: { 
                                         dataFindId: song, 
                                         albumsSong: albums, 
