@@ -20,7 +20,7 @@ import IconIon from "react-native-vector-icons/Ionicons";
 import IconFnA from "react-native-vector-icons/Octicons";
 import IconEnty from "react-native-vector-icons/Entypo";
 
-import { songs } from "../data/data_audio";
+import { songs, artists,albumsSong } from "../data/data_audio";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -29,6 +29,37 @@ export default function SearchAudio({ navigation, route,}) {
 
     const [isFocused, setIsFocused] = useState(false);
     const [inputText, setInputText] = useState('');
+
+    const [searchResults, setSearchResults] = useState([]);
+
+    const handleSearch = (text) => {
+        setInputText(text);
+
+        const trimmedInput = text.trim().toLowerCase();
+        
+        if (trimmedInput === '') {
+            setSearchResults([]);
+            return;
+        }
+
+        // Tìm kiếm trong danh sách bài hát
+        const filteredSongs = songs.filter((song) =>
+            song.title.toLowerCase().includes(trimmedInput) 
+        );
+
+        // Tìm kiếm trong danh sách nghệ sĩ
+        const filteredArtists = artists.filter((artist) =>
+            artist.artistName.toLowerCase().includes(trimmedInput)
+        );
+        // Tìm kiếm trong danh sách albums
+        const filteredAlbums = albumsSong.filter((albums) =>
+            albums.title.toLowerCase().includes(trimmedInput)
+        );
+
+        // Kết hợp kết quả
+        setSearchResults([...filteredSongs, ...filteredArtists, ...filteredAlbums]);
+    };
+
 
   return (
     <SafeAreaView style={styles.container}>
@@ -41,7 +72,7 @@ export default function SearchAudio({ navigation, route,}) {
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           value={inputText}
-          onChangeText={(text) => setInputText(text)}
+          onChangeText={handleSearch}
         />
 
         {inputText.length > 0 ?
@@ -52,7 +83,18 @@ export default function SearchAudio({ navigation, route,}) {
       </View>
 
       <ScrollView style={{marginHorizontal:20}} showsVerticalScrollIndicator={false}>
-
+        <View style={{marginTop:20}}>
+        <FlatList
+                data={searchResults}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({ item }) => (
+                    <Text style={styles.resultText}>
+                        {item.title || item.artistName}
+                    </Text>
+                )}
+                scrollEnabled={false}
+            />
+        </View>
       </ScrollView>
 
       {/** action footer */}
@@ -117,6 +159,12 @@ const styles = StyleSheet.create({
   cancelIcon: {
     paddingHorizontal: 10,
   },
+  resultText: {
+    fontSize: 16,
+    paddingVertical: 8,
+    borderBottomWidth: 1,
+    borderColor: '#ddd',
+},
   footer:{display:'flex', flexDirection:'row', justifyContent:'space-between', alignItems:'center',paddingHorizontal:55,paddingVertical:20,backgroundColor:'white', borderTopWidth:1, borderColor:'#C4C4C4'}
 
 });
