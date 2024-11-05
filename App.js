@@ -14,6 +14,7 @@ import MyLibrary from './page/MyLibrary';
 import MyLibrary_Playlist from './page/MyLibrary_Playlist';
 
 import Artist_Profile_Screen from './page/Artist_Profile_Screen';
+import SearchAudio from './page/SearchAudio';
 
 
 const Stack = createStackNavigator();
@@ -25,13 +26,11 @@ export default function App() {
 
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home_AudioListing">
-        <Stack.Screen name="Home_AudioListing" component={MyLibrary_Playlist} options={{ headerShown: false }} />
+        <Stack.Screen name="Home_AudioListing" component={SearchAudio} options={{ headerShown: false }} />
         <Stack.Screen name="Playlist_Details" component={Playlist_Details} options={{ headerShown: false }} />  
         <Stack.Screen name="AudioListing_SearchResultsScreen" component={AudioListing_SearchResultsScreen} options={{ headerShown: false }} />
         <Stack.Screen name="MyLibrary" component={MyLibrary} options={{ headerShown: false }} />
         <Stack.Screen name="MyLibrary_Playlist" component={MyLibrary_Playlist} options={{ headerShown: true }} />
-
-
 
         {/* MyLibrary */}
         <Stack.Screen
@@ -44,6 +43,8 @@ export default function App() {
           }}
         />
         <Stack.Screen name="ArtistProfile" component={Artist_Profile_Screen} options={{ headerShown: false }} />
+        <Stack.Screen name="SearchAudio" component={SearchAudio} options={{ headerShown: false }} />
+
 
       </Stack.Navigator>
     </NavigationContainer>
