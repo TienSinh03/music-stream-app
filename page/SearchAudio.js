@@ -12,7 +12,7 @@ import {
   ImageBackground,
   Dimensions,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { v4 as uuidv4 } from 'uuid';
 
 
@@ -33,6 +33,14 @@ export default function SearchAudio({ navigation, route,}) {
     const [inputText, setInputText] = useState('');
 
     const [searchResults, setSearchResults] = useState([]);
+
+    // auto focus text input
+    const textInputRef = useRef(null);
+    useEffect(() => {
+      if (textInputRef.current) {
+        textInputRef.current.focus();
+      }
+    }, []);
 
     const handleSearch = (text) => {
         setInputText(text);
@@ -79,6 +87,7 @@ export default function SearchAudio({ navigation, route,}) {
       <View style={[styles.inputSearch, isFocused && styles.inputSearchFocused]}>
         <IconFe name="search" size={20} />
         <TextInput
+          ref={textInputRef}
           placeholder="What you want to listen to"
           style={styles.textInputSearch}
           onFocus={() => setIsFocused(true)}

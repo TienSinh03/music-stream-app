@@ -110,13 +110,13 @@ export default function Home_AudioListing({navigation, route}) {
           <Text style={styles.textUser}>Ashley Scott</Text>
 
           {/* Input search */}
-          <View style={styles.inputSearch}>
+          <TouchableOpacity style={styles.inputSearch} onPress={() => navigation.navigate('SearchAudio')}>
             <IconFe name="search" size={20} />
             <TextInput
               placeholder="What you want to listen to"
               style={styles.textInputSearch}
             />
-          </View>
+          </TouchableOpacity>
         </View>
 
         {/* Suggestion */}
@@ -246,7 +246,7 @@ export default function Home_AudioListing({navigation, route}) {
         </TouchableOpacity>
 
         {/** button search */}
-        <TouchableOpacity style={{alignItems:'center'}}>
+        <TouchableOpacity style={{alignItems:'center'}} onPress={() => navigation.navigate('SearchAudio')}>
           <IconFe name="search" size={25} color="#565E6CFF"/>
           <Text style={{fontSize:14, lineHeight:24, fontWeight:'400', color:'#565E6CFF'}}>Search</Text>
         </TouchableOpacity> 
