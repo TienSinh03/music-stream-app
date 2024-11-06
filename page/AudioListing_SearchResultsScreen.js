@@ -33,7 +33,6 @@ export default function AudioListing_SearchResultsScreen({  navigation,  route})
 
   const [isFocused, setIsFocused] = useState(false);
 
-
   const [inputText, setInputText] = useState(route.params?.text || "");
   const [searchResults, setSearchResults] = useState(route.params?.query || []);
 
@@ -41,12 +40,16 @@ export default function AudioListing_SearchResultsScreen({  navigation,  route})
   const [artistSearch, setArtistSearch] = useState([]);
   const [albumSearch, setAlbumSearch] = useState([]);
 
+  // find the song when clicked on the song
   const [song, setSong] = useState();
+
+  //phan loai theo type
+  const [selectedType, setSelectType] = useState('All');
 
   // display the song small
   const dataSongId = route.params?.dataFindId ? route.params?.dataFindId : null;
 
-  
+
   // Search handle
   const handleSearch = (text) => {
     setInputText(text);
@@ -71,12 +74,17 @@ export default function AudioListing_SearchResultsScreen({  navigation,  route})
     setSearchResults(combinedResults);
   };
 
+  // filter the data  by type 
+  const filteredDataByType = selectedType === 'All' ?
+        searchResults : 
+        searchResults.filter((item) => item.type === selectedType);
+
   useEffect(() => {
     const songs =[];
     const artists =[];
     const albums =[];
 
-    searchResults.forEach((result) => {
+    filteredDataByType.forEach((result) => {
       if (result.type === "song") {
         songs.push(result);
       } else if (result.type === "artist") {
@@ -89,15 +97,15 @@ export default function AudioListing_SearchResultsScreen({  navigation,  route})
     setSongSearch(songs);
     setArtistSearch(artists);
     setAlbumSearch(albums);
-  }, [searchResults]);
-
-  console.log(searchResults);
+  }, [searchResults, selectedType]);
+ 
   
   const handelArtistByID = (id) => {
     var artist= artists.find((item) => item.id === id);
     return artist;
   }
 
+  // 
   const [selectedPause, setSelectedPause] = useState(false);
 
   useEffect(() => {
@@ -139,18 +147,15 @@ export default function AudioListing_SearchResultsScreen({  navigation,  route})
       <ScrollView style={styles.scrollView}>
         
         <View style={styles.categoryRow}>
-          <View style={styles.category}>
-            <Text style={styles.categoryText}>All</Text>
-          </View>
-          <View style={styles.category}>
-            <Text style={styles.categoryText}>Tracks</Text>
-          </View>
-          <View style={styles.category}>
-            <Text style={styles.categoryText}>Albums</Text>
-          </View>
-          <View style={styles.category}>
-            <Text style={styles.categoryText}>Artists</Text>
-          </View>
+
+          {["All", "song", "album", "artist"].map((type) => (
+            <TouchableOpacity 
+              key={type} 
+              style={[styles.category, {borderColor: selectedType === type ? '#21c5db' : 'transparent', borderBottomWidth: selectedType === type ? 2 : 0}]}  
+              onPress={() => setSelectType(type)}>
+              <Text style={[styles.categoryText, {color: selectedType === type ? '#21c5db' : '#565E6C'}]}>{type.charAt(0).toUpperCase() + type.slice(1)}</Text>
+            </TouchableOpacity>
+          ))}
         </View>
 
         {/* gọi data_audio_list cho tac_gia */}
@@ -291,7 +296,7 @@ export default function AudioListing_SearchResultsScreen({  navigation,  route})
             <TouchableOpacity style ={{backgroundColor:'#171A1FFF', width:'100%', display:'flex', flexDirection:'row', alignItems:'center', justifyContent:'space-between', padding:15}}
                 onPress={() => navigation.navigate(
                     "PlayanAudio", 
-                    {dataFindId: dataSongId, idChart: route.params?.idChart, selectedPause: selectedPause, artist: route.params?.artist}
+                    {dataFindId: dataSongId, selectedPause: selectedPause, artist: route.params?.artist, previousScreen: 'AudioListing_SearchResultsScreen'}
                 )}
             >
                 
@@ -371,11 +376,12 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     marginBottom: 20,
-    marginHorizontal: 20,
   },
   category: {
     alignItems: "center",
-    paddingVertical: 21,
+    paddingVertical: 15,
+    borderBottomWidth:2,
+    width:'25%'
   },
   inputSearch: {
     display: "flex",
@@ -404,8 +410,9 @@ const styles = StyleSheet.create({
     marginLeft: 24,
   },
   categoryText: {
-    color: "#565E6C",
-    fontSize: 14,
+    fontSize: 16,
+    fontWeight: "400",
+    lineHeight: 22
   },
   categoryUnderline: {
     height: 4,
