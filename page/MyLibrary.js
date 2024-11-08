@@ -11,17 +11,39 @@ import {
   StatusBar,
   Dimensions,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import IconFe from "react-native-vector-icons/Feather";
 import IconAnt from "react-native-vector-icons/AntDesign";
 import IconIon from "react-native-vector-icons/Ionicons";
 import IconFnA from "react-native-vector-icons/FontAwesome";
-import { songs } from "../data/data_audio";
+
+import { songs, myLibrary,artists, albumsSong } from "../data/data_audio";
 
 const screenWidth = Dimensions.get("window").width;
 
+
 export default function MyLibrary() {
   const [isFollowing, setIsFollowing] = useState(false);
+  
+  // set data for categories in MyLibrary
+  const [songMyLibrary, setSongMyLibrary] = useState([]);
+  const [artistMyLibrary, setArtistMyLibrary] = useState([]);
+  const [albumMyLibrary, setAlbumMyLibrary] = useState([]);
+  const [playlistMyLibrary, setPlaylistMyLibrary] = useState([]);
+
+  useEffect(() => {
+    myLibrary.map((item) => {
+      setSongMyLibrary(item.songs);
+      setArtistMyLibrary(item.artists);
+      setAlbumMyLibrary(item.albumsSong);
+      setPlaylistMyLibrary(item.playLists);
+    })
+  },[myLibrary]);
+
+  const handelArtistByID = (id) => {
+    var artist= artists.find((item) => item.id === id);
+    return artist;
+  }
 
   const toggleFollow = () => {
     setIsFollowing(!isFollowing);
@@ -33,39 +55,34 @@ export default function MyLibrary() {
         <Image source={item.image} style={styles.musicImage} />
         <View>
           <Text style={styles.musicTitle}>{item.title}</Text>
-          <Text style={styles.musicArtist}>{item.artist}</Text>
+          <Text style={styles.musicArtist}>{handelArtistByID(item.artist).artistName}</Text>
           <View style={styles.musicDetails}>
             <IconFe name="play" size={16} color="#9095A0FF" />
-            <Text style={styles.musicDetailText}>{item.plays}</Text>
+            <Text style={styles.musicDetailText}>{item.plays}M</Text>
             <IconFnA name="circle" size={10} color="#9095A0FF" />
             <Text style={styles.musicDetailText}>{item.duration}</Text>
           </View>
         </View>
       </View>
       <TouchableOpacity>
-        <IconAnt name="heart" size={15} style={styles.userIcon} color="#01bdd6" />
+        <IconAnt name="heart" size={20} style={styles.userIcon} color="#01bdd6" />
       </TouchableOpacity>
     </TouchableOpacity>
   );
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.scrollView}>
-      <View style={{  flexDirection: "row",  alignItems: "center", justifyContent: "space-between"}}>
-        <Text style={styles.artistName}>Your Library</Text>
-        <View style={styles.inputSearch}>
-            <TextInput
-            placeholder="What you want to library"
-            style={styles.textInputSearch}
-            />
-            <IconFe name="search" size={20} color="#BCC1CAFF" />
-        </View>
+      <View style={{  flexDirection: "row",  alignItems: "center", justifyContent: "space-between" , paddingHorizontal:20}}>
+        <Text style={{fontSize:20, fontWeight:'bold'}}>Your Library</Text>
+        <TouchableOpacity style={styles.inputSearch}>
+            <IconFe name="search" size={25} color="#BCC1CAFF" />
+        </TouchableOpacity>
       </View>
 
 
         <View style={styles.categoryContainer}>
           <ScrollView
-            horizontal
+            horizontal={true}
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.categoryRow}
           >
@@ -77,28 +94,97 @@ export default function MyLibrary() {
           </ScrollView>
         </View>
 
-        <TouchableOpacity style={styles.artistRow}>
-          <Image
-            source={require("../assets/image/Audio Listing - Search Results/Image 85.png")}
-            resizeMode="stretch"
-            style={styles.artistImage}
-          />
-          <View style={styles.artistInfo}>
-            <Text style={styles.artistName}>Mer Watson</Text>
-            <View style={styles.followersRow}>
-              <IconAnt name="user" size={15} style={styles.userIcon} />
-              <Text style={styles.followersText}>1.234K Followers</Text>
-            </View>
-          </View>
-          <TouchableOpacity style={styles.followButton} onPress={toggleFollow}>
-            <Text style={styles.followButtonText}>
-              {isFollowing ? 'Unfollow' : 'Follow'}
-            </Text>
-          </TouchableOpacity>
-        </TouchableOpacity>
-
+      <ScrollView style={styles.scrollView}>
+      
+        {/* Artists */}
         <FlatList
-          data={songs}
+          data={artistMyLibrary}
+          renderItem={({ item }) => (
+            <TouchableOpacity style={styles.artistRow}>
+              <Image
+                source={item.image}
+                resizeMode="stretch"
+                style={styles.artistImage}
+              />
+              <View style={styles.artistInfo}>
+                <Text style={styles.artistName}>{item.artistName}</Text>
+                <View style={styles.followersRow}>
+                  <IconAnt name="user" size={15} style={styles.userIcon} />
+                  <Text style={styles.followersText}>1.234K Followers</Text>
+                </View>
+              </View>
+              <TouchableOpacity style={styles.followButton} onPress={toggleFollow}>
+                <Text style={styles.followButtonText}>
+                  {isFollowing ? 'Unfollow' : 'Follow'}
+                </Text>
+              </TouchableOpacity>
+            </TouchableOpacity>
+          )}
+
+          keyExtractor={(item) => item.id.toString()}
+          scrollEnabled={false}        
+        />
+
+        {/* albumMyLibrary */}
+        <FlatList
+          data={albumMyLibrary}
+          renderItem={({ item }) => (
+            <TouchableOpacity style={styles.artistRow}>
+              <Image
+                source={item.image}
+                resizeMode="stretch"
+                style={styles.musicImage}
+              />
+              <View style={styles.artistInfo}>
+                <Text style={styles.artistName}>{item.title}</Text>
+                <View style={[styles.followersRow, {gap:10}]}>
+                  <Text style={styles.musicArtist}>{item.artist}</Text>
+                  <IconFnA name="circle" size={10} color="#9095A0FF" />
+                  <Text style={styles.musicArtist}>{item.songs.length} songs</Text>
+                </View>
+              </View>
+              <TouchableOpacity>
+                <IconAnt size={25} color="black" name="right" />
+              </TouchableOpacity>
+            </TouchableOpacity>
+          )}
+
+          keyExtractor={(item) => item.id.toString()}
+          scrollEnabled={false}        
+        />
+
+        {/* albumMyLibrary */}
+        <FlatList
+          data={playlistMyLibrary}
+          renderItem={({ item }) => (
+            <TouchableOpacity style={styles.artistRow}>
+              <Image
+                source={item.image}
+                resizeMode="stretch"
+                style={styles.musicImage}
+              />
+              <View style={styles.artistInfo}>
+                <Text style={styles.artistName}>{item.title}</Text>
+                <View style={[styles.followersRow, {gap:10}]}>
+                  <Text style={styles.musicArtist}>{item.artists}</Text>
+                  <IconFnA name="circle" size={10} color="#9095A0FF" />
+                  <Text style={styles.musicArtist}>{item.songs.length} songs</Text>
+                </View>
+              </View>
+              <TouchableOpacity>
+                <IconAnt size={25} color="black" name="right" />
+              </TouchableOpacity>
+            </TouchableOpacity>
+          )}
+
+          keyExtractor={(item) => item.id.toString()}
+          scrollEnabled={false}        
+        />
+        
+
+        {/* Songs */}
+        <FlatList
+          data={songMyLibrary}
           renderItem={renderSongItem}
           keyExtractor={(item) => item.id.toString()}
           scrollEnabled={false}
@@ -134,19 +220,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#FFFFFF",
+    paddingTop: StatusBar.currentHeight,
   },
   scrollView: {
     flex: 1,
-    paddingTop: 13,
     paddingHorizontal: 20,
   },
   inputSearch: {
     flexDirection: "row",
     alignItems: "center",
-    borderWidth: 1,
     borderColor: "#BCC1CAFF",
     padding: 10,
-    borderRadius: 22,
     marginVertical: 11,
   },
   textInputSearch: {
@@ -164,8 +248,8 @@ const styles = StyleSheet.create({
   category: {
     paddingVertical: 10,
     paddingHorizontal: 15,
-    backgroundColor: "#f2f2f2",
-    borderRadius: 15,
+    backgroundColor: "#F3F4F6",
+    borderRadius: 20,
     marginHorizontal: 5,
   },
   categoryText: {
@@ -205,7 +289,7 @@ const styles = StyleSheet.create({
   followButton: {
     padding: 10,
     backgroundColor: "#171a1f",
-    borderRadius: 15,
+    borderRadius: 20,
   },
   followButtonText: {
     color: "#FFFFFF",
@@ -235,14 +319,17 @@ const styles = StyleSheet.create({
     color: "#171A1FFF",
   },
   musicArtist: {
-    color: "#565E6CFF",
+    fontSize: 14,
+    lineHeight: 24,
+    fontWeight: "400",
+     color: "#565E6CFF",
   },
   musicDetails: {
     flexDirection: "row",
     alignItems: "center",
+    gap:10
   },
   musicDetailText: {
-    marginLeft: 5,
     color: "#565E6CFF",
   },
   menuIcon: {

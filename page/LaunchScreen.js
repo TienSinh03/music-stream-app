@@ -9,7 +9,7 @@ import {
 } from "react-native";
 
 
-export default function App() {
+export default function App({navigation}) {
   return (
     <SafeAreaView style={styles.container}>
     {/* Background Image */}
@@ -26,7 +26,7 @@ export default function App() {
         </TouchableOpacity>
 
         {/* Button Already have an account */}
-        <TouchableOpacity style={[styles.button, styles.buttonAlready]}>
+        <TouchableOpacity style={[styles.button, styles.buttonAlready]} onPress={() =>navigation.navigate('Home_AudioListing')}>
             <Text style={[styles.textButton,{ color: '#9d45efff'}]}>l already have an account</Text>
         </TouchableOpacity>
 

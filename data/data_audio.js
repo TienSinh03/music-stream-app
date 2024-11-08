@@ -284,5 +284,173 @@ const chart_list = [
     },
   ];
 
+  const myLibrary = [
+    {
+      name: "Jesss",
+      image: require('../assets/image/Artist Profile/Image user.png'),
+      songs:[
+        {
+          title: "FLOWER",
+          artist: "5",
+          plays: 2.1,
+          duration: "3:26",
+          image: require("../assets/image/Playlist Details - Audio Listing/Image 51.png"),
+          like: 12,
+          comment: 450,
+          albums_id: "1",
+          chart_id: "1",
+          id: "1",
+        },
+        {
+          title: "Shape of You",
+          artist: "3",
+          plays: 68,
+          duration: "3:35",
+          image: require("../assets/image/Playlist Details - Audio Listing/Image 52.png"),
+          like: 12,
+          comment: 450,
+          albums_id: "1",
+          chart_id: "1",
+          id: "2",
+        },
+        {
+          title: "Blinding Lights",
+          artist: "6",
+          plays: 93,
+          duration: "4:39",
+          image: require("../assets/image/Playlist Details - Audio Listing/Image 53.png"),
+          like: 12,
+          comment: 450,
+          albums_id: "1",
+          chart_id: "1",
+          id: "3",
+        },
+        {
+          title: "Levitating",
+          artist: "3",
+          plays: 9,
+          duration: "7:48",
+          image: require("../assets/image/Playlist Details - Audio Listing/Image 54.png"),
+          like: 12,
+          comment: 450,
+          albums_id: "1",
+          chart_id: "1",
+          id: "4",
+        },
+        {
+          title: "Astronaut in the Ocean",
+          artist: "7",
+          plays: 23,
+          duration: "3:36",
+          image: require("../assets/image/Playlist Details - Audio Listing/Image 55.png"),
+          like: 12,
+          comment: 450,
+          albums_id: "1",
+          chart_id: "1",
+          id: "5",
+        },
+        {
+          title: "Dynamite",
+          artist: "8",
+          plays: 10,
+          duration: "6:22",
+          image: require("../assets/image/Playlist Details - Audio Listing/Image 56.png"),
+          like: 12,
+          comment: 450,
+          albums_id: "1",
+          chart_id: "1",
+          id: "6",
+        }, 
+      ],
+      albumsSong: [
+        {
+          title: "ME",
+          artist:"Jessica Gonzalez",
+          image: require('../assets/image/Home - Audio Listing/Image 45.png'),
+          songs:["1","2","3"],
+          id: "1"
+        },
+      ],
+      playLists:[
+        {
+          title: "Lpsum sit nulla",
+          image: require('../assets/image/My Playlists/Image 110.png'),
+          songs:[
+            {
+              title: "Astronaut in the Ocean",
+              artist: "4",
+              plays: 93,
+              duration: "03:36",
+              image: require("../assets/image/Artist Profile/Image 69.png"),
+              like: 50,
+              comment: 600,
+              albums_id: "2",
+              chart_id: "2",
+              id: "1",
+            },
+            {
+              title: "Dynamite",
+              artist: "4",
+              plays: 93,
+              duration: "06:22",
+              image: require("../assets/image/Artist Profile/Image 70.png"),
+              like: 50,
+              comment: 600,
+              albums_id: "2",
+              chart_id: "2",
+              id: "2",
+            },
+          ],
+          artists: 'Ashley Scott',
+          id: "1",
+        },
+        {
+          title: "Occaecat aliq",
+          image: require('../assets/image/My Playlists/Image 111.png'),
+          songs:[
+            {
+              title: "Astronaut in the Ocean",
+              artist: "4",
+              plays: 93,
+              duration: "03:36",
+              image: require("../assets/image/Artist Profile/Image 69.png"),
+              like: 50,
+              comment: 600,
+              albums_id: "2",
+              chart_id: "2",
+              id: "1",
+            },
+            {
+              title: "Dynamite",
+              artist: "4",
+              plays: 93,
+              duration: "06:22",
+              image: require("../assets/image/Artist Profile/Image 70.png"),
+              like: 50,
+              comment: 600,
+              albums_id: "2",
+              chart_id: "2",
+              id: "2",
+            },
+          ],
+          artists: 'Jose Garciat',
+          id: "2",
+        },
+      ],
+      artists: [
+        {
+          artistName:"Mer Watson",
+          image: require('../assets/image/My Library/Image 107.png'),
+          id: "1"
+        },
+        {
+          artistName:"Brian Thomas",
+          image: require('../assets/image/Home - Audio Listing/Image 40.png'),
+          id: "2"
+        },
+      ],
+      id: "1"
+    }
+  ]
   
-    export { chart_list, albumsSong, artists,songs };
+    export { chart_list, albumsSong, artists,songs,myLibrary };
