@@ -11,7 +11,7 @@ import {
   StatusBar,
   Dimensions,
 } from "react-native";
-import React, { useState,useEffect } from "react";
+import React, { useState,useEffect, } from "react";
 import IconFe from "react-native-vector-icons/Feather";
 import IconAnt from "react-native-vector-icons/AntDesign";
 import IconIon from "react-native-vector-icons/Ionicons";
@@ -29,16 +29,43 @@ export default function MyLibrary() {
   const [songMyLibrary, setSongMyLibrary] = useState([]);
   const [artistMyLibrary, setArtistMyLibrary] = useState([]);
   const [albumMyLibrary, setAlbumMyLibrary] = useState([]);
+  const [newTagMyLibrary, setNewTagMyLibrary] = useState([]);
   const [playlistMyLibrary, setPlaylistMyLibrary] = useState([]);
 
+  const [selectedCategory, setSelectedCategory] = useState('All');
+
   useEffect(() => {
+    const songs =[];
+    const artists =[];
+    const albums =[];
+    const playlists =[];
+    const newTag = []
+
     myLibrary.map((item) => {
-      setSongMyLibrary(item.songs);
-      setArtistMyLibrary(item.artists);
-      setAlbumMyLibrary(item.albumsSong);
-      setPlaylistMyLibrary(item.playLists);
+      if( selectedCategory === 'Songs'){
+        songs.push(...item.songs);
+      } else if (selectedCategory === 'New tag') {
+        newTag.push();
+      } else if (selectedCategory === 'Artists') {
+        artists.push(...item.artists);
+      } else if ( selectedCategory === 'Albums') {
+        albums.push(...item.albumsSong);
+      } else if ( selectedCategory === 'Playlists') {
+        playlists.push(...item.playLists);
+      } else if (selectedCategory === 'All'){
+        songs.push(...item.songs);
+        artists.push(...item.artists);
+        albums.push(...item.albumsSong);
+        playlists.push(...item.playLists);      
+      }
     })
-  },[myLibrary]);
+    setSongMyLibrary(songs);
+    setArtistMyLibrary(artists);
+    setAlbumMyLibrary(albums);
+    setPlaylistMyLibrary(playlists);
+  },[myLibrary, selectedCategory]);
+
+  console.log(albumMyLibrary.songs);
 
   const handelArtistByID = (id) => {
     var artist= artists.find((item) => item.id === id);
@@ -48,6 +75,8 @@ export default function MyLibrary() {
   const toggleFollow = () => {
     setIsFollowing(!isFollowing);
   };
+
+
 
   const renderSongItem = ({ item }) => (
     <TouchableOpacity style={styles.musicItem}>
@@ -73,7 +102,9 @@ export default function MyLibrary() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={{  flexDirection: "row",  alignItems: "center", justifyContent: "space-between" , paddingHorizontal:20}}>
-        <Text style={{fontSize:20, fontWeight:'bold'}}>Your Library</Text>
+        <TouchableOpacity onPress={() => setSelectedCategory('All')}>
+          <Text style={{fontSize:20, fontWeight:'bold'}} >Your Library</Text>
+        </TouchableOpacity>
         <TouchableOpacity style={styles.inputSearch}>
             <IconFe name="search" size={25} color="#BCC1CAFF" />
         </TouchableOpacity>
@@ -87,7 +118,9 @@ export default function MyLibrary() {
             contentContainerStyle={styles.categoryRow}
           >
             {["Playlists", "New tag", "Songs", "Albums", "Artists"].map(item => (
-              <TouchableOpacity key={item} style={styles.category}>
+              <TouchableOpacity key={item} style={[styles.category,{backgroundColor: selectedCategory === item ? '#21c5db':'#F3F4F6'}]}
+                onPress={() => setSelectedCategory(item)}
+              >
                 <Text style={styles.categoryText}>{item}</Text>
               </TouchableOpacity>
             ))}
@@ -121,7 +154,7 @@ export default function MyLibrary() {
             </TouchableOpacity>
           )}
 
-          keyExtractor={(item) => item.id.toString()}
+          keyExtractor={(item) => item.id}
           scrollEnabled={false}        
         />
 
@@ -149,7 +182,7 @@ export default function MyLibrary() {
             </TouchableOpacity>
           )}
 
-          keyExtractor={(item) => item.id.toString()}
+          keyExtractor={(item) => item.id}
           scrollEnabled={false}        
         />
 
@@ -177,7 +210,7 @@ export default function MyLibrary() {
             </TouchableOpacity>
           )}
 
-          keyExtractor={(item) => item.id.toString()}
+          keyExtractor={(item) => item.id}
           scrollEnabled={false}        
         />
         
@@ -186,7 +219,7 @@ export default function MyLibrary() {
         <FlatList
           data={songMyLibrary}
           renderItem={renderSongItem}
-          keyExtractor={(item) => item.id.toString()}
+          keyExtractor={(item) => item.id}
           scrollEnabled={false}
           style={{ marginBottom: 80 }} // Avoid content being hidden by footer
         />
@@ -248,7 +281,6 @@ const styles = StyleSheet.create({
   category: {
     paddingVertical: 10,
     paddingHorizontal: 15,
-    backgroundColor: "#F3F4F6",
     borderRadius: 20,
     marginHorizontal: 5,
   },
