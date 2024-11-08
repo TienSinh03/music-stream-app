@@ -22,8 +22,8 @@ import { songs, myLibrary,artists, albumsSong } from "../data/data_audio";
 const screenWidth = Dimensions.get("window").width;
 
 
-export default function MyLibrary() {
-  const [isFollowing, setIsFollowing] = useState(false);
+export default function MyLibrary({navigation, route}) {
+  const [isFollowing, setIsFollowing] = useState(true);
   
   // set data for categories in MyLibrary
   const [songMyLibrary, setSongMyLibrary] = useState([]);
@@ -33,6 +33,15 @@ export default function MyLibrary() {
   const [playlistMyLibrary, setPlaylistMyLibrary] = useState([]);
 
   const [selectedCategory, setSelectedCategory] = useState('All');
+
+   // find the song when clicked on the song
+   const [song, setSong] = useState();
+
+   // display small the song when clicked on the song
+   const dataSongId = route.params?.dataFindId ? route.params?.dataFindId : null;
+
+   // set button pause or play 
+  const [selectedPause, setSelectedPause] = useState(false);
 
   useEffect(() => {
     const songs =[];
@@ -51,6 +60,10 @@ export default function MyLibrary() {
       } else if ( selectedCategory === 'Albums') {
         albums.push(...item.albumsSong);
       } else if ( selectedCategory === 'Playlists') {
+        navigation.navigate('MyLibrary_Playlist')
+        songs.push(...item.songs);
+        artists.push(...item.artists);
+        albums.push(...item.albumsSong);
         playlists.push(...item.playLists);
       } else if (selectedCategory === 'All'){
         songs.push(...item.songs);
@@ -76,10 +89,22 @@ export default function MyLibrary() {
     setIsFollowing(!isFollowing);
   };
 
-
+  const handelSongByID = (id) => {
+    var song = songMyLibrary.find((item) => item.id === id);
+    setSong(song);
+    navigation.navigate('PlayanAudio', {
+      dataFindId: song, 
+      selectedPause: selectedPause, 
+      image: song.image, 
+      artist: handelArtistByID(song.artist).artistName,
+      previousScreen: 'MyLibrary'
+    })
+  }
 
   const renderSongItem = ({ item }) => (
-    <TouchableOpacity style={styles.musicItem}>
+    <TouchableOpacity style={styles.musicItem} 
+    onPress={() => handelSongByID(item.id)}
+    >
       <View style={styles.musicInfo}>
         <Image source={item.image} style={styles.musicImage} />
         <View>
@@ -118,7 +143,7 @@ export default function MyLibrary() {
             contentContainerStyle={styles.categoryRow}
           >
             {["Playlists", "New tag", "Songs", "Albums", "Artists"].map(item => (
-              <TouchableOpacity key={item} style={[styles.category,{backgroundColor: selectedCategory === item ? '#21c5db':'#F3F4F6'}]}
+              <TouchableOpacity key={item} style={[styles.category,{backgroundColor: (selectedCategory === item && selectedCategory !== 'Playlists') ? '#21c5db':'#F3F4F6'}]}
                 onPress={() => setSelectedCategory(item)}
               >
                 <Text style={styles.categoryText}>{item}</Text>
@@ -133,7 +158,9 @@ export default function MyLibrary() {
         <FlatList
           data={artistMyLibrary}
           renderItem={({ item }) => (
-            <TouchableOpacity style={styles.artistRow}>
+            <TouchableOpacity style={styles.artistRow}
+            onPress={() => navigation.navigate('ArtistProfile',{artist_id: item.id, artist: item.artistName, artistImage: item.image})}
+            >
               <Image
                 source={item.image}
                 resizeMode="stretch"
@@ -224,6 +251,47 @@ export default function MyLibrary() {
           style={{ marginBottom: 80 }} // Avoid content being hidden by footer
         />
       </ScrollView>
+
+      {/** music playing screen small */}           
+      {(dataSongId) ?
+            <TouchableOpacity style ={{backgroundColor:'#171A1FFF', width:'100%', display:'flex', flexDirection:'row', alignItems:'center', justifyContent:'space-between', padding:15}}
+                onPress={() => navigation.navigate(
+                    "PlayanAudio", 
+                    {dataFindId: dataSongId, selectedPause: selectedPause, artist: route.params?.artist, previousScreen: 'MyLibrary'}
+                )}
+            >
+                
+            {/** Image and infor music playing */}
+            <View style={{display:'flex', flexDirection:'row', alignItems:'center', gap:15}}>
+                {/** Image music */}
+                <Image source={dataSongId.image} style={{width: 50, height: 50}}/>
+
+                {/** Infor */}
+                <View style={{flexDirection:'column'}}>
+                    {/** Name music */}
+                    <Text style={{fontSize: 16, lineHeight:24,fontWeight:'500', color:'white'}}>{dataSongId.title}</Text>
+
+                    {/**  */}
+                    <View style={{display:'flex', flexDirection:'row', alignItems:'center', gap:6}}>
+                        <Text style={{fontSize: 14, lineHeight:24,fontWeight:'400', color:'white', marginRight:8}}>{route.params?.albumsSong.title}</Text>
+                        
+                        {/**duration */}
+                        <IconFnA name="circle" size={10} color="white"/>
+                        <Text style={{fontSize: 14, lineHeight:24,fontWeight:'400', color:'white'}}>{route.params?.artist}</Text>
+                    </View>
+                </View>
+            </View>  
+
+            <View style={{flexDirection:'row', alignItems:'center', gap:25}}>
+                <IconAnt name="hearto" size={24} color="white"/>
+
+                <TouchableOpacity onPress={() => setSelectedPause(!selectedPause)}>
+                    {selectedPause ? <IconFe name="pause" size={24} color="white"/> : <IconFe name="play" size={24} color="white"/>}
+                </TouchableOpacity>
+                
+            </View>      
+            </TouchableOpacity>
+        : null}
 
       <View style={styles.footer}>
           <TouchableOpacity style={styles.footerButton}>
