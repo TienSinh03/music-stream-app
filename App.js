@@ -15,6 +15,7 @@ import MyLibrary_Playlist from './page/MyLibrary_Playlist';
 
 import Artist_Profile_Screen from './page/Artist_Profile_Screen';
 import SearchAudio from './page/SearchAudio';
+import SubscriptionPlan from './page/SubscriptionPlan_Screen';
 
 
 const Stack = createStackNavigator();
@@ -25,7 +26,7 @@ export default function App() {
 
     <NavigationContainer>
       <Stack.Navigator initialRouteName="LanchScreen">
-        <Stack.Screen name="LanchScreen" component={LanchScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="LanchScreen" component={SubscriptionPlan} options={{ headerShown: false }} />
         <Stack.Screen name="Home_AudioListing" component={Home_AudioListing} options={{ headerShown: false }} />
         <Stack.Screen name="Playlist_Details" component={Playlist_Details} options={{ headerShown: false }} />  
         <Stack.Screen name="AudioListing_SearchResultsScreen" component={AudioListing_SearchResultsScreen} options={{ headerShown: false }} />
@@ -44,6 +45,8 @@ export default function App() {
         />
         <Stack.Screen name="ArtistProfile" component={Artist_Profile_Screen} options={{ headerShown: false }} />
         <Stack.Screen name="SearchAudio" component={SearchAudio} options={{ headerShown: false }} />
+        <Stack.Screen name="SubscriptionPlan" component={SubscriptionPlan} options={{ headerShown: false }} />
+
 
 
       </Stack.Navigator>
