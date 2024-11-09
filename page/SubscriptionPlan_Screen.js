@@ -3,9 +3,6 @@ import {
     Text,
     View,
     SafeAreaView,
-    Image,
-    TextInput,
-    FlatList,
     TouchableOpacity,
     ScrollView,
     StatusBar,
@@ -96,7 +93,13 @@ import {
               </View>
             </ScrollView>
   
-            
+            {/* Title header */}
+            <Text style={styles.headerText}>...</Text>
+  
+            {/* Button back home */}
+            <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+              <Text style={styles.subscribeText}>Back home</Text>
+            </TouchableOpacity>
           </View>
         </ImageBackground>
       </SafeAreaView>

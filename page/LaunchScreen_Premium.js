@@ -24,7 +24,7 @@ import {
           <Text style={{textAlign:'center', fontSize:45, color:'white', fontWeight:'bold'}}>...</Text>
   
           {/* Button Create an account */}
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('SubscriptionPlan')}>
               <Text style={styles.textButton}>Start listening</Text>
           </TouchableOpacity>
   
