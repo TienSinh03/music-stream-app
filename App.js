@@ -25,12 +25,12 @@ export default function App() {
 
     <NavigationContainer>
       <Stack.Navigator initialRouteName="LanchScreen">
-        <Stack.Screen name="LanchScreen" component={MyLibrary} options={{ headerShown: false }} />
+        <Stack.Screen name="LanchScreen" component={LanchScreen} options={{ headerShown: false }} />
         <Stack.Screen name="Home_AudioListing" component={Home_AudioListing} options={{ headerShown: false }} />
         <Stack.Screen name="Playlist_Details" component={Playlist_Details} options={{ headerShown: false }} />  
         <Stack.Screen name="AudioListing_SearchResultsScreen" component={AudioListing_SearchResultsScreen} options={{ headerShown: false }} />
         <Stack.Screen name="MyLibrary" component={MyLibrary} options={{ headerShown: false }} />
-        <Stack.Screen name="MyLibrary_Playlist" component={MyLibrary_Playlist} options={{ headerShown: true }} />
+        <Stack.Screen name="MyLibrary_Playlist" component={MyLibrary_Playlist} options={{ headerShown: false }} />
 
         {/* MyLibrary */}
         <Stack.Screen

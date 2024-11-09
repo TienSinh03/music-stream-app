@@ -23,6 +23,7 @@ import IconFnA from "react-native-vector-icons/FontAwesome";
 import IconEnty from "react-native-vector-icons/Entypo";
 import IconOct from "react-native-vector-icons/Octicons";
 
+import Footer from '../component/footer';
 
 import { songs, artists, albumsSong } from "../data/data_audio";
 
@@ -291,65 +292,22 @@ export default function AudioListing_SearchResultsScreen({  navigation,  route})
         />
       </ScrollView>
 
-      {/** music playing screen small */}           
-      {(dataSongId) ?
-            <TouchableOpacity style ={{backgroundColor:'#171A1FFF', width:'100%', display:'flex', flexDirection:'row', alignItems:'center', justifyContent:'space-between', padding:15}}
-                onPress={() => navigation.navigate(
-                    "PlayanAudio", 
-                    {dataFindId: dataSongId, selectedPause: selectedPause, artist: route.params?.artist, previousScreen: 'AudioListing_SearchResultsScreen'}
-                )}
-            >
-                
-            {/** Image and infor music playing */}
-            <View style={{display:'flex', flexDirection:'row', alignItems:'center', gap:15}}>
-                {/** Image music */}
-                <Image source={dataSongId.image} style={{width: 50, height: 50}}/>
-
-                {/** Infor */}
-                <View style={{flexDirection:'column'}}>
-                    {/** Name music */}
-                    <Text style={{fontSize: 16, lineHeight:24,fontWeight:'500', color:'white'}}>{dataSongId.title}</Text>
-
-                    {/**  */}
-                    <View style={{display:'flex', flexDirection:'row', alignItems:'center', gap:6}}>
-                        <Text style={{fontSize: 14, lineHeight:24,fontWeight:'400', color:'white', marginRight:8}}>{route.params?.albumsSong.title}</Text>
-                        
-                        {/**duration */}
-                        <IconFnA name="circle" size={10} color="white"/>
-                        <Text style={{fontSize: 14, lineHeight:24,fontWeight:'400', color:'white'}}>{route.params?.artist}</Text>
-                    </View>
-                </View>
-            </View>  
-
-            <View style={{flexDirection:'row', alignItems:'center', gap:25}}>
-                <IconAnt name="hearto" size={24} color="white"/>
-
-                <TouchableOpacity onPress={() => setSelectedPause(!selectedPause)}>
-                    {selectedPause ? <IconFe name="pause" size={24} color="white"/> : <IconFe name="play" size={24} color="white"/>}
-                </TouchableOpacity>
-                
-            </View>      
-            </TouchableOpacity>
-        : null}
-
-      <View style={styles.footer} >
-        <TouchableOpacity style={styles.footerButton} onPress={() => navigation.popToTop()}>
-          <IconAnt name="home" size={25} color="#565E6CFF" />
-          <Text style={styles.footerText}>Home</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.footerButton}>
-          <IconFe name="search" size={25} color="#21c5db" />
-          <Text style={styles.footerTextActive}>Search</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.footerButton}>
-          <IconAnt name="switcher" size={25} color="#565E6CFF" />
-          <Text style={styles.footerText}>Feed</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.footerButton}>
-          <IconIon name="library-outline" size={25} color="#565E6CFF" />
-          <Text style={styles.footerText}>Library</Text>
-        </TouchableOpacity>
-      </View>
+      {/** Footer */}
+      <Footer 
+          dataSongId={dataSongId} 
+          onPressSmallMusic = {() => navigation.navigate(
+            "PlayanAudio", 
+            {dataFindId: dataSongId, selectedPause: selectedPause, artist: route.params?.artist, previousScreen: 'AudioListing_SearchResultsScreen'}
+          )}
+          selectedPause={selectedPause}
+          setSelectedPause={() => setSelectedPause(!selectedPause)}
+          navigatePoptoTop={() => navigation.popToTop()}
+          albumsSong={route.params?.albumsSong}
+          artists={route.params?.artist}
+          navigateToScreen={(screen) => navigation.navigate(screen)}
+          activeScreen={'AudioListing_SearchResultsScreen'}
+          showMusicInfo={true}
+        />
     </SafeAreaView>
   );
 }

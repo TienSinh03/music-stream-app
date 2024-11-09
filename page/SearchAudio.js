@@ -22,6 +22,8 @@ import IconIon from "react-native-vector-icons/Ionicons";
 import IconFnA from "react-native-vector-icons/Octicons";
 import IconEnty from "react-native-vector-icons/Entypo";
 
+import Footer from '../component/footer';
+
 import { songs, artists,albumsSong } from "../data/data_audio";
 
 const screenWidth = Dimensions.get("window").width;
@@ -119,32 +121,12 @@ export default function SearchAudio({ navigation, route,}) {
         </View>
       </ScrollView>
 
-      {/** action footer */}
-      <View style={styles.footer}>
-          {/** button home */}
-          <TouchableOpacity style={{alignItems:'center'}} onPress={() => navigation.popToTop()}>
-            <IconAnt name="home" size={25} color="#565E6CFF"/>
-            <Text style={{fontSize:14, lineHeight:24, fontWeight:'400', color:'#565E6CFF'}}>Home</Text>
-          </TouchableOpacity>
-  
-          {/** button search */}
-          <TouchableOpacity style={{alignItems:'center'}}>
-            <IconFe name="search" size={25} color="#21c5db"/>
-            <Text style={{fontSize:14, lineHeight:24, fontWeight:'400', color:'#21c5db'}}>Search</Text>
-          </TouchableOpacity> 
-  
-          {/** button feed */}
-          <TouchableOpacity style={{alignItems:'center'}}>
-            <IconAnt name="switcher" size={25} color="#565E6CFF"/>
-            <Text style={{fontSize:14, lineHeight:24, fontWeight:'400', color:'#565E6CFF'}}>Feed</Text>
-          </TouchableOpacity>
-  
-          {/** button library */}
-          <TouchableOpacity style={{alignItems:'center'}}>
-            <IconIon name="library-outline" size={25} color="#565E6CFF"/>
-            <Text style={{fontSize:14, lineHeight:24, fontWeight:'400', color:'#565E6CFF'}}>Library</Text>
-          </TouchableOpacity>
-        </View>
+      <Footer 
+        
+          navigateToScreen={(screen) => navigation.navigate(screen)}
+          activeScreen={'SearchAudio'}
+          showMusicInfo={false}
+        />
     </SafeAreaView>
   );
 }

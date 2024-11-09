@@ -20,7 +20,7 @@ import IconIon from "react-native-vector-icons/Ionicons";
 
 import { chart_list,artists,albumsSong } from "../data/data_audio";
 
-
+import Footer from '../component/footer';
 
 const screenWith = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -237,32 +237,11 @@ export default function Home_AudioListing({navigation, route}) {
         </View>
       </ScrollView>
 
-      {/** action footer */}
-      <View style={{display:'flex', flexDirection:'row', justifyContent:'space-between', alignItems:'center',paddingHorizontal:55,paddingVertical:20,backgroundColor:'white', borderTopWidth:1, borderColor:'#C4C4C4'}}>
-        {/** button home */}
-        <TouchableOpacity style={{alignItems:'center'}} onPress={() => navigation.popToTop()}>
-          <IconAnt name="home" size={25} color="#21c5db"/>
-          <Text style={{fontSize:14, lineHeight:24, fontWeight:'400', color:'#21c5db'}}>Home</Text>
-        </TouchableOpacity>
-
-        {/** button search */}
-        <TouchableOpacity style={{alignItems:'center'}} onPress={() => navigation.navigate('SearchAudio')}>
-          <IconFe name="search" size={25} color="#565E6CFF"/>
-          <Text style={{fontSize:14, lineHeight:24, fontWeight:'400', color:'#565E6CFF'}}>Search</Text>
-        </TouchableOpacity> 
-
-        {/** button feed */}
-        <TouchableOpacity style={{alignItems:'center'}}>
-          <IconAnt name="switcher" size={25} color="#565E6CFF"/>
-          <Text style={{fontSize:14, lineHeight:24, fontWeight:'400', color:'#565E6CFF'}}>Feed</Text>
-        </TouchableOpacity>
-
-        {/** button library */}
-        <TouchableOpacity style={{alignItems:'center'}}>
-          <IconIon name="library-outline" size={25} color="#565E6CFF"/>
-          <Text style={{fontSize:14, lineHeight:24, fontWeight:'400', color:'#565E6CFF'}}>Library</Text>
-        </TouchableOpacity>
-      </View>
+      <Footer 
+          navigateToScreen={(screen) => navigation.navigate(screen)}
+          activeScreen={'Home_AudioListing'}
+          showMusicInfo={false}
+        />
     </SafeAreaView>
   );
 }

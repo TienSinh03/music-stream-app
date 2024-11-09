@@ -22,7 +22,7 @@ import {
   import IconFnA from "react-native-vector-icons/FontAwesome";
   import IconEnty from "react-native-vector-icons/Entypo";
 
-  import { albumsSong } from "../data/data_audio";
+  import { albumsSong, artists } from "../data/data_audio";
     import Icon from "react-native-vector-icons/Feather";
   
   const screenWith = Dimensions.get("window").width;
@@ -33,8 +33,11 @@ import {
     const [selectedPause, setSelectedPause] = useState(route.params?.selectedPause);
 
     const song = route.params?.dataFindId;
+    console.log(song);
+
 
     const albums = albumsSong.find((item) => item.id === song.albums_id);
+    const itemArtist = artists.find((item) => item.id === song.artist);
 
     console.log(route.params?.previousScreen);
     return (
@@ -45,28 +48,28 @@ import {
                 <View style ={styles.viewHeader}>
                     <Text style={styles.textHeader}>Play</Text>
                     <IconAnt name="down" size={24} color="white"
-                        onPress={() => {
-                            navigation.dispatch(
-                                CommonActions.navigate({
-                                    name: route.params?.previousScreen,
-                                    params: { 
-                                        dataFindId: song, 
-                                        albumsSong: albums, 
-                                        idChart: route.params?.idChart,
-                                        selectedPause: selectedPause, 
-                                        image: song.image, 
-                                        artist: route.params?.artist
-                                    }
-                                })
-                            );
-                        }}
+                        onPress={() => navigation.navigate({
+                            name: route.params?.previousScreen,
+                            params: { 
+                                dataFindId: song, 
+                                albumsSong: albums, 
+                                idChart: route.params?.idChart,
+                                selectedPause: selectedPause, 
+                                image: song.image, 
+                                artist: route.params?.artist,
+                                artist_id: itemArtist.id,
+                                artistImage: itemArtist.image
+                            }
+                        })}                        
                     />
                 </View>
 
                 {/* View play music */}
                 <View style ={styles.viewPlayMusic}>
                     <Text style={styles.nameMusic}>{song.title}</Text>
-                    <TouchableOpacity style={{opacity:1}} onPress={() => navigation.navigate('ArtistProfile')}>
+                    <TouchableOpacity style={{opacity:1}} onPress={() => navigation.navigate('ArtistProfile',
+                        {artist_id: itemArtist.id, artist: itemArtist.artistName, artistImage: itemArtist.image}
+                    )}>
                         <Text style={styles.nameArtist}>{route.params?.artist}</Text>
                     </TouchableOpacity>
 

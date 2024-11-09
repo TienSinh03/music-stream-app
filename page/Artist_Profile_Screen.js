@@ -21,6 +21,7 @@ import {
   import IconEnty from "react-native-vector-icons/Entypo";
 
   import { chart_list,songs, artists, albumsSong } from "../data/data_audio";
+  import Footer from '../component/footer';
   
   const screenWith = Dimensions.get("window").width;
   const screenHeight = Dimensions.get("window").height;
@@ -235,75 +236,22 @@ const Item_Albumn = ({title, artist, image, navigation}) => (
             
         </ScrollView>
 
-         {/** music playing screen small */}           
-        {(dataSongId) ?
-            <TouchableOpacity style ={{backgroundColor:'#171A1FFF', width:'100%', display:'flex', flexDirection:'row', alignItems:'center', justifyContent:'space-between', padding:15}}
-                onPress={() => navigation.navigate(
-                    "PlayanAudio", 
-                    {dataFindId: dataSongId, idChart: route.params?.idChart, selectedPause: selectedPause, artist: route.params?.artist}
-                )}
-            >
-                
-            {/** Image and infor music playing */}
-            <View style={{display:'flex', flexDirection:'row', alignItems:'center', gap:15}}>
-                {/** Image music */}
-                <Image source={dataSongId.image} style={{width: 50, height: 50}}/>
-
-                {/** Infor */}
-                <View style={{flexDirection:'column'}}>
-                    {/** Name music */}
-                    <Text style={{fontSize: 16, lineHeight:24,fontWeight:'500', color:'white'}}>{dataSongId.title}</Text>
-
-                    {/**  */}
-                    <View style={{display:'flex', flexDirection:'row', alignItems:'center', gap:6}}>
-                        <Text style={{fontSize: 14, lineHeight:24,fontWeight:'400', color:'white', marginRight:8}}>{route.params?.albumsSong.title}</Text>
-                        
-                        {/**duration */}
-                        <IconFnA name="circle" size={10} color="white"/>
-                        <Text style={{fontSize: 14, lineHeight:24,fontWeight:'400', color:'white'}}>{route.params?.artist}</Text>
-                    </View>
-                </View>
-            </View>  
-
-            <View style={{flexDirection:'row', alignItems:'center', gap:25}}>
-                <IconAnt name="hearto" size={24} color="white"/>
-
-                <TouchableOpacity onPress={() => setSelectedPause(!selectedPause)}>
-                    {selectedPause ? <IconFe name="pause" size={24} color="white"/> : <IconFe name="play" size={24} color="white"/>}
-                </TouchableOpacity>
-                
-            </View>      
-            </TouchableOpacity>
-        : null}
-
-        
-  
-        {/** action footer */}
-        <View style={styles.footer}>
-          {/** button home */}
-          <TouchableOpacity style={{alignItems:'center'}} onPress={() => navigation.popToTop()}>
-            <IconAnt name="home" size={25} color="#21c5db"/>
-            <Text style={{fontSize:14, lineHeight:24, fontWeight:'400', color:'#21c5db'}}>Home</Text>
-          </TouchableOpacity>
-  
-          {/** button search */}
-          <TouchableOpacity style={{alignItems:'center'}}>
-            <IconFe name="search" size={25} color="#565E6CFF"/>
-            <Text style={{fontSize:14, lineHeight:24, fontWeight:'400', color:'#565E6CFF'}}>Search</Text>
-          </TouchableOpacity> 
-  
-          {/** button feed */}
-          <TouchableOpacity style={{alignItems:'center'}}>
-            <IconAnt name="switcher" size={25} color="#565E6CFF"/>
-            <Text style={{fontSize:14, lineHeight:24, fontWeight:'400', color:'#565E6CFF'}}>Feed</Text>
-          </TouchableOpacity>
-  
-          {/** button library */}
-          <TouchableOpacity style={{alignItems:'center'}}>
-            <IconIon name="library-outline" size={25} color="#565E6CFF"/>
-            <Text style={{fontSize:14, lineHeight:24, fontWeight:'400', color:'#565E6CFF'}}>Library</Text>
-          </TouchableOpacity>
-        </View>
+         {/** Footer */}
+        <Footer 
+          dataSongId={dataSongId} 
+          onPressSmallMusic = {() => navigation.navigate(
+            "PlayanAudio", 
+            {dataFindId: dataSongId, selectedPause: selectedPause, artist: route.params?.artist, previousScreen: 'ArtistProfile'}
+          )}
+          selectedPause={selectedPause}
+          setSelectedPause={() => setSelectedPause(!selectedPause)}
+          navigatePoptoTop={() => navigation.popToTop()}
+          albumsSong={route.params?.albumsSong}
+          artists={route.params?.artist}
+          navigateToScreen={(screen) => navigation.navigate(screen)}
+          activeScreen={'MyLibrary'}
+          showMusicInfo={true}
+        />
       </SafeAreaView>
     );
   }

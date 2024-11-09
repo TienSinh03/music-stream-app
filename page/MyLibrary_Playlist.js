@@ -21,7 +21,8 @@ import {
   import IconEnty from "react-native-vector-icons/Entypo";
   import IconMatter from "react-native-vector-icons/MaterialIcons";
   import IconMaterialIcons from "react-native-vector-icons/MaterialIcons";
-import { songs } from "../data/data_audio";
+  import { songs } from "../data/data_audio";
+  import Footer from "../component/footer";
   
   const screenWidth = Dimensions.get("window").width;
   const screenHeight = Dimensions.get("window").height;
@@ -32,72 +33,60 @@ import { songs } from "../data/data_audio";
   
   export default function MyLibrary_Playlist({ navigation, route }) {
 
-    console.log(songs);
+    const { playLists } = route.params;
     return (
       <SafeAreaView style={styles.container}>
+        {/* Header */}
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => navigation.navigate('MyLibrary', {playLists: playLists})}>
+              <IconAnt name="left" size={25} color="#9095A0FF"/>
+          </TouchableOpacity>
+          <Text style={{fontSize: 20, lineHeight: 26, fontWeight: '500', color: '#171A1FFF'}}>Playlist</Text>
+          <TouchableOpacity>
+              <IconFe name="cast" size={25} color="#9095A0FF"/>
+          </TouchableOpacity>
+        </View>
+        <Text style={{fontSize: 22, lineHeight: 32, fontWeight: 'bold', color: '#171A1FFF', marginLeft: 20, marginTop: 30, paddingVertical:10}}>Your playlists</Text>
+        
         <ScrollView style={styles.scrollView}>
-  
-
 
           {/* gọi data_audio_list cho chart_list */}
-        <FlatList
-          data={songs} 
-          key={(item) => item.id}
+          <FlatList
+          data={playLists}
           renderItem={({ item }) => (
-    
-            <TouchableOpacity style={{display:'flex', flexDirection:'row', alignItems:'center', justifyContent:'space-between',marginBottom:25}}>
-            <View style={{flexDirection:'row', alignItems:'center', gap:15}}>
-                    <Image source={item.image} style={{width:70, height:70}}/>
-                    <View style={{flexDirection:'column'}}>
-                        <Text style={{fontSize: 16, lineHeight:24,fontWeight:'500', color:'#171A1FFF'}}>{item.title}</Text>
-                        <View style={{display:'flex', flexDirection:'row', alignItems:'center', gap:6}}>
-                            <Text style={{fontSize: 14, lineHeight:24,fontWeight:'400', color:'#565E6CFF', marginRight:8}}>{item.plays}</Text>
-                        
-                            <IconFnA name="circle" size={10} color="#9095A0FF"/>          
-                            <Text style={{fontSize: 14, lineHeight:24,fontWeight:'400', color:'#565E6CFF'}}>{item.duration}</Text>
-                        </View>
-                    </View>
-            </View>
-                {/** button menu */}
-            <TouchableOpacity>
-             <IconMatter name="navigate-next" size={25} color="#9095A0FF"/>          
+            <TouchableOpacity style={styles.artistRow}>
+              <Image
+                source={item.image}
+                resizeMode="stretch"
+                style={styles.musicImage}
+              />
+              <View style={styles.artistInfo}>
+                <Text style={styles.artistName}>{item.title}</Text>
+                <View style={[styles.followersRow, {gap:10}]}>
+                  <Text style={styles.musicArtist}>{item.artists}</Text>
+                  <IconFnA name="circle" size={10} color="#9095A0FF" />
+                  <Text style={styles.musicArtist}>{item.songs.length} songs</Text>
+                </View>
+              </View>
+              <TouchableOpacity>
+                <IconAnt size={25} color="black" name="right" />
+              </TouchableOpacity>
             </TouchableOpacity>
-        </TouchableOpacity>       
-    
           )}
+
           keyExtractor={(item) => item.id}
-          scrollEnabled={false}
-            />
+          scrollEnabled={false}        
+        />
 
         </ScrollView>
   
-        <View >
-          <View style={styles.footer_add}>
-               <TouchableOpacity style={styles.footerButton}>
-               <IconMaterialIcons name="add-circle" size={35} color="#565E6CFF" />
-              </TouchableOpacity>
-          </View>
-
-          <View style={styles.footer}>
-            <TouchableOpacity style={styles.footerButton}>
-              <IconAnt name="home" size={25} color="#565E6CFF" />
-              <Text style={styles.footerText}>Home</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.footerButton}>
-              <IconFe name="search" size={25} color="#565E6CFF" />
-              <Text style={styles.footerText}>Search</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.footerButton}>
-              <IconAnt name="switcher" size={25} color="#565E6CFF" />
-              <Text style={styles.footerText}>Feed</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.footerButton}>
-              <IconIon name="library-outline" size={25} color="#21c5db" />
-              <Text style={styles.footerTextActive}>Library</Text>
-            </TouchableOpacity>
-          </View>
-
-        </View>
+        {/** Footer */}
+        <Footer 
+        
+          navigateToScreen={(screen) => navigation.navigate(screen)}
+          activeScreen={'MyLibrary'}
+          showMusicInfo={false}
+        />
       </SafeAreaView>
     );
   }
@@ -106,8 +95,14 @@ import { songs } from "../data/data_audio";
     container: {
       flex: 1,
       backgroundColor: "#FFFFFF",
-        marginTop: StatusBar.currentHeight || 0,
-
+      paddingTop: StatusBar.currentHeight || 0,
+    },
+    header: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      flexDirection: "row",
+      paddingHorizontal:20
     },
     scrollView: {
       flex: 1,
@@ -170,6 +165,12 @@ import { songs } from "../data/data_audio";
       marginBottom: 18,
 
     },
+    musicImage: {
+      width: 70,
+      height: 70,
+      borderRadius: 5,
+      marginRight: 15,
+    },
     artistImage: {
       borderRadius: 30,
       width: 60,
@@ -185,11 +186,18 @@ import { songs } from "../data/data_audio";
     artistName: {
       color: "#171A1F",
       fontSize: 16,
+      fontWeight:'500',
       marginBottom: 8,
     },
     followersRow: {
       flexDirection: "row",
       alignItems: "center",
+    },
+    musicArtist: {
+      fontSize: 14,
+      lineHeight: 24,
+      fontWeight: "400",
+       color: "#565E6CFF",
     },
     userIcon: {
       marginRight: 8,
