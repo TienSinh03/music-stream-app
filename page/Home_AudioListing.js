@@ -2,7 +2,6 @@ import {
   StyleSheet,
   Text,
   View,
-  SafeAreaView,
   Image,
   TextInput,
   FlatList,
@@ -12,7 +11,9 @@ import {
   ImageBackground,
   Dimensions
 } from "react-native";
+import { SafeAreaView } from 'react-native-safe-area-context';
 import React, { useEffect, useState } from "react";
+
 
 import IconFe from "react-native-vector-icons/Feather";
 import IconAnt from "react-native-vector-icons/AntDesign";
@@ -237,6 +238,7 @@ export default function Home_AudioListing({navigation, route}) {
         </View>
       </ScrollView>
 
+              
       <Footer 
           navigateToScreen={(screen) => navigation.navigate(screen)}
           activeScreen={'Home_AudioListing'}

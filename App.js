@@ -16,18 +16,19 @@ import MyLibrary_Playlist from './page/MyLibrary_Playlist';
 import Artist_Profile_Screen from './page/Artist_Profile_Screen';
 import SearchAudio from './page/SearchAudio';
 import SubscriptionPlan from './page/SubscriptionPlan_Screen';
+import TabNavigation from './navigation/TabNavigationBottom';
+
 
 
 const Stack = createStackNavigator();
-
 export default function App() {
   return (
 
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="LanchScreen">
+      <Stack.Navigator initialRouteName="MainTab">
         <Stack.Screen name="LanchScreen" component={LanchScreen} options={{ headerShown: false }} />
         <Stack.Screen name="Home_AudioListing" component={Home_AudioListing} options={{ headerShown: false }} />
-        <Stack.Screen name="Playlist_Details" component={Playlist_Details} options={{ headerShown: false }} />  
+        <Stack.Screen name="Playlist_Details" component={Playlist_Details} options={{ headerShown: false, gestureDirection: 'vertical', }} />  
         <Stack.Screen name="AudioListing_SearchResultsScreen" component={AudioListing_SearchResultsScreen} options={{ headerShown: false }} />
         <Stack.Screen name="MyLibrary" component={MyLibrary} options={{ headerShown: false }} />
         <Stack.Screen name="MyLibrary_Playlist" component={MyLibrary_Playlist} options={{ headerShown: false }} />
@@ -40,12 +41,14 @@ export default function App() {
             headerShown: false,
             gestureDirection: 'vertical', // Cấu hình hướng vuốt
             ...TransitionPresets.FadeFromBottomAndroid, // Hiệu ứng trượt từ dưới lên khi mở màn hình và từ trên xuống khi quay lại
+            tabBarStyle: { display: 'none' }
           }}
         />
         <Stack.Screen name="ArtistProfile" component={Artist_Profile_Screen} options={{ headerShown: false }} />
         <Stack.Screen name="SearchAudio" component={SearchAudio} options={{ headerShown: false }} />
         <Stack.Screen name="LanchScreen_Premium" component={LanchScreen_Premium} options={{ headerShown: false }} />
         <Stack.Screen name="SubscriptionPlan" component={SubscriptionPlan} options={{ headerShown: false }} />
+        {/* <Stack.Screen name="MainTab" component={TabNavigation} options={{ headerShown: false }} /> */}
 
       </Stack.Navigator>
     </NavigationContainer>

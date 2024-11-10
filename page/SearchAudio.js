@@ -96,6 +96,7 @@ export default function SearchAudio({ navigation, route,}) {
           onBlur={() => setIsFocused(false)}
           value={inputText}
           onChangeText={handleSearch}
+          returnKeyType="done"
           onSubmitEditing={handleEnterSearchResults}
         />
 

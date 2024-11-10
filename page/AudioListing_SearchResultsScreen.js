@@ -305,7 +305,7 @@ export default function AudioListing_SearchResultsScreen({  navigation,  route})
           albumsSong={route.params?.albumsSong}
           artists={route.params?.artist}
           navigateToScreen={(screen) => navigation.navigate(screen)}
-          activeScreen={'AudioListing_SearchResultsScreen'}
+          activeScreen={'SearchAudio'}
           showMusicInfo={true}
         />
     </SafeAreaView>
