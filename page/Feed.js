@@ -9,10 +9,11 @@ import {
   Modal,
   TextInput,
   ScrollView,
-  Dimensions,
+  Dimensions,SafeAreaView
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { FontAwesome, MaterialIcons, AntDesign } from '@expo/vector-icons';
+import Footer from "../component/footer";
 
 const { height } = Dimensions.get('window');
 const feedData = [
@@ -163,7 +164,7 @@ const Feed = ({ navigation }) => {
   );
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <FlatList
         data={feedData}
         renderItem={renderItem}
@@ -261,17 +262,15 @@ const Feed = ({ navigation }) => {
           <Text style={styles.footerText}>Library</Text>
         </View>
       </View> */}
-      <View style={styles.inputContainer}>
-      <Image source={require('../assets/image/Feed - Comment on an Audio/Avatar 13.png')} />
-      <TextInput
-                placeholder="Write a comment..."
-                style={styles.input}
-              />
-              <TouchableOpacity>
-                <Icon name="send" size={20} color="#007AFF" />
-              </TouchableOpacity>
-            </View>
-    </View>
+   
+        <Footer 
+        
+        navigateToScreen={(screen) => navigation.navigate(screen)}
+        activeScreen={'Feed'}
+        showMusicInfo={false}
+      />
+    </SafeAreaView>
+
   );
 };
 
