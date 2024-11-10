@@ -77,9 +77,9 @@ import {
                 </TouchableOpacity> 
         
                 {/** button feed */}
-                <TouchableOpacity style={{alignItems:'center'}} onPress= {() => navigateToScreen()}>
-                    <IconAnt name="switcher" size={25} color={getColor("SearchAudio")}/>
-                    <Text style={{fontSize:14, lineHeight:24, fontWeight:'400', color:getColor("SearchAudio")}}>Feed</Text>
+                <TouchableOpacity style={{alignItems:'center'}} onPress= {() => navigateToScreen('Feed')}>
+                    <IconAnt name="switcher" size={25} color={getColor("Feed")}/>
+                    <Text style={{fontSize:14, lineHeight:24, fontWeight:'400', color:getColor("Feed")}}>Feed</Text>
                 </TouchableOpacity>
         
                 {/** button library */}

@@ -16,7 +16,7 @@ import MyLibrary_Playlist from './page/MyLibrary_Playlist';
 import Artist_Profile_Screen from './page/Artist_Profile_Screen';
 import SearchAudio from './page/SearchAudio';
 import SubscriptionPlan from './page/SubscriptionPlan_Screen';
-
+import Feed from './page/Feed';
 
 const Stack = createStackNavigator();
 
@@ -46,6 +46,7 @@ export default function App() {
         <Stack.Screen name="SearchAudio" component={SearchAudio} options={{ headerShown: false }} />
         <Stack.Screen name="LanchScreen_Premium" component={LanchScreen_Premium} options={{ headerShown: false }} />
         <Stack.Screen name="SubscriptionPlan" component={SubscriptionPlan} options={{ headerShown: false }} />
+        <Stack.Screen name="Feed" component={Feed} options={{ headerShown: false }} />
 
       </Stack.Navigator>
     </NavigationContainer>
