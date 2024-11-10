@@ -9,9 +9,11 @@ import {
   Modal,
   TextInput,
   ScrollView,
-  Dimensions,SafeAreaView
+  Dimensions,SafeAreaView,
+  StatusBar
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import IconFe from 'react-native-vector-icons/Feather';
 import { FontAwesome, MaterialIcons, AntDesign } from '@expo/vector-icons';
 import Footer from "../component/footer";
 
@@ -100,12 +102,10 @@ const Feed = ({ navigation }) => {
     setSelectedComments(comments);
     setModalVisible(true);
   };
+
   {/* Header */ }
   const renderHeader = () => (
-    <View style={styles.headerContainer}>
-      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-        <Icon name="arrow-back" size={24} color="#000" />
-      </TouchableOpacity>
+    <View style={[styles.headerContainer,{padding:20}]}>
       <Text style={styles.feedTitle}>Feed</Text>
     </View>
   );
@@ -117,12 +117,19 @@ const Feed = ({ navigation }) => {
         <View style={styles.userInfo}>  
             <View style={{flexDirection:'row',alignItems: 'center'}}>
                  <Text style={styles.username}>{item.username}</Text>
-                <FontAwesome name="check-circle" size={14} color="#4CAF50" style={styles.verifiedIcon} />
+                <AntDesign name="checkcircleo" size={14} color="#21c5db" style={styles.verifiedIcon} />
             </View>
 
-          <Text style={styles.postTime}>Posted a track • {item.time}</Text>
+           {/** views and duration */}
+           <View style={{display:'flex', flexDirection:'row', alignItems:'center', gap:6}}>
+                <Text style={{fontSize: 14, lineHeight:24,fontWeight:'400', color:'#565E6CFF', marginRight:8}}>Posted a track</Text>
+                    
+                {/**duration */}
+                <FontAwesome name="circle" size={10} color="#9095A0FF"/>
+                <Text style={{fontSize: 14, lineHeight:24,fontWeight:'400', color:'#565E6CFF'}}>{item.time}</Text>
+            </View>
         </View>
-        <Icon name="ellipsis-horizontal" size={20} color="#888" />
+        
       </View>
       <View>
         <Image source={item.image} style={styles.postImage} />
@@ -136,29 +143,33 @@ const Feed = ({ navigation }) => {
               justifyContent: 'space-between',
             }}>
             <Text style={styles.artist}>{item.username}</Text>
-            <View style={styles.stats}>
-              <Icon name="play" size={14} color="#fff" />
+            <View style={[styles.stats, {gap:8}]}>
+              <IconFe name="play" size={16} color="#fff"/>
               <Text style={styles.statText}>{item.plays}</Text>
-              <Text style={styles.duration}> • {item.duration}</Text>
+              <FontAwesome name="circle" size={8} color="#fff"/>
+              <Text style={styles.duration}> {item.duration}</Text>
             </View>
           </View>
         </View>
       </View>
       <View style={styles.actions}>
-        <TouchableOpacity style={styles.actionButton}>
-          <Icon name="heart-outline" size={20} color="#000" />
-          <Text style={styles.actionText}>{item.likes}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.actionButton}
-          onPress={() => openComments(item.commentsData)}>
-          <Icon name="chatbubble-outline" size={20} color="#000" />
-          <Text style={styles.actionText}>{item.comments}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.actionButton}>
-          <Icon name="repeat-outline" size={20} color="#000" />
-          <Text style={styles.actionText}>{item.shares}</Text>
-        </TouchableOpacity>
+        <View style={{flexDirection:'row',alignItems: 'center', gap:20}}>
+          <TouchableOpacity style={styles.actionButton}>
+            <Icon name="heart-outline" size={20} color="#9095A0FF" />
+            <Text style={styles.actionText}>{item.likes}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.actionButton}
+            onPress={() => openComments(item.commentsData)}>
+            <Icon name="chatbubble-outline" size={20} color="#9095A0FF" />
+            <Text style={styles.actionText}>{item.comments}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.actionButton}>
+            <Icon name="repeat-outline" size={20} color="#9095A0FF" />
+            <Text style={styles.actionText}>{item.shares}</Text>
+          </TouchableOpacity>
+        </View>
+        <Icon name="ellipsis-horizontal" size={25} color="#888" />
       </View>
     </View>
   );
@@ -170,7 +181,8 @@ const Feed = ({ navigation }) => {
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
         ListHeaderComponent={renderHeader}
-        contentContainerStyle={styles.listContainer}
+        contentContainerStyle={[styles.listContainer,{paddingHorizontal:20}]}
+        showsVerticalScrollIndicator = {false}
       />
 
       <Modal visible={isModalVisible} animationType="slide" transparent={true}>
@@ -180,11 +192,15 @@ const Feed = ({ navigation }) => {
             onPress={() => setModalVisible(false)}
           />
           <View style={styles.modalContent}>
-            <TouchableOpacity onPress={() => setModalVisible(false)}>
-              <Icon name="close" size={30} color="#000" />
-            </TouchableOpacity>
-            <Text style={styles.commentTitle}>3 comments</Text>
-            <ScrollView>
+            
+            <View style={{display:'flex', flexDirection:'row', alignItems:'center', justifyContent:'space-between', marginBottom:10}}>
+              <Text style={styles.commentTitle}>3 comments</Text>
+              <TouchableOpacity onPress={() => setModalVisible(false)}>
+                <AntDesign name="down" size={30} color="#000" />
+              </TouchableOpacity>
+            </View>
+
+            <ScrollView showsVerticalScrollIndicator={false}>
               {selectedComments.map((comment) => (
                 <View key={comment.id} style={styles.commentContainer}>
                   <Image
@@ -223,46 +239,7 @@ const Feed = ({ navigation }) => {
           </View>
         </View>
       </Modal>
-      {/* Footer */}
-      {/* <View style={styles.footer}>
-        <View style={styles.footerItem}>
-        <TouchableOpacity onPress={() => navigation.navigate("Screen1")}>
-          <Image
-            style={styles.footerIcon}
-            source={require('../assets/image/Feed - Comment on an Audio/Avatar 13.png')}
-          />
-          </TouchableOpacity>
-          <Text style={styles.footerText}>Home</Text>
-        </View>
-        <View style={styles.footerItem}>
-        <TouchableOpacity onPress={() => navigation.navigate("Screen6")}>
-          <Image
-            style={styles.footerIcon}
-            source={require("../assets/image/Feed - Comment on an Audio/Avatar 13.png'")}
-          />
-          </TouchableOpacity>
-          <Text style={styles.footerText}>Search</Text>
-        </View>
-        <View style={styles.footerItem}>
-          <TouchableOpacity onPress={() => navigation.navigate("Feed")}>
-            <Image
-              style={styles.footerIcon}
-              source={require("../assets/image/Feed - Comment on an Audio/Avatar 13.png'")}
-            />
-          </TouchableOpacity>
-          <Text style={styles.footerText}>Feed</Text>
-        </View>
-        <View style={styles.footerItem}>
-          <TouchableOpacity onPress={() => navigation.navigate("LibraryScreen")}>
-          <Image
-            style={styles.footerIcon}
-            source={require("../assets/image/Feed - Comment on an Audio/Avatar 13.png'")}
-          />
-          </TouchableOpacity>
-          <Text style={styles.footerText}>Library</Text>
-        </View>
-      </View> */}
-   
+         
         <Footer 
         
         navigateToScreen={(screen) => navigation.navigate(screen)}
@@ -278,7 +255,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    padding: 16,
+    paddingTop:StatusBar.currentHeight
   },
   headerContainer: {
     flexDirection: 'row',
@@ -290,7 +267,7 @@ const styles = StyleSheet.create({
   },
   feedTitle: {
     fontSize: 24,
-    fontWeight: 'bold'
+    fontWeight: '500'
   },
   listContainer: {
     paddingBottom: 20,
@@ -335,7 +312,9 @@ const styles = StyleSheet.create({
   },
   username: {
     fontWeight: 'bold',
-    padding: 5
+    fontSize: 16,
+    lineHeight: 24,
+    paddingRight:10
   },
   postTime: {
     color: '#888',
@@ -345,23 +324,24 @@ const styles = StyleSheet.create({
   },
   postImage: {
     width: '100%',
-    height: 250,
+    height: height*0.35,
   },
   titleContainer: {
-    padding: 16,
+    padding: 20,
     backgroundColor: '#00000080',
     position: 'absolute',
     bottom: 0,
     width: '100%',
   },
   title: {
-    fontSize: 18,
+    fontSize: 22,
     fontWeight: 'bold',
     color: '#fff',
   },
   artist: {
     color: 'white',
     paddingTop: 3,
+    fontSize: 16,
   },
   stats: {
     flexDirection: 'row',
@@ -370,16 +350,16 @@ const styles = StyleSheet.create({
   },
   statText: {
     color: '#fff',
-    marginLeft: 4,
+    fontSize: 16,
   },
   duration: {
     color: '#fff',
-    marginLeft: 4,
+    fontSize: 16,
   },
   actions: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    padding: 16,
+    paddingVertical: 16,
   },
   actionButton: {
     flexDirection: 'row',
@@ -388,6 +368,7 @@ const styles = StyleSheet.create({
   actionText: {
     marginLeft: 4,
     color: '#000',
+    fontSize: 16,
   },
   modalOverlay: {
     flex: 1,
@@ -438,18 +419,20 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 8,
-    borderTopWidth: 1,
     borderColor: '#ddd',
+    justifyContent: 'space-between',
+    gap: 16
   },
   input: {
     flex: 1,
     padding: 8,
+    paddingLeft: 16,
     borderWidth: 0.5,
-    borderRadius: 20,
-    borderColor: '#888',
+    borderRadius: 32,
+    borderColor: '#BCC1CAFF',
     height: 50,
-    opacity: 0.5,
+    width:'85%',
+    fontSize:18
   },
 });
 
