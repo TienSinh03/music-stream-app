@@ -19,6 +19,7 @@ import SubscriptionPlan from './page/SubscriptionPlan_Screen';
 import TabNavigation from './navigation/TabNavigationBottom';
 
 
+import Feed from './page/Feed';
 
 const Stack = createStackNavigator();
 export default function App() {
@@ -49,6 +50,7 @@ export default function App() {
         <Stack.Screen name="LanchScreen_Premium" component={LanchScreen_Premium} options={{ headerShown: false }} />
         <Stack.Screen name="SubscriptionPlan" component={SubscriptionPlan} options={{ headerShown: false }} />
         {/* <Stack.Screen name="MainTab" component={TabNavigation} options={{ headerShown: false }} /> */}
+        <Stack.Screen name="Feed" component={Feed} options={{ headerShown: false }} />
 
       </Stack.Navigator>
     </NavigationContainer>
