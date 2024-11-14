@@ -9,7 +9,7 @@ import {
   } from "react-native";
   
   
-  export default function App() {
+  export default function App({navigation}) {
     return (
       <SafeAreaView style={styles.container}>
       {/* Background Image */}

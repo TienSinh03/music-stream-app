@@ -26,7 +26,7 @@ const screenWidth = Dimensions.get("window").width;
 export default function MyLibrary({navigation, route}) {
 
   const playLists = route.params?.playLists ? route.params.playLists : [];
-  const [isFollowing, setIsFollowing] = useState(true);
+  const [isFollowing, setIsFollowing] = useState({});
   
   // set data for categories in MyLibrary
   const [songMyLibrary, setSongMyLibrary] = useState([]);
@@ -88,8 +88,11 @@ export default function MyLibrary({navigation, route}) {
     return artist;
   }
 
-  const toggleFollow = () => {
-    setIsFollowing(!isFollowing);
+  const toggleFollow = (id) => {
+    setIsFollowing((prevState) => ({
+      ...prevState, 
+      [id]: !prevState[id],// Đảo ngược trạng thái của nghệ sĩ có id tương ứng
+    }));
   };
 
   const handelSongByID = (id) => {
@@ -101,7 +104,7 @@ export default function MyLibrary({navigation, route}) {
       selectedPause: selectedPause, 
       image: song.image, 
       artist: handelArtistByID(song.artist).artistName,
-      previousScreen: 'MyLibrary'
+      previousScreen: 'MainTab'
     })
   }
 
@@ -178,9 +181,9 @@ export default function MyLibrary({navigation, route}) {
                   <Text style={styles.followersText}>1.234K Followers</Text>
                 </View>
               </View>
-              <TouchableOpacity style={styles.followButton} onPress={toggleFollow}>
+              <TouchableOpacity style={styles.followButton} onPress={() => toggleFollow(item.id)}>
                 <Text style={styles.followButtonText}>
-                  {isFollowing ? 'Unfollow' : 'Follow'}
+                  {isFollowing[item.id] ? 'Follow' : 'Unfollow'}
                 </Text>
               </TouchableOpacity>
             </TouchableOpacity>

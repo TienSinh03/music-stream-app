@@ -68,7 +68,7 @@ const Item_Albumn = ({title, artist, image, navigation}) => (
 
   export default function Artist_Profile_Screen({ navigation,route }) {
 
-    const songsByChart = songs.filter((item) => item.artist === route.params?.artist_id);
+    const songByArtists = songs.filter((item) => item.artist === route.params?.artist_id);
     // const charts = chart_list.find((item) => item.id === route.params?.idChart);
     const dataSongId = route.params?.dataFindId ? route.params?.dataFindId : null;
 
@@ -149,7 +149,7 @@ const Item_Albumn = ({title, artist, image, navigation}) => (
                     </TouchableOpacity>
                         
                     {/** button play */}
-                    <TouchableOpacity onPress={() => handelSongByID(songsByChart[0].id)}>
+                    <TouchableOpacity onPress={() => handelSongByID(songByArtists[0].id)}>
                         <Image source={require('../assets/image/Playlist Details - Audio Listing/Icon Button 2.png')} style={{width: 60, height: 60}}/>
                     </TouchableOpacity>
                 </View>
@@ -158,7 +158,7 @@ const Item_Albumn = ({title, artist, image, navigation}) => (
             {/** List Audio */}
             <View style ={{marginTop:25, marginRight:20}}>
                 <FlatList
-                    data={songsByChart}
+                    data={songByArtists}
                     key={item => item.id}
                     renderItem={({ item }) => (
                         <Item 

@@ -70,11 +70,11 @@ import {
 
     console.log(dataSongId);
 
-    
     const [song, setSong] = useState();
-
     
-    const [selectedPause, setSelectedPause] = useState(false);
+    const [selectedPause, setSelectedPause] = useState(route.params?.selectedPause || true);
+    console.log(selectedPause);
+
 
     useEffect(() => {
         setSelectedPause(route.params?.selectedPause);
@@ -113,8 +113,27 @@ import {
                 selectedPause: selectedPause, 
                 image: song.image, 
                 artist: handelArtistByID(song.artist).artistName,
-                previousScreen: 'Playlist_Details',
+                previousScreen: 'MainTab',
             });
+    }
+
+    // play song
+    const handelPlaySong = async () => {
+        try {
+            const status = await soundObject.current.getStatusAsync();
+            if (!status.isLoaded) {
+                console.log("Sound is not loaded yet.");
+                return;
+            }
+            if(selectedPause) {
+                await soundObject.current.pauseAsync();
+            } else {
+                await soundObject.current.playAsync();
+            }
+            setSelectedPause(!selectedPause);
+        } catch (e) {
+            console.log(e);
+        };
     }
     
     return (
@@ -213,17 +232,16 @@ import {
           dataSongId={dataSongId} 
           onPressSmallMusic = {() => navigation.navigate(
             "PlayanAudio", 
-            {dataFindId: dataSongId, selectedPause: selectedPause, artist: route.params?.artist, previousScreen: 'Playlist_Details', idChart: route.params?.idChart, soundObject: route.params?.soundObject}
+            {dataFindId: dataSongId, selectedPause: selectedPause, artist: route.params?.artist, previousScreen: 'MainTab', idChart: route.params?.idChart,songsByChart: route.params?.songsByChart}
           )}
           selectedPause={selectedPause}
-          setSelectedPause={() => setSelectedPause(!selectedPause)}
+          setSelectedPause={handelPlaySong}
           navigatePoptoTop={() => navigation.popToTop()}
           albumsSong={route.params?.albumsSong}
           artists={route.params?.artist}
           navigateToScreen={(screen) => navigation.navigate(screen)}
           activeScreen={'Home_AudioListing'}
           showMusicInfo={true}
-          soundObject={route.params?.soundObject}
         />
       </SafeAreaView>
     );

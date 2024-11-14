@@ -42,10 +42,16 @@ import {
     const song = route.params?.dataFindId;
 
     console.log(currentSong);
+    console.log(selectedPause);
+    
     
     const albums = albumsSong.find((item) => item.id === currentSong.albums_id);
     const itemArtist = artists.find((item) => item.id === currentSong.artist);
 
+
+    useEffect(() => {
+        setSelectedPause(route.params?.selectedPause);
+    }, [route.params?.selectedPause]);
 
     console.log(route.params?.previousScreen);
 
@@ -98,7 +104,7 @@ import {
             await soundObject.current.playAsync();
 
             setCurrentSong(nextSong);
-            setSelectedPause(false);
+            setSelectedPause(true);
         } catch (error) {
             console.log("next"+error);
         }
@@ -131,6 +137,7 @@ import {
             await soundObject.current.playAsync();
 
             setCurrentSong(previousSong);
+            setSelectedPause(true);
         } catch (e) {
             console.log("back"+e);
         }
@@ -170,6 +177,7 @@ import {
                                 dataFindId: currentSong, 
                                 albumsSong: albums, 
                                 songsByChart: route.params?.songsByChart,
+                                idChart: route.params?.idChart,
                                 selectedPause: selectedPause, 
                                 image: currentSong.image, 
                                 artist: itemArtist,

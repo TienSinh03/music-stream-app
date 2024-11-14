@@ -123,7 +123,7 @@ export default function AudioListing_SearchResultsScreen({  navigation,  route})
             selectedPause: selectedPause, 
             image: song.image, 
             artist: handelArtistByID(song.artist).artistName,
-            previousScreen: 'AudioListing_SearchResultsScreen'
+            previousScreen: 'MainTab'
         });
   }
 

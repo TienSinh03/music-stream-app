@@ -54,21 +54,35 @@ const Item_Trending = ({title, artist, image, navigation}) => (
 )
 
 // Items with popular artists
-const Item_popular_artists = ({artist, image}) => (
+const Item_popular_artists = ({artist,follow,textFollower, navigation}) => (
 
-  <View style={{width:'30%', alignItems:'center', marginRight:20}}>
-    <Image source={image} />
+  <TouchableOpacity style={{width:'30%', alignItems:'center', marginRight:20}}
+    onPress={() => navigation.navigate('ArtistProfile',
+              {artist_id: artist.id, artist: artist.artistName, artistImage: artist.image})} 
+  >
+    <Image source={artist.image} />
                 
-    <Text style={[styles.textNameMainCate,{marginVertical:8}]}>{artist}</Text>
+    <Text style={[styles.textNameMainCate,{marginVertical:8}]}>{artist.artistName}</Text>
                 
     {/** button follow */}
-    <TouchableOpacity style ={styles.buttonFL}>
-      <Text style={styles.textButtonFL}>Follow</Text>
+    <TouchableOpacity style ={styles.buttonFL} 
+      onPress={follow}
+    >
+      <Text style={styles.textButtonFL}>{textFollower}</Text>
     </TouchableOpacity>
-  </View>
+  </TouchableOpacity>
 ) 
 
 export default function Home_AudioListing({navigation, route}) {
+
+  const [isFollowing, setIsFollowing] = useState({});
+
+  const toggleFollow = (id) => {
+    setIsFollowing((prevState) => ({
+      ...prevState,
+      [id]: !prevState[id]
+    }));
+  };
 
   // get random artists
   const getPopularArtists = (artistsList) => {
@@ -84,9 +98,11 @@ export default function Home_AudioListing({navigation, route}) {
         {/* Header */}
         <View style={styles.header}>
           {/* Image lyrics */}
-          <Image
-            source={require("../assets/image/Home - Audio Listing/Image 36.png")}
-          />
+          <TouchableOpacity onPress={() => navigation.navigate('LanchScreen_Premium')}>
+            <Image
+              source={require("../assets/image/Home - Audio Listing/Image 36.png")}
+            />
+          </TouchableOpacity>
 
           <View style={styles.headerLeft}>
             <IconFe
@@ -106,7 +122,10 @@ export default function Home_AudioListing({navigation, route}) {
         {/* Information user login and Search */}
         <View style={{ display: "flex", marginVertical: 40,marginRight:20 }}>
           {/* Text Good morning */}
-          <Text style={styles.textMorning}>Good morning</Text>
+          {new Date().getHours() < 12 ? (
+            <Text style={styles.textMorning}>Good morning</Text>
+          ) : <Text style={styles.textMorning}>Good afternoon</Text>}
+
           {/* Text User */}
           <Text style={styles.textUser}>Ashley Scott</Text>
 
@@ -226,8 +245,11 @@ export default function Home_AudioListing({navigation, route}) {
               data={artistsPopuplar}
               renderItem={({item}) =>(
                 <Item_popular_artists
-                  artist={item.artist}
-                  image={item.image}
+                key={item.id}
+                  artist={item}
+                  follow = {() => toggleFollow(item.id)}
+                  textFollower={isFollowing[item.id] ? "Following" : "Follow"}
+                  navigation={navigation}
                 />
               )}
               keyExtractor={item => item.id}

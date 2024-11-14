@@ -15,6 +15,7 @@ import AudioListing_SearchResultsScreen from '../page/AudioListing_SearchResults
 import MyLibrary_Playlist from '../page/MyLibrary_Playlist';
 import Artist_Profile_Screen from '../page/Artist_Profile_Screen';
 import PlayanAudio from '../page/Play_an_AudioScreen';
+import Feed from '../page/Feed';
 
 
 const Tab = createBottomTabNavigator();
@@ -26,7 +27,8 @@ const HomeStackScreen = () => {
         <HomeStack.Navigator>
             <HomeStack.Screen name="Home_AudioListing" component={Home_AudioListing} options={{ headerShown: false }} />
             <HomeStack.Screen name="Playlist_Details" component={Playlist_Details} options={{ headerShown: false }} />
-            {/* <HomeStack.Screen name="Artist_Profile_Screen" component={Artist_Profile_Screen} options={{ headerShown: false }} /> */}
+            <HomeStack.Screen name="ArtistProfile" component={Artist_Profile_Screen} options={{ headerShown: false }} />
+            {/* <HomeStack.Screen name="PlayanAudio" component={PlayanAudio} options={{ headerShown: false }} /> */}
         </HomeStack.Navigator>
     );
 }
@@ -44,7 +46,7 @@ const LibraryScreen = () => {
     return (
         <SearchStack.Navigator>
             <SearchStack.Screen name="MyLibrary" component={MyLibrary} options={{ headerShown: false }} />
-            <SearchStack.Screen name="Artist_Profile_Screen" component={Artist_Profile_Screen} options={{ headerShown: false }} />
+            <SearchStack.Screen name="ArtistProfile" component={Artist_Profile_Screen} options={{ headerShown: false }} />
             <SearchStack.Screen name="MyLibrary_Playlist" component={MyLibrary_Playlist} options={{ headerShown: false }} />
         </SearchStack.Navigator>
     );
@@ -89,7 +91,7 @@ export default function TabNavigation() {
       >
         <Tab.Screen name="Home" component={HomeStackScreen} options={{ headerShown: false }} />
         <Tab.Screen name="Search" component={SearchStackScreen} options={{ headerShown: false }} />
-        <Tab.Screen name="Feed" component={SearchAudio} options={{ headerShown: false }} />
+        <Tab.Screen name="Feed" component={Feed} options={{ headerShown: false }} />
         <Tab.Screen name="Library" component={LibraryScreen} options={{ headerShown: false }} />
         {/* <Tab.Screen name="Artist_Profile_Screen" component={Artist_Profile_Screen} options={{ tabBarStyle: {display:'none'} }} />
         <Tab.Screen name="AudioListing_SearchResultsScreen" component={AudioListing_SearchResultsScreen} options={{ tabBarStyle: {display:'none'} }} />

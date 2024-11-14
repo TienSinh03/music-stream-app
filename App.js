@@ -28,7 +28,7 @@ export default function App() {
   return (
     <AudioProvider>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="MainTab">
+        <Stack.Navigator initialRouteName="LanchScreen">
           <Stack.Screen name="LanchScreen" component={LanchScreen} options={{ headerShown: false }} />
           <Stack.Screen name="Home_AudioListing" component={Home_AudioListing} options={{ headerShown: false }} />
           <Stack.Screen name="Playlist_Details" component={Playlist_Details} options={{ headerShown: false, gestureDirection: 'vertical', }} />  
@@ -42,17 +42,16 @@ export default function App() {
             component={PlayanAudio}
             options={{
               headerShown: false,
-              gestureDirection: 'vertical', // Cấu hình hướng vuốt
+              gestureDirection: 'vertical-inverted', // Cấu hình hướng vuốt
               ...TransitionPresets.FadeFromBottomAndroid, // Hiệu ứng trượt từ dưới lên khi mở màn hình và từ trên xuống khi quay lại
-              tabBarStyle: { display: 'none' }
             }}
           />
           <Stack.Screen name="ArtistProfile" component={Artist_Profile_Screen} options={{ headerShown: false }} />
           <Stack.Screen name="SearchAudio" component={SearchAudio} options={{ headerShown: false }} />
           <Stack.Screen name="LanchScreen_Premium" component={LanchScreen_Premium} options={{ headerShown: false }} />
           <Stack.Screen name="SubscriptionPlan" component={SubscriptionPlan} options={{ headerShown: false }} />
-          {/* <Stack.Screen name="MainTab" component={TabNavigation} options={{ headerShown: false }} /> */}
           <Stack.Screen name="Feed" component={Feed} options={{ headerShown: false }} />
+          <Stack.Screen name="MainTab" component={TabNavigation} options={{ headerShown: false }} />
 
         </Stack.Navigator>
       </NavigationContainer>

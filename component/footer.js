@@ -11,13 +11,13 @@ import {
     StatusBar,
     Dimensions,
   } from "react-native";
-  import React, { useState,useEffect, } from "react";
+  import React, { useState,useEffect, useContext} from "react";
   import IconFe from "react-native-vector-icons/Feather";
   import IconAnt from "react-native-vector-icons/AntDesign";
   import IconIon from "react-native-vector-icons/Ionicons";
   import IconFnA from "react-native-vector-icons/FontAwesome";
 
-  const Footer = ({dataSongId,onPressSmallMusic, selectedPause, setSelectedPause,albumsSong,artists,navigateToScreen, activeScreen, showMusicInfo = true,soundObject}) => {
+  const Footer = ({dataSongId,onPressSmallMusic, selectedPause, setSelectedPause,albumsSong,artists,navigateToScreen, activeScreen, showMusicInfo = true}) => {
     
     const getColor = (screenName) => (screenName === activeScreen ? "#21c5db" : "#565E6CFF");
     console.log("foonter");
@@ -62,31 +62,27 @@ import {
         )}
 
             {/** action footer */}
-            <View style={styles.footer}>
-                {/** button home */}
+            {/* <View style={styles.footer}>
                 <TouchableOpacity style={{alignItems:'center'}} onPress={() => navigateToScreen('Home_AudioListing')}>
                     <IconAnt name="home" size={25} color={getColor("Home_AudioListing")}/>
                     <Text style={{fontSize:14, lineHeight:24, fontWeight:'400', color:getColor("Home_AudioListing")}}>Home</Text>
                 </TouchableOpacity>
         
-                {/** button search */}
                 <TouchableOpacity style={{alignItems:'center'}} onPress= {() => navigateToScreen('SearchAudio')}>
                     <IconFe name="search" size={25} color={getColor("SearchAudio")}/>
                     <Text style={{fontSize:14, lineHeight:24, fontWeight:'400', color:getColor("SearchAudio")}}>Search</Text>
                 </TouchableOpacity> 
         
-                {/** button feed */}
                 <TouchableOpacity style={{alignItems:'center'}} onPress= {() => navigateToScreen('Feed')}>
                     <IconAnt name="switcher" size={25} color={getColor("Feed")}/>
                     <Text style={{fontSize:14, lineHeight:24, fontWeight:'400', color:getColor("Feed")}}>Feed</Text>
                 </TouchableOpacity>
         
-                {/** button library */}
                 <TouchableOpacity style={{alignItems:'center'}} onPress= {() => navigateToScreen('MyLibrary')}>
                     <IconIon name="library-outline" size={25} color={getColor("MyLibrary")}/>
                     <Text style={{fontSize:14, lineHeight:24, fontWeight:'400', color:getColor("MyLibrary")}}>Library</Text>
                 </TouchableOpacity>
-            </View>
+            </View> */}
         </View>
       
     )

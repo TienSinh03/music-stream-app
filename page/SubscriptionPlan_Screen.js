@@ -97,7 +97,7 @@ import {
             <Text style={styles.headerText}>...</Text>
   
             {/* Button back home */}
-            <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+            <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('Home_AudioListing')}>
               <Text style={styles.subscribeText}>Back home</Text>
             </TouchableOpacity>
           </View>
