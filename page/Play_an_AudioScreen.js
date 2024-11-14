@@ -73,6 +73,7 @@ import {
         }
     }
 
+    // play next song
     const playNextSong = async() => {
         if(!songs.length) {
             console.log("No songs");
@@ -104,6 +105,36 @@ import {
 
     }
 
+    // play the back song
+    const playBackSong = async() => {
+        if(!songs.length) {
+            console.log("No songs");
+            return;
+        }
+
+        const currentIndex = songs.findIndex(s => s.id === currentSong.id);
+
+        if (currentIndex === -1 || currentIndex === 0) {
+            console.error("No next song available.");
+            return;
+        }
+
+        const previousSong  = songs[currentIndex - 1];
+        try {
+            
+            // dừng bài hát hiện tại
+            await soundObject.current.stopAsync();
+            await soundObject.current.unloadAsync();
+
+            // Tải và phát bài hát trước đó
+            await soundObject.current.loadAsync({uri: previousSong.audio});
+            await soundObject.current.playAsync();
+
+            setCurrentSong(previousSong);
+        } catch (e) {
+            console.log("back"+e);
+        }
+    }    
 
     useEffect(() => {
         async function loadAudio() {
@@ -175,8 +206,8 @@ import {
                         </TouchableOpacity>
 
                         {/** Button stepbackward*/}
-                        <TouchableOpacity onPress={()=>{}}>
-                            <IconAnt name="stepbackward" size={32} color="#FFFFFF80" />
+                        <TouchableOpacity onPress={playBackSong}>
+                            <IconAnt name="stepbackward" size={32} color="#FFFFFF" />
                         </TouchableOpacity>
 
                         {/** Button play*/}
