@@ -17,7 +17,7 @@ import {
   import IconIon from "react-native-vector-icons/Ionicons";
   import IconFnA from "react-native-vector-icons/FontAwesome";
 
-  const Footer = ({dataSongId,onPressSmallMusic, selectedPause, setSelectedPause,albumsSong,artists,navigateToScreen, activeScreen, showMusicInfo = true  }) => {
+  const Footer = ({dataSongId,onPressSmallMusic, selectedPause, setSelectedPause,albumsSong,artists,navigateToScreen, activeScreen, showMusicInfo = true,soundObject}) => {
     
     const getColor = (screenName) => (screenName === activeScreen ? "#21c5db" : "#565E6CFF");
     console.log("foonter");
@@ -44,9 +44,8 @@ import {
                     <View style={{display:'flex', flexDirection:'row', alignItems:'center', gap:6}}>
                         <Text style={{fontSize: 14, lineHeight:24,fontWeight:'400', color:'white', marginRight:8}}>{albumsSong.title}</Text>
                         
-                        {/**duration */}
                         <IconFnA name="circle" size={10} color="white"/>
-                        <Text style={{fontSize: 14, lineHeight:24,fontWeight:'400', color:'white'}}>{artists}</Text>
+                        <Text style={{fontSize: 14, lineHeight:24,fontWeight:'400', color:'white'}}>{artists.artistName}</Text>
                     </View>
                 </View>
             </View>  

@@ -97,6 +97,7 @@ export default function MyLibrary({navigation, route}) {
     setSong(song);
     navigation.navigate('PlayanAudio', {
       dataFindId: song, 
+      songMyLibrary: songMyLibrary,
       selectedPause: selectedPause, 
       image: song.image, 
       artist: handelArtistByID(song.artist).artistName,

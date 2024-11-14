@@ -18,41 +18,44 @@ import SearchAudio from './page/SearchAudio';
 import SubscriptionPlan from './page/SubscriptionPlan_Screen';
 import TabNavigation from './navigation/TabNavigationBottom';
 
+import { AudioProvider } from './context/AudioContext';
+
 
 import Feed from './page/Feed';
 
 const Stack = createStackNavigator();
 export default function App() {
   return (
+    <AudioProvider>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="MainTab">
+          <Stack.Screen name="LanchScreen" component={LanchScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="Home_AudioListing" component={Home_AudioListing} options={{ headerShown: false }} />
+          <Stack.Screen name="Playlist_Details" component={Playlist_Details} options={{ headerShown: false, gestureDirection: 'vertical', }} />  
+          <Stack.Screen name="AudioListing_SearchResultsScreen" component={AudioListing_SearchResultsScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="MyLibrary" component={MyLibrary} options={{ headerShown: false }} />
+          <Stack.Screen name="MyLibrary_Playlist" component={MyLibrary_Playlist} options={{ headerShown: false }} />
 
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="MainTab">
-        <Stack.Screen name="LanchScreen" component={LanchScreen} options={{ headerShown: false }} />
-        <Stack.Screen name="Home_AudioListing" component={Home_AudioListing} options={{ headerShown: false }} />
-        <Stack.Screen name="Playlist_Details" component={Playlist_Details} options={{ headerShown: false, gestureDirection: 'vertical', }} />  
-        <Stack.Screen name="AudioListing_SearchResultsScreen" component={AudioListing_SearchResultsScreen} options={{ headerShown: false }} />
-        <Stack.Screen name="MyLibrary" component={MyLibrary} options={{ headerShown: false }} />
-        <Stack.Screen name="MyLibrary_Playlist" component={MyLibrary_Playlist} options={{ headerShown: false }} />
+          {/* MyLibrary */}
+          <Stack.Screen
+            name="PlayanAudio"
+            component={PlayanAudio}
+            options={{
+              headerShown: false,
+              gestureDirection: 'vertical', // Cấu hình hướng vuốt
+              ...TransitionPresets.FadeFromBottomAndroid, // Hiệu ứng trượt từ dưới lên khi mở màn hình và từ trên xuống khi quay lại
+              tabBarStyle: { display: 'none' }
+            }}
+          />
+          <Stack.Screen name="ArtistProfile" component={Artist_Profile_Screen} options={{ headerShown: false }} />
+          <Stack.Screen name="SearchAudio" component={SearchAudio} options={{ headerShown: false }} />
+          <Stack.Screen name="LanchScreen_Premium" component={LanchScreen_Premium} options={{ headerShown: false }} />
+          <Stack.Screen name="SubscriptionPlan" component={SubscriptionPlan} options={{ headerShown: false }} />
+          {/* <Stack.Screen name="MainTab" component={TabNavigation} options={{ headerShown: false }} /> */}
+          <Stack.Screen name="Feed" component={Feed} options={{ headerShown: false }} />
 
-        {/* MyLibrary */}
-        <Stack.Screen
-          name="PlayanAudio"
-          component={PlayanAudio}
-          options={{
-            headerShown: false,
-            gestureDirection: 'vertical', // Cấu hình hướng vuốt
-            ...TransitionPresets.FadeFromBottomAndroid, // Hiệu ứng trượt từ dưới lên khi mở màn hình và từ trên xuống khi quay lại
-            tabBarStyle: { display: 'none' }
-          }}
-        />
-        <Stack.Screen name="ArtistProfile" component={Artist_Profile_Screen} options={{ headerShown: false }} />
-        <Stack.Screen name="SearchAudio" component={SearchAudio} options={{ headerShown: false }} />
-        <Stack.Screen name="LanchScreen_Premium" component={LanchScreen_Premium} options={{ headerShown: false }} />
-        <Stack.Screen name="SubscriptionPlan" component={SubscriptionPlan} options={{ headerShown: false }} />
-        {/* <Stack.Screen name="MainTab" component={TabNavigation} options={{ headerShown: false }} /> */}
-        <Stack.Screen name="Feed" component={Feed} options={{ headerShown: false }} />
-
-      </Stack.Navigator>
-    </NavigationContainer>
+        </Stack.Navigator>
+      </NavigationContainer>
+    </AudioProvider>    
   );
 }

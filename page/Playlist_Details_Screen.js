@@ -12,7 +12,7 @@ import {
     ImageBackground,
     Dimensions,
   } from "react-native";
-  import React, { useEffect, useState } from "react";
+  import React, { useEffect, useState, useContext  } from "react";
   
   import IconFe from "react-native-vector-icons/Feather";
   import IconAnt from "react-native-vector-icons/AntDesign";
@@ -22,6 +22,9 @@ import {
 
   import { chart_list,songs, artists } from "../data/data_audio";
   import Footer from '../component/footer';
+
+  import { Audio } from "expo-av";
+  import { AudioContext } from "../context/AudioContext";
   
   const screenWith = Dimensions.get("window").width;
   const screenHeight = Dimensions.get("window").height;
@@ -61,7 +64,7 @@ import {
   
   export default function Playlist_Details({navigation,route}) {
 
-    const songsByChart = songs.filter((item) => item.chart_id === route.params?.idChart);
+    const songsByChart = songs.filter((item) => item.chart_id === route.params?.idChart) || route.params?.songsByChart;
     const charts = chart_list.find((item) => item.id === route.params?.idChart);
     const dataSongId = route.params?.dataFindId ? route.params?.dataFindId : null;
 
@@ -84,20 +87,35 @@ import {
         return artist;
     }
 
+    const soundObject = useContext(AudioContext);
+
     // Find song by id
-    const handelSongByID = (id) => {
+    const handelSongByID = async  (id) => {
         var song = songs.find((item) => item.id === id);
         setSong(song);
+
+        try {
+            if (soundObject.current) {
+                await soundObject.current.stopAsync(); // Dừng nhạc hiện tại
+                await soundObject.current.unloadAsync(); // Gỡ nhạc hiện tại
+            }
+            await soundObject.current.loadAsync({ uri: song.audio }); // Tải bài hát mới
+            await soundObject.current.playAsync(); // Phát bài hát mới
+        } catch (e) {
+            console.log(e);
+        }
+
         navigation.navigate("PlayanAudio", 
-            {   dataFindId: song, 
-                idChart: route.params?.idChart,
+            {   
+                ...route.params,
+                dataFindId: song, 
+                songsByChart: songsByChart,
                 selectedPause: selectedPause, 
                 image: song.image, 
                 artist: handelArtistByID(song.artist).artistName,
-                previousScreen: 'Playlist_Details'
+                previousScreen: 'Playlist_Details',
             });
     }
-
     
     return (
       <SafeAreaView style={styles.container}>
@@ -195,7 +213,7 @@ import {
           dataSongId={dataSongId} 
           onPressSmallMusic = {() => navigation.navigate(
             "PlayanAudio", 
-            {dataFindId: dataSongId, selectedPause: selectedPause, artist: route.params?.artist, previousScreen: 'Playlist_Details', idChart: route.params?.idChart}
+            {dataFindId: dataSongId, selectedPause: selectedPause, artist: route.params?.artist, previousScreen: 'Playlist_Details', idChart: route.params?.idChart, soundObject: route.params?.soundObject}
           )}
           selectedPause={selectedPause}
           setSelectedPause={() => setSelectedPause(!selectedPause)}
@@ -205,6 +223,7 @@ import {
           navigateToScreen={(screen) => navigation.navigate(screen)}
           activeScreen={'Home_AudioListing'}
           showMusicInfo={true}
+          soundObject={route.params?.soundObject}
         />
       </SafeAreaView>
     );

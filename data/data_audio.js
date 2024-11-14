@@ -1,3 +1,90 @@
+const users=[
+  {
+    id: '1',
+    username: 'Sally Rooney',
+    password: '123456',
+    phone: '123456789',
+    img: require('../assets/image/Feed - Comment on an Audio/Avatar 8.png'),
+  },
+  {
+    id: '2',
+    username: 'Sally Rooney',
+    password: '123456',
+    phone: '123456789',
+    img: require('../assets/image/Feed - Comment on an Audio/Avatar 8.png'),
+  },
+  {
+    id: '1',
+    username: 'Sally Rooney',
+    password: '123456',
+    phone: '123456789',
+    img: require('../assets/image/Feed - Comment on an Audio/Avatar 8.png'),
+  }
+]
+
+const feed = [
+  {
+    id: '1',
+    artists_id: '1',
+    timePost: new Date().getHours(),
+    shares:1,
+    verified: true,
+  },
+  {
+    id: '2',
+    artists_id: '3',
+    likes: 12,
+    timePost: new Date().getHours(),
+    shares:1,
+    verified: true,
+  }
+]
+
+const feed_comment = [
+  {
+    id: '1',
+    feed_id: '1',
+    user_id: '1',
+    content: 'I love this song',
+    time: new Date().getHours(),
+  },
+  {
+    id: '2',
+    feed_id: '1',
+    user_id: '2',
+    content: 'I love this song',
+    time: new Date().getHours(),
+  },
+  {
+    id: '3',
+    feed_id: '1',
+    user_id: '3',
+    content: 'I love this song',
+    time: new Date().getHours(),
+  },
+  {
+    id: '4',
+    feed_id: '2',
+    user_id: '1',
+    content: 'I love this song',
+    time: new Date().getHours(),
+  },
+  {
+    id: '5',
+    feed_id: '2',
+    user_id: '2',
+    content: 'I love this song',
+    time: new Date().getHours(),
+  },
+  {
+    id: '6',
+    feed_id: '2',
+    user_id: '3',
+    content: 'I love this song',
+    time: new Date().getHours(),
+  }
+]
+
 const chart_list = [
     {
       title: "Top 50",
@@ -153,6 +240,7 @@ const chart_list = [
     {
       title: "FLOWER",
       artist: "5",
+      audio: "https://audio.jukehost.co.uk/vTRYaTEbpaYRCxiWGgL2S91mnOuMKfLw",
       plays: 2.1,
       duration: "3:26",
       image: require("../assets/image/Playlist Details - Audio Listing/Image 51.png"),
@@ -165,6 +253,7 @@ const chart_list = [
     {
       title: "Shape of You",
       artist: "3",
+      audio: "https://audio.jukehost.co.uk/priWy2vYsWODmQiM6KevNYVLpPJGPZGd",
       plays: 68,
       duration: "3:35",
       image: require("../assets/image/Playlist Details - Audio Listing/Image 52.png"),
@@ -178,6 +267,7 @@ const chart_list = [
       title: "Blinding Lights",
       artist: "6",
       plays: 93,
+      audio: "https://audio.jukehost.co.uk/ZLdoXNocDAcsgeq6QKtPRHyvlqslNbke",
       duration: "4:39",
       image: require("../assets/image/Playlist Details - Audio Listing/Image 53.png"),
       like: 12,
@@ -189,6 +279,7 @@ const chart_list = [
     {
       title: "Levitating",
       artist: "3",
+      audio: "https://audio.jukehost.co.uk/rZ9sshicVlki8Dnm95ps1eWhK95dYgKF",
       plays: 9,
       duration: "7:48",
       image: require("../assets/image/Playlist Details - Audio Listing/Image 54.png"),
@@ -201,6 +292,7 @@ const chart_list = [
     {
       title: "Astronaut in the Ocean",
       artist: "7",
+      audio: "https://audio.jukehost.co.uk/ZufGK11EtwQWXge8xYo5EQ02RuJqtr4s",
       plays: 23,
       duration: "3:36",
       image: require("../assets/image/Playlist Details - Audio Listing/Image 55.png"),
