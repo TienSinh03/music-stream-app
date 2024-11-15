@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { NavigationContainer } from '@react-navigation/native';
 import IconAnt from "react-native-vector-icons/AntDesign";
 import IconFe from "react-native-vector-icons/Feather";
 import IconIon from "react-native-vector-icons/Ionicons";
@@ -17,6 +18,12 @@ import Artist_Profile_Screen from '../page/Artist_Profile_Screen';
 import PlayanAudio from '../page/Play_an_AudioScreen';
 import Feed from '../page/Feed';
 
+import Footer from '../component/footer';
+import { useMusic } from "../context/FloatingMusicContext";
+import { AudioContext } from '../context/AudioContext';
+
+import {artists, albumsSong} from '../data/data_audio'
+
 
 const Tab = createBottomTabNavigator();
 const HomeStack = createNativeStackNavigator();
@@ -29,6 +36,8 @@ const HomeStackScreen = () => {
             <HomeStack.Screen name="Playlist_Details" component={Playlist_Details} options={{ headerShown: false }} />
             <HomeStack.Screen name="ArtistProfile" component={Artist_Profile_Screen} options={{ headerShown: false }} />
             {/* <HomeStack.Screen name="PlayanAudio" component={PlayanAudio} options={{ headerShown: false }} /> */}
+            {/* <HomeStack.Screen name="SearchAudio" component={SearchAudio} options={{ headerShown: false }} />
+            <SearchStack.Screen name="AudioListing_SearchResultsScreen" component={AudioListing_SearchResultsScreen} options={{ headerShown: false }} /> */}
         </HomeStack.Navigator>
     );
 }
@@ -54,7 +63,42 @@ const LibraryScreen = () => {
 
 // TabNavigator component
 export default function TabNavigation() {
+  const { songId, isPause, setIsPause } = useMusic(); 
+  const soundObject = useContext(AudioContext);;
+
+
+  // / Find artist by id
+    const handelArtistByID = (id) => {
+        var artist= artists.find((item) => item.id === id);
+        return artist;
+    }
+
+    // Find artist by id
+    const handelAlbumByID = (id) => {
+        const album = albumsSong.find((item) => item.id === id);
+        return album;
+    }
+
+  const handelPlaySong = async () => {
+    try {
+        const status = await soundObject.current.getStatusAsync();
+        if (!status.isLoaded) {
+            console.log("Sound is not loaded yet.");
+            return;
+        }
+        if(isPause) {
+            await soundObject.current.pauseAsync();
+        } else {
+            await soundObject.current.playAsync();
+        }
+        setIsPause(!isPause);
+    } catch (e) {
+        console.log(e);
+    };
+}
   return (
+    <>
+
       <Tab.Navigator
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
@@ -99,5 +143,22 @@ export default function TabNavigation() {
         <Tab.Screen name="Playlist_Details" component={Playlist_Details} options={{ tabBarStyle: {display:'none'} }} /> */}
 
       </Tab.Navigator>
+
+      {songId && (
+        <Footer
+          dataSongId={songId}
+          selectedPause={isPause}
+          setSelectedPause={handelPlaySong}
+          albumsSong={handelAlbumByID(songId.albums_id)}
+          artists={handelArtistByID(songId.id)}
+          activeScreen={'MainTab'}
+          showMusicInfo={true}
+        />
+      )}
+      
+    </>
+     
+  
+      
   );
 }

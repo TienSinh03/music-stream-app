@@ -20,11 +20,12 @@ import {
   import IconFnA from "react-native-vector-icons/FontAwesome";
   import IconEnty from "react-native-vector-icons/Entypo";
 
-  import { chart_list,songs, artists } from "../data/data_audio";
+  import { chart_list,songs, artists,albumsSong } from "../data/data_audio";
   import Footer from '../component/footer';
 
   import { Audio } from "expo-av";
   import { AudioContext } from "../context/AudioContext";
+    import { useMusic } from "../context/FloatingMusicContext";
   
   const screenWith = Dimensions.get("window").width;
   const screenHeight = Dimensions.get("window").height;
@@ -68,17 +69,16 @@ import {
     const charts = chart_list.find((item) => item.id === route.params?.idChart);
     const dataSongId = route.params?.dataFindId ? route.params?.dataFindId : null;
 
-    console.log(dataSongId);
-
     const [song, setSong] = useState();
     
-    const [selectedPause, setSelectedPause] = useState(route.params?.selectedPause || true);
+    const [selectedPause, setSelectedPause] = useState(route.params?.selectedPause);
     console.log(selectedPause);
-
 
     useEffect(() => {
         setSelectedPause(route.params?.selectedPause);
     }, [route.params?.selectedPause]);
+
+    const { setDataSongId } = useMusic();
 
 
     // Find artist by id
@@ -87,12 +87,24 @@ import {
         return artist;
     }
 
+    // Find artist by id
+    const handelAlbumByID = (id) => {
+        const album = albumsSong.find((item) => item.id === song.albums_id);
+        return album;
+    }
+
     const soundObject = useContext(AudioContext);
 
     // Find song by id
     const handelSongByID = async  (id) => {
         var song = songs.find((item) => item.id === id);
+
+        console.log("song"+song);
         setSong(song);
+        setDataSongId(song);
+
+        // setIsPause(!selectedPause);
+        // setSelectedPause(!selectedPause);
 
         try {
             if (soundObject.current) {
@@ -228,21 +240,21 @@ import {
         </ScrollView>
 
          {/** Footer */}
+         {/* {song && (
         <Footer 
-          dataSongId={dataSongId} 
+          dataSongId={song} 
           onPressSmallMusic = {() => navigation.navigate(
             "PlayanAudio", 
-            {dataFindId: dataSongId, selectedPause: selectedPause, artist: route.params?.artist, previousScreen: 'MainTab', idChart: route.params?.idChart,songsByChart: route.params?.songsByChart}
+            {dataFindId: song, selectedPause: selectedPause, artist: route.params?.artist, previousScreen: 'MainTab', idChart: route.params?.idChart,songsByChart: songsByChart}
           )}
           selectedPause={selectedPause}
           setSelectedPause={handelPlaySong}
-          navigatePoptoTop={() => navigation.popToTop()}
-          albumsSong={route.params?.albumsSong}
-          artists={route.params?.artist}
-          navigateToScreen={(screen) => navigation.navigate(screen)}
-          activeScreen={'Home_AudioListing'}
+          albumsSong={handelAlbumByID(song)}
+          artists={handelArtistByID(song.id)}
+          activeScreen={'MainTab'}
           showMusicInfo={true}
         />
+        )} */}
       </SafeAreaView>
     );
   }

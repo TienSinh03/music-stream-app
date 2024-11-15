@@ -261,11 +261,11 @@ export default function Home_AudioListing({navigation, route}) {
       </ScrollView>
 
               
-      <Footer 
+      {/* <Footer 
           navigateToScreen={(screen) => navigation.navigate(screen)}
           activeScreen={'Home_AudioListing'}
           showMusicInfo={false}
-        />
+        /> */}
     </SafeAreaView>
   );
 }

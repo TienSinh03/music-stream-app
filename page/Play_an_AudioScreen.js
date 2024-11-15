@@ -27,6 +27,7 @@ import {
 
     import { Audio } from 'expo-av';
     import { AudioContext } from '../context/AudioContext';
+import { useMusic } from "../context/FloatingMusicContext";
   
   const screenWith = Dimensions.get("window").width;
   const screenHeight = Dimensions.get("window").height;
@@ -49,14 +50,10 @@ import {
     const itemArtist = artists.find((item) => item.id === currentSong.artist);
 
 
-    useEffect(() => {
-        setSelectedPause(route.params?.selectedPause);
-    }, [route.params?.selectedPause]);
-
     console.log(route.params?.previousScreen);
 
     const soundObject = useContext(AudioContext);
-
+    const {setIsPause} = useMusic();
 
     const handlePlayPause = async () => {
         try {
@@ -73,6 +70,7 @@ import {
             } else {
                 await soundObject.current.playAsync();
             }
+            setIsPause(!selectedPause);
             setSelectedPause(!selectedPause);
         } catch (error) {
             console.log("phat"+error);

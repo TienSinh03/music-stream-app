@@ -17,14 +17,17 @@ import {
   import IconIon from "react-native-vector-icons/Ionicons";
   import IconFnA from "react-native-vector-icons/FontAwesome";
 
-  const Footer = ({dataSongId,onPressSmallMusic, selectedPause, setSelectedPause,albumsSong,artists,navigateToScreen, activeScreen, showMusicInfo = true}) => {
+  import { useMusic } from "../context/FloatingMusicContext";
+
+  const Footer = ({dataSongId,onPressSmallMusic, selectedPause, setSelectedPause,albumsSong,artists, activeScreen, showMusicInfo = true}) => {
     
     const getColor = (screenName) => (screenName === activeScreen ? "#21c5db" : "#565E6CFF");
-    console.log("foonter");
+    console.log("footer");
     console.log(dataSongId);
+    
 
     return (
-        <View>
+        <View style={{position:'absolute', bottom:100, right:0, left:0}}>
             {showMusicInfo && dataSongId && (
             <TouchableOpacity style ={{backgroundColor:'#171A1FFF', width:'100%', display:'flex', flexDirection:'row', alignItems:'center', justifyContent:'space-between', padding:15}}
                 onPress={() => onPressSmallMusic()}
@@ -59,7 +62,7 @@ import {
                 
             </View>      
             </TouchableOpacity>
-        )}
+         )} 
 
             {/** action footer */}
             {/* <View style={styles.footer}>
@@ -93,6 +96,52 @@ import {
     footer:{display:'flex', flexDirection:'row', justifyContent:'space-between', alignItems:'center',paddingHorizontal:55,paddingVertical:20,backgroundColor:'white', borderTopWidth:1, borderColor:'#C4C4C4'}
 
 })
+
+// const Footer = ({ navigation, activeScreen }) => {
+//     const { dataSongId, selectedPause, setSelectedPause } = useMusic();
+  
+//     console.log("Footer");
+//     console.log(dataSongId);
+//     return (
+//       <View>
+//         {dataSongId && (
+//           <TouchableOpacity style ={{backgroundColor:'#171A1FFF', width:'100%', display:'flex', flexDirection:'row', alignItems:'center', justifyContent:'space-between', padding:15}}
+//                 onPress={() => navigation.navigate('PlayanAudio')}
+//         >
+                          
+//                       {/** Image and infor music playing */}
+//                       <View style={{display:'flex', flexDirection:'row', alignItems:'center', gap:15}}>
+//                           {/** Image music */}
+//                           <Image source={dataSongId.image} style={{width: 50, height: 50}}/>
+          
+//                           {/** Infor */}
+//                           <View style={{flexDirection:'column'}}>
+//                               {/** Name music */}
+//                               <Text style={{fontSize: 16, lineHeight:24,fontWeight:'500', color:'white'}}>{dataSongId.title}</Text>
+          
+//                               {/**  */}
+//                               {/* <View style={{display:'flex', flexDirection:'row', alignItems:'center', gap:6}}>
+//                                   <Text style={{fontSize: 14, lineHeight:24,fontWeight:'400', color:'white', marginRight:8}}>{albumsSong.title}</Text>
+                                  
+//                                   <IconFnA name="circle" size={10} color="white"/>
+//                                   <Text style={{fontSize: 14, lineHeight:24,fontWeight:'400', color:'white'}}>{artists.artistName}</Text>
+//                               </View> */}
+//                           </View>
+//                       </View>  
+          
+//                       <View style={{flexDirection:'row', alignItems:'center', gap:25}}>
+//                           <IconAnt name="hearto" size={24} color="white"/>
+          
+//                           <TouchableOpacity onPress={() => setSelectedPause()}>
+//                               {selectedPause ? <IconFe name="pause" size={24} color="white"/> : <IconFe name="play" size={24} color="white"/>}
+//                           </TouchableOpacity>
+                          
+//                       </View>      
+//             </TouchableOpacity>
+//         )}
+//       </View>
+//     );
+//   };
 
 
   export default Footer;

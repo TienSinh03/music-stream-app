@@ -19,6 +19,7 @@ import SubscriptionPlan from './page/SubscriptionPlan_Screen';
 import TabNavigation from './navigation/TabNavigationBottom';
 
 import { AudioProvider } from './context/AudioContext';
+import { MusicProvider } from './context/FloatingMusicContext';
 
 
 import Feed from './page/Feed';
@@ -26,6 +27,7 @@ import Feed from './page/Feed';
 const Stack = createStackNavigator();
 export default function App() {
   return (
+    <MusicProvider>
     <AudioProvider>
       <NavigationContainer>
         <Stack.Navigator initialRouteName="LanchScreen">
@@ -55,6 +57,7 @@ export default function App() {
 
         </Stack.Navigator>
       </NavigationContainer>
-    </AudioProvider>    
+    </AudioProvider>  
+    </MusicProvider>  
   );
 }
