@@ -16,9 +16,7 @@ import {
   import IconAnt from "react-native-vector-icons/AntDesign";
   import IconIon from "react-native-vector-icons/Ionicons";
   import IconFnA from "react-native-vector-icons/FontAwesome";
-
   import { useMusic } from "../context/FloatingMusicContext";
-
   const Footer = ({dataSongId,onPressSmallMusic, selectedPause, setSelectedPause,albumsSong,artists, activeScreen, showMusicInfo = true}) => {
     
     const getColor = (screenName) => (screenName === activeScreen ? "#21c5db" : "#565E6CFF");

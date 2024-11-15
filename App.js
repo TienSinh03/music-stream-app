@@ -21,6 +21,8 @@ import TabNavigation from './navigation/TabNavigationBottom';
 import { AudioProvider } from './context/AudioContext';
 import { MusicProvider } from './context/FloatingMusicContext';
 
+import Login from './page/Login';
+import Register from './page/Register';
 
 import Feed from './page/Feed';
 
@@ -54,6 +56,8 @@ export default function App() {
           <Stack.Screen name="SubscriptionPlan" component={SubscriptionPlan} options={{ headerShown: false }} />
           <Stack.Screen name="Feed" component={Feed} options={{ headerShown: false }} />
           <Stack.Screen name="MainTab" component={TabNavigation} options={{ headerShown: false }} />
+    <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
+          <Stack.Screen name="Register" component={Register} options={{ headerShown: false }} />
 
         </Stack.Navigator>
       </NavigationContainer>
