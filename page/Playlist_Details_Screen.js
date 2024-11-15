@@ -53,7 +53,7 @@ import {
                     
                     {/**duration */}
                     <IconFnA name="circle" size={10} color="#9095A0FF"/>
-                    <Text style={{fontSize: 14, lineHeight:24,fontWeight:'400', color:'#565E6CFF'}}>{duration}</Text>
+                    <Text style={{fontSize: 14, lineHeight:24,fontWeight:'400', color:'#565E6CFF'}}>{(duration/1000/60).toFixed(2)}</Text>
                 </View>
             </View>
          </View>
@@ -76,7 +76,7 @@ import {
     const dataSongId = route.params?.dataFindId ? route.params?.dataFindId : null;
 
     const [song, setSong] = useState();
-    
+
     const { setDataSongId, setAlbumSongId, setArtistSongId, isPause } = useMusic();
     
     const [selectedPause, setSelectedPause] = useState(isPause);
@@ -236,22 +236,6 @@ import {
             </View>
         </ScrollView>
 
-         {/** Footer */}
-         {/* {song && (
-        <Footer 
-          dataSongId={song} 
-          onPressSmallMusic = {() => navigation.navigate(
-            "PlayanAudio", 
-            {dataFindId: song, selectedPause: selectedPause, artist: route.params?.artist, previousScreen: 'MainTab', idChart: route.params?.idChart,songsByChart: songsByChart}
-          )}
-          selectedPause={selectedPause}
-          setSelectedPause={handelPlaySong}
-          albumsSong={handelAlbumByID(song)}
-          artists={handelArtistByID(song.id)}
-          activeScreen={'MainTab'}
-          showMusicInfo={true}
-        />
-        )} */}
       </SafeAreaView>
     );
   }

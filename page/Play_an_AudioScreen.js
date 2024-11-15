@@ -83,6 +83,7 @@ import {
         }
 
         const currentIndex = songs.findIndex(s => s.track.id === currentSong.id);
+        console.log("index"+currentIndex);
 
         if (currentIndex === -1 || currentIndex === songs.length - 1) {
             console.error("No next song available.");
@@ -90,6 +91,7 @@ import {
         }
 
         const nextSong = songs[currentIndex + 1];
+        console.log("nextSong"+nextSong.track.name);
         try {
             // dừng bài hát hiện tại
             await soundObject.current.stopAsync();
@@ -143,7 +145,7 @@ import {
         async function loadAudio() {
             if (!route.params?.soundObject) {
                 try {
-                    await soundObject.current.loadAsync({ uri: song.preview_url });
+                    await soundObject.current.loadAsync({ uri: currentSong.preview_url });
                     await soundObject.current.playAsync();
                 } catch (error) {
                     console.log("load"+error);
@@ -157,7 +159,29 @@ import {
     }, []);
 
 
-    
+    // get the artist by id
+    const getArtistById = async(id) => {
+        const url = `https://api.spotify.com/v1/artists/${id}`;
+        const options = {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        }
+        const response = await fetchWithToken(url, options);
+        const data = await response.json();
+        return data;
+    }
+
+    useEffect(() => {
+        async function loadArtist() {
+            const artist = await getArtistById(currentSong.artists[0].id);
+            setArtistBySong(artist);
+        }
+        loadArtist();
+        console.log('Artist');
+        console.log(artistBySong);
+    },[]);
 
     return (
         <SafeAreaView style={styles.container}>
@@ -198,7 +222,7 @@ import {
                         <Image source={require('../assets/image/Play an Audio/Group 4.png')} resizeMode="stretch" style={{width:'100%', }}/>
                         <View style={styles.viewLyric}>
                             <Text style={{color:'white', fontSize:16, lineHeight:22, fontWeight:'400'}}>0:00</Text>
-                            <Text style={{color:'#9095A0FF', fontSize:16, lineHeight:22, fontWeight:'400'}}>{currentSong.duration_ms}</Text>
+                            <Text style={{color:'#9095A0FF', fontSize:16, lineHeight:22, fontWeight:'400'}}>{(currentSong.duration_ms/1000/60).toFixed(2)}</Text>
                         </View>
                     </View>
 
