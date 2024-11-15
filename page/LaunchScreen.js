@@ -30,12 +30,12 @@ export default function App({navigation}) {
         <Text style={styles.titleHeader}>Your music {'\n'} Your{'\n'}artists</Text>
 
         {/* Button Create an account */}
-        <TouchableOpacity style={[styles.button, styles.buttonCreateAc]}>
+        <TouchableOpacity style={[styles.button, styles.buttonCreateAc]} onPress={()=> navigation.navigate('Register')}>
             <Text style={[styles.textButton,{ color: 'white'}]}>Create an account</Text>
         </TouchableOpacity>
 
         {/* Button Already have an account */}
-        <TouchableOpacity style={[styles.button, styles.buttonAlready]} onPress={() =>navigation.navigate('MainTab')}>
+        <TouchableOpacity style={[styles.button, styles.buttonAlready]} onPress={() =>navigation.navigate('Login')}>
             <Text style={[styles.textButton,{ color: '#9d45efff'}]}>l already have an account</Text>
         </TouchableOpacity>
 
