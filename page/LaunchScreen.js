@@ -7,9 +7,18 @@ import {
   Image,
   TouchableOpacity
 } from "react-native";
+import React, { useEffect } from "react";
 
+import {get_Token} from '../utils/GetAccessToken';
 
 export default function App({navigation}) {
+
+  
+
+  useEffect(() => {
+    get_Token();
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
     {/* Background Image */}
