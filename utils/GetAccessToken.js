@@ -23,7 +23,7 @@ export const get_Token = async () => {
         await AsyncStorage.setItem("token", data.access_token);
         await AsyncStorage.setItem("expireTime", expireTime.toString());
 
-        console.log(data.access_token );
+        
 
         console.log("saved token successfully");
       } else {
@@ -34,6 +34,7 @@ export const get_Token = async () => {
     }
     
   }
+
 
   // xử dụng khi cần get api token
   export const fetchWithToken= async (URL, options) => {
@@ -47,6 +48,7 @@ export const get_Token = async () => {
     }
 
     const access_token = await AsyncStorage.getItem("token");
+    console.log(access_token );
     options.headers = {
       ...options.headers,
       "Authorization": `Bearer ${access_token}`

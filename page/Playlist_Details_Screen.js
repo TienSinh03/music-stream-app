@@ -26,6 +26,8 @@ import {
   import { Audio } from "expo-av";
   import { AudioContext } from "../context/AudioContext";
     import { useMusic } from "../context/FloatingMusicContext";
+
+    import { fetchWithToken } from "../utils/GetAccessToken";
   
   const screenWith = Dimensions.get("window").width;
   const screenHeight = Dimensions.get("window").height;
@@ -37,7 +39,7 @@ import {
     >
         <View style={{flexDirection:'row', alignItems:'center', gap:15}}>
             {/** Image music */}
-            <Image source={image} style={{width:70, height:70}}/>
+            <Image source={{uri:image}} style={{width:70, height:70}}/>
             {/** The information music */}
             <View style={{flexDirection:'column'}}>
                 {/** Name music */}
@@ -47,7 +49,7 @@ import {
                 {/** views and duration */}
                 <View style={{display:'flex', flexDirection:'row', alignItems:'center', gap:6}}>
                     <IconFe name="play" size={16} color="#9095A0FF"/>
-                    <Text style={{fontSize: 14, lineHeight:24,fontWeight:'400', color:'#565E6CFF', marginRight:8}}>{plays}M</Text>
+                    <Text style={{fontSize: 14, lineHeight:24,fontWeight:'400', color:'#565E6CFF', marginRight:8}}>12M</Text>
                     
                     {/**duration */}
                     <IconFnA name="circle" size={10} color="#9095A0FF"/>
@@ -65,53 +67,49 @@ import {
   
   export default function Playlist_Details({navigation,route}) {
 
-    const songsByChart = songs.filter((item) => item.chart_id === route.params?.idChart) || route.params?.songsByChart;
+    console.log('Playlist_Details');
+
+    const chartTop50 = route.params?.chartTop50;
+
+    const songsByChart =  chartTop50.tracks.items || route.params?.songsByChart;
     const charts = chart_list.find((item) => item.id === route.params?.idChart);
     const dataSongId = route.params?.dataFindId ? route.params?.dataFindId : null;
 
     const [song, setSong] = useState();
     
-    const [selectedPause, setSelectedPause] = useState(route.params?.selectedPause);
-    console.log(selectedPause);
+    const { setDataSongId, setAlbumSongId, setArtistSongId, isPause } = useMusic();
+    
+    const [selectedPause, setSelectedPause] = useState(isPause);
+
+
+    const soundObject = useContext(AudioContext);
+
+    console.log("isSelcet "+selectedPause);
 
     useEffect(() => {
         setSelectedPause(route.params?.selectedPause);
     }, [route.params?.selectedPause]);
 
-    const { setDataSongId } = useMusic();
-
-
-    // Find artist by id
-    const handelArtistByID = (id) => {
-        var artist= artists.find((item) => item.id === id);
-        return artist;
-    }
-
-    // Find artist by id
-    const handelAlbumByID = (id) => {
-        const album = albumsSong.find((item) => item.id === song.albums_id);
-        return album;
-    }
-
-    const soundObject = useContext(AudioContext);
-
     // Find song by id
-    const handelSongByID = async  (id) => {
-        var song = songs.find((item) => item.id === id);
+    const handelSongByID = async  (track) => {
 
-        console.log("song"+song);
-        setSong(song);
-        setDataSongId(song);
+        setSong(track);
+        setDataSongId(track);
 
-        // setIsPause(!selectedPause);
-        // setSelectedPause(!selectedPause);
+        setAlbumSongId(track.album);
+        console.log("albumn");
+        console.log(track.album);
+
+        setArtistSongId(track.artists[0]);
+        console.log("artist");
+        console.log(track.artists[0]);
 
         try {
             if (soundObject.current) {
                 await soundObject.current.stopAsync(); // Dừng nhạc hiện tại
                 await soundObject.current.unloadAsync(); // Gỡ nhạc hiện tại
             }
-            await soundObject.current.loadAsync({ uri: song.audio }); // Tải bài hát mới
+            await soundObject.current.loadAsync({ uri: track.preview_url }); // Tải bài hát mới
             await soundObject.current.playAsync(); // Phát bài hát mới
         } catch (e) {
             console.log(e);
@@ -120,11 +118,11 @@ import {
         navigation.navigate("PlayanAudio", 
             {   
                 ...route.params,
-                dataFindId: song, 
+                dataFindId: track, 
                 songsByChart: songsByChart,
                 selectedPause: selectedPause, 
-                image: song.image, 
-                artist: handelArtistByID(song.artist).artistName,
+                image: track.album.images[0].url, 
+                artist: track.artists[0].name,
                 previousScreen: 'MainTab',
             });
     }
@@ -165,27 +163,27 @@ import {
             {/** playlist info and image */}
             <View style={styles.viewInfo}>
                 {/** Image and name playlist */}
-                <ImageBackground source={charts.image} style={styles.viewImageList}>
-                    <Text style={styles.textNameList_Image}>{charts.title}</Text>
-                    <Text style={{color:'white', fontSize: 15, fontWeight:'400'}}>{charts.location}</Text>
+                <ImageBackground source={{uri: chartTop50.images[0].url}} style={styles.viewImageList}>
+                    {/* <Text style={styles.textNameList_Image}>{chartTop50.name}</Text>
+                    <Text style={{color:'white', fontSize: 15, fontWeight:'400'}}>{charts.location}</Text> */}
                 </ImageBackground>
 
                 {/**The information Playlist*/}
                 <View>
                     {/**title Playlist */}
-                    <Text style={styles.textTitleList}>{charts.title} - {charts.location}</Text>
+                    <Text style={styles.textTitleList}>{chartTop50.name}</Text>
                     
                     {/** Tym and total Hours */}
                     <View style={{display:'flex', flexDirection:'row', alignItems:'center', gap:10, marginVertical:5}}>
                         <IconAnt name="hearto" size={18} color="#21c5db"/>
-                        <Text style={[styles.text,{marginRight:8}]}>{charts.likes}</Text>
+                        <Text style={[styles.text,{marginRight:8}]}>1,235</Text>
 
                         <IconFnA name="circle" size={12} color="#9095A0FF"/>
-                        <Text style={styles.text}>{charts.duration}</Text>
+                        <Text style={styles.text}>05:10:18</Text>
                     </View>
 
                     {/** Description */}
-                    <Text style={styles.text}>{charts.description}</Text>
+                    <Text style={styles.text}>{chartTop50.description}</Text>
                 </View>
 
             </View>
@@ -212,7 +210,7 @@ import {
                     </TouchableOpacity>
                         
                     {/** button play */}
-                    <TouchableOpacity onPress={() => handelSongByID(songsByChart[0].id)}>
+                    <TouchableOpacity onPress={() => handelSongByID(songsByChart[0].track)}>
                         <Image source={require('../assets/image/Playlist Details - Audio Listing/Icon Button 2.png')} style={{width: 60, height: 60}}/>
                     </TouchableOpacity>
                 </View>
@@ -222,18 +220,17 @@ import {
             <View style ={{marginTop:25}}>
                 <FlatList
                     data={songsByChart}
-                    key={item => item.id}
+                    key={item => item.track.id}
                     renderItem={({ item }) => (
                         <Item 
-                        title={item.title} 
-                        artist={handelArtistByID(item.artist).artistName} 
-                        plays={item.plays} 
-                        duration={item.duration} 
-                        image={item.image}
-                        setFindSong={() => handelSongByID(item.id)}
+                        title={item.track.name} 
+                        artist={item.track.artists[0].name} 
+                        duration={item.track.duration_ms} 
+                        image={item.track.album.images[0].url}
+                        setFindSong={() => handelSongByID(item.track)}
                          />
                     )}
-                    keyExtractor={item => item.id}
+                    keyExtractor={item => item.track.id}
                     scrollEnabled={false}
                 />
             </View>
@@ -275,6 +272,6 @@ import {
     viewImageList:{width:screenWith*0.31,height:screenHeight*0.14, alignItems:'center', justifyContent:'center'},
     textNameList_Image:{color:'white', fontSize: 22, lineHeight:30,fontWeight:'bold', paddingBottom:15},
     textTitleList:{fontSize: 24, lineHeight:30,fontWeight:'bold', color:'#171A1FFF'},
-    text:{fontSize: 16, lineHeight:24,fontWeight:'400', color:'#565E6CFF'},
+    text:{fontSize: 14, lineHeight:24,fontWeight:'400', color:'#565E6CFF'},
     footer:{display:'flex', flexDirection:'row', justifyContent:'space-between', alignItems:'center',paddingHorizontal:55,paddingVertical:20,backgroundColor:'white', borderTopWidth:1, borderColor:'#C4C4C4'}
 })

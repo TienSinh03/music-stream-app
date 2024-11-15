@@ -23,20 +23,22 @@ import { chart_list,artists,albumsSong } from "../data/data_audio";
 
 import Footer from '../component/footer';
 
+import { get_Token, fetchWithToken } from "../utils/GetAccessToken";
+
 const screenWith = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
 
 
 // Items with charts
-const Item_Chart = ({ title, location, likes, duration, description, image,navigation,id }) => (
+const Item_Chart = ({ title, location, likes, duration, description, image,navigation,chart }) => (
   
-  <TouchableOpacity style={{width:'30%'}} onPress={() => navigation.navigate({
+  <TouchableOpacity style={{width:'10%', marginRight:20}} onPress={() => navigation.navigate({
     name:'Playlist_Details',
-    params: {idChart: id}
+    params: {chartTop50: chart}
   })}>
     {/** Image and name playlist */}
-    <ImageBackground source={image} style={styles.viewImageList}>
+    <ImageBackground source={{uri: image}} style={styles.viewImageList}>
         <Text style={styles.textNameList_Image}>{title}</Text>
         <Text style={{color:'white', fontSize: 15, fontWeight:'400'}}>{location}</Text>
     </ImageBackground>
@@ -75,7 +77,14 @@ const Item_popular_artists = ({artist,follow,textFollower, navigation}) => (
 
 export default function Home_AudioListing({navigation, route}) {
 
+  const USER_ID =  "317qive5msxoaogrwjuqgm2vwvfy";
+  const PLAYLIST_ID_TOP_VN = "37i9dQZEVXbLdGSmz6xilI"
+  const PLAYLIST_ID_TOP_USA = "37i9dQZEVXbLRQDuF5jeBp"
+  const PLAYLIST_ID_TOP_UK = "37i9dQZEVXbLnolsZ8PSNw"
+
   const [isFollowing, setIsFollowing] = useState({});
+  const [userProfile, setUserProfile] = useState();
+  const [chartTop50, setChartTop50] = useState([]);
 
   const toggleFollow = (id) => {
     setIsFollowing((prevState) => ({
@@ -92,6 +101,50 @@ export default function Home_AudioListing({navigation, route}) {
   const artistsPopuplar = getPopularArtists(artists);
   console.log(artistsPopuplar);
 
+
+  // fetch users from spotify api
+  const getProfile = async () => {
+    const url = "https://api.spotify.com/v1/users/"+USER_ID;
+    const options = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+    const response = await fetchWithToken(url, options);
+    const data = await response.json();
+    setUserProfile(data);
+  }
+
+  // fetch the top 50 songs from spotify api
+  const getTop50= async (PLAYLIST_ID_TOP) => {
+    const url = `https://api.spotify.com/v1/playlists/${PLAYLIST_ID_TOP}`;
+    const options = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+    const response = await fetchWithToken(url, options);
+    const data = await response.json();
+    return data;
+  }
+
+  useEffect(() => {
+    getProfile();
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const vnData = await getTop50(PLAYLIST_ID_TOP_VN);
+      const usaData = await getTop50(PLAYLIST_ID_TOP_USA);
+      const ukData = await getTop50(PLAYLIST_ID_TOP_UK);
+      setChartTop50([vnData, usaData, ukData]);
+    }
+    fetchData();
+  }
+  , []);
+  
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView  style={{marginLeft: 20}} showsVerticalScrollIndicator={false}>
@@ -113,7 +166,7 @@ export default function Home_AudioListing({navigation, route}) {
             />
             <TouchableOpacity>
               <Image
-                source={require("../assets/image/Home - Audio Listing/Avatar 3.png")}
+                source={{uri: userProfile?.images[0]?.url}} style={{width: 36, height: 36, borderRadius:18}}
               />
             </TouchableOpacity>
           </View>
@@ -127,7 +180,7 @@ export default function Home_AudioListing({navigation, route}) {
           ) : <Text style={styles.textMorning}>Good afternoon</Text>}
 
           {/* Text User */}
-          <Text style={styles.textUser}>Ashley Scott</Text>
+          <Text style={styles.textUser}>{userProfile?.display_name}</Text>
 
           {/* Input search */}
           <TouchableOpacity style={styles.inputSearch} onPress={() => navigation.navigate('SearchAudio')}>
@@ -177,17 +230,13 @@ export default function Home_AudioListing({navigation, route}) {
           {/** List chart */}
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
                 <FlatList 
-                    data={chart_list}
+                    data={chartTop50}
                     renderItem={({item}) =>(
                       <Item_Chart 
                         key={item.id}
-                        id={item.id}
-                        title={item.title} 
-                        location={item.location} 
-                        likes={item.likes} 
-                        duration={item.duration} 
+                        chart={item}                    
                         description={item.description} 
-                        image={item.image} 
+                        image={item.images[0].url} 
                         navigation={navigation}/>
                     )}
                     keyExtractor={item => item.id}
@@ -332,6 +381,6 @@ const styles = StyleSheet.create({
   buttonFL:{alignItems:'center', backgroundColor:'#171A1FFF', borderRadius:18},
   textButtonFL:{fontSize:16, lineHeight:22, fontWeight:'400', color:'white', paddingHorizontal:12, paddingVertical:8},
 
-  viewImageList:{width:screenWith*0.31,height:screenHeight*0.14, alignItems:'center', justifyContent:'center'},
+  viewImageList:{width:screenWith*0.31,height:screenHeight*0.14, alignItems:'center', justifyContent:'center', borderRadius:10},
   textNameList_Image:{color:'white', fontSize: 22, lineHeight:30,fontWeight:'bold', paddingBottom:15},
 });

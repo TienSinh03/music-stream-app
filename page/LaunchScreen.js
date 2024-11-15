@@ -10,11 +10,12 @@ import {
 import React, { useEffect } from "react";
 
 import {get_Token} from '../utils/GetAccessToken';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function App({navigation}) {
 
   
-
+// console.log(AsyncStorage.getItem("access_token"));
   useEffect(() => {
     get_Token();
   }, []);

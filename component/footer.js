@@ -24,6 +24,8 @@ import {
     const getColor = (screenName) => (screenName === activeScreen ? "#21c5db" : "#565E6CFF");
     console.log("footer");
     console.log(dataSongId);
+    console.log("helloa"+artists);
+    console.log("hellon"+albumsSong);
     
 
     return (
@@ -36,19 +38,19 @@ import {
             {/** Image and infor music playing */}
             <View style={{display:'flex', flexDirection:'row', alignItems:'center', gap:15}}>
                 {/** Image music */}
-                <Image source={dataSongId.image} style={{width: 50, height: 50}}/>
+                <Image source={{uri: dataSongId.album.images[0].url}} style={{width: 50, height: 50}}/>
 
                 {/** Infor */}
                 <View style={{flexDirection:'column'}}>
-                    {/** Name music */}
-                    <Text style={{fontSize: 16, lineHeight:24,fontWeight:'500', color:'white'}}>{dataSongId.title}</Text>
+                    {/* * Name music */}
+                    <Text style={{fontSize: 16, lineHeight:24,fontWeight:'500', color:'white'}}>{dataSongId.name}</Text>
 
                     {/**  */}
                     <View style={{display:'flex', flexDirection:'row', alignItems:'center', gap:6}}>
-                        <Text style={{fontSize: 14, lineHeight:24,fontWeight:'400', color:'white', marginRight:8}}>{albumsSong.title}</Text>
+                        <Text style={{fontSize: 14, lineHeight:24,fontWeight:'400', color:'white', marginRight:8}}>{albumsSong.name}</Text>
                         
                         <IconFnA name="circle" size={10} color="white"/>
-                        <Text style={{fontSize: 14, lineHeight:24,fontWeight:'400', color:'white'}}>{artists.artistName}</Text>
+                        <Text style={{fontSize: 14, lineHeight:24,fontWeight:'400', color:'white'}}>{artists.name}</Text>
                     </View>
                 </View>
             </View>  

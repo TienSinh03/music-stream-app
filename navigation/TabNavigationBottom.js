@@ -63,8 +63,8 @@ const LibraryScreen = () => {
 
 // TabNavigator component
 export default function TabNavigation() {
-  const { songId, isPause, setIsPause } = useMusic(); 
-  const soundObject = useContext(AudioContext);;
+  const { songId, isPause, setIsPause, artistSongId,albumSongId } = useMusic(); 
+  const soundObject = useContext(AudioContext);
 
 
   // / Find artist by id
@@ -149,11 +149,12 @@ export default function TabNavigation() {
           dataSongId={songId}
           selectedPause={isPause}
           setSelectedPause={handelPlaySong}
-          albumsSong={handelAlbumByID(songId.albums_id)}
-          artists={handelArtistByID(songId.id)}
+          albumsSong={albumSongId}
+          artists={artistSongId}
           activeScreen={'MainTab'}
           showMusicInfo={true}
         />
+
       )}
       
     </>

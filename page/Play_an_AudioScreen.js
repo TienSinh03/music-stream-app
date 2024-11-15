@@ -27,8 +27,12 @@ import {
 
     import { Audio } from 'expo-av';
     import { AudioContext } from '../context/AudioContext';
-import { useMusic } from "../context/FloatingMusicContext";
+    import { useMusic } from "../context/FloatingMusicContext";
+
+    import { fetchWithToken } from "../utils/GetAccessToken";
   
+
+
   const screenWith = Dimensions.get("window").width;
   const screenHeight = Dimensions.get("window").height;
 
@@ -37,18 +41,12 @@ import { useMusic } from "../context/FloatingMusicContext";
     const [selectedPause, setSelectedPause] = useState(route.params?.selectedPause || true);
 
     const [currentSong, setCurrentSong] = useState(route.params?.dataFindId);
+    const [artistBySong, setArtistBySong] = useState();
 
     const songs = route.params?.songsByChart || [];
 
     const song = route.params?.dataFindId;
-
-    console.log(currentSong);
-    console.log(selectedPause);
     
-    
-    const albums = albumsSong.find((item) => item.id === currentSong.albums_id);
-    const itemArtist = artists.find((item) => item.id === currentSong.artist);
-
 
     console.log(route.params?.previousScreen);
 
@@ -84,7 +82,7 @@ import { useMusic } from "../context/FloatingMusicContext";
             return;
         }
 
-        const currentIndex = songs.findIndex(s => s.id === currentSong.id);
+        const currentIndex = songs.findIndex(s => s.track.id === currentSong.id);
 
         if (currentIndex === -1 || currentIndex === songs.length - 1) {
             console.error("No next song available.");
@@ -98,10 +96,10 @@ import { useMusic } from "../context/FloatingMusicContext";
             await soundObject.current.unloadAsync();
 
             // load và phát bài hát tiếp theo
-            await soundObject.current.loadAsync({ uri: nextSong.audio });
+            await soundObject.current.loadAsync({ uri: nextSong.track.preview_url });
             await soundObject.current.playAsync();
 
-            setCurrentSong(nextSong);
+            setCurrentSong(nextSong.track);
             setSelectedPause(true);
         } catch (error) {
             console.log("next"+error);
@@ -116,7 +114,7 @@ import { useMusic } from "../context/FloatingMusicContext";
             return;
         }
 
-        const currentIndex = songs.findIndex(s => s.id === currentSong.id);
+        const currentIndex = songs.findIndex(s => s.track.id === currentSong.id);
 
         if (currentIndex === -1 || currentIndex === 0) {
             console.error("No next song available.");
@@ -131,10 +129,10 @@ import { useMusic } from "../context/FloatingMusicContext";
             await soundObject.current.unloadAsync();
 
             // Tải và phát bài hát trước đó
-            await soundObject.current.loadAsync({uri: previousSong.audio});
+            await soundObject.current.loadAsync({uri: previousSong.track.preview_url});
             await soundObject.current.playAsync();
 
-            setCurrentSong(previousSong);
+            setCurrentSong(previousSong.track);
             setSelectedPause(true);
         } catch (e) {
             console.log("back"+e);
@@ -145,7 +143,7 @@ import { useMusic } from "../context/FloatingMusicContext";
         async function loadAudio() {
             if (!route.params?.soundObject) {
                 try {
-                    await soundObject.current.loadAsync({ uri: song.audio });
+                    await soundObject.current.loadAsync({ uri: song.preview_url });
                     await soundObject.current.playAsync();
                 } catch (error) {
                     console.log("load"+error);
@@ -159,11 +157,12 @@ import { useMusic } from "../context/FloatingMusicContext";
     }, []);
 
 
+    
 
     return (
         <SafeAreaView style={styles.container}>
             {/* Background Image */}
-            <ImageBackground source={currentSong.image} resizeMode="cover" style={styles.imageBackground}>
+            <ImageBackground source={{uri: currentSong.album.images[0].url}} resizeMode="cover" style={styles.imageBackground}>
                 {/* Header */}
                 <View style ={styles.viewHeader}>
                     <Text style={styles.textHeader}>Play</Text>
@@ -173,14 +172,13 @@ import { useMusic } from "../context/FloatingMusicContext";
                             params: { 
                                 ...route.params,
                                 dataFindId: currentSong, 
-                                albumsSong: albums, 
-                                songsByChart: route.params?.songsByChart,
-                                idChart: route.params?.idChart,
+                                albumsSong: currentSong.album, 
+                                songsByChart: songs,
                                 selectedPause: selectedPause, 
-                                image: currentSong.image, 
-                                artist: itemArtist,
-                                artist_id: itemArtist.id,
-                                artistImage: itemArtist.image,
+                                image: currentSong.album.images[0].url, 
+                                artist: artistBySong,
+                                artist_id:  artistBySong.id,
+                                artistImage:  artistBySong.images[0].url,
                             }
                         })}                        
                     />
@@ -188,11 +186,11 @@ import { useMusic } from "../context/FloatingMusicContext";
 
                 {/* View play music */}
                 <View style ={styles.viewPlayMusic}>
-                    <Text style={styles.nameMusic}>{currentSong.title}</Text>
+                    <Text style={styles.nameMusic}>{currentSong.name}</Text>
                     <TouchableOpacity style={{opacity:1}} onPress={() => navigation.navigate('ArtistProfile',
-                        {artist_id: itemArtist.id, artist: itemArtist.artistName, artistImage: itemArtist.image}
+                        {artist_id: artistBySong.id, artist: artistBySong.name, artistImage: artistBySong.images[0].urle}
                     )}>
-                        <Text style={styles.nameArtist}>{itemArtist.artistName}</Text>
+                        <Text style={styles.nameArtist}>{currentSong.artists[0].name}</Text>
                     </TouchableOpacity>
 
                     {/** Image lyric and duration */}
@@ -200,7 +198,7 @@ import { useMusic } from "../context/FloatingMusicContext";
                         <Image source={require('../assets/image/Play an Audio/Group 4.png')} resizeMode="stretch" style={{width:'100%', }}/>
                         <View style={styles.viewLyric}>
                             <Text style={{color:'white', fontSize:16, lineHeight:22, fontWeight:'400'}}>0:00</Text>
-                            <Text style={{color:'#9095A0FF', fontSize:16, lineHeight:22, fontWeight:'400'}}>{currentSong.duration}</Text>
+                            <Text style={{color:'#9095A0FF', fontSize:16, lineHeight:22, fontWeight:'400'}}>{currentSong.duration_ms}</Text>
                         </View>
                     </View>
 
@@ -243,7 +241,7 @@ import { useMusic } from "../context/FloatingMusicContext";
                                 <TouchableOpacity onPress={()=>{}}>
                                     <IconAnt name="hearto" size={26} color="white" />
                                 </TouchableOpacity>
-                                <Text style={{color:'#9095A0FF', fontSize:16, lineHeight:22, fontWeight:'400'}}>{song.like}</Text>
+                                <Text style={{color:'#9095A0FF', fontSize:16, lineHeight:22, fontWeight:'400'}}>12</Text>
                             </View>
                             
 
@@ -252,7 +250,7 @@ import { useMusic } from "../context/FloatingMusicContext";
                                 <TouchableOpacity onPress={()=>{}}>
                                     <Image source={require('../assets/image/Play an Audio/F chat 1.png')} style={{width:26, height:26}}/>
                                 </TouchableOpacity>
-                                <Text style={{color:'#9095A0FF', fontSize:16, lineHeight:22, fontWeight:'400'}}>{song.comment}</Text>
+                                <Text style={{color:'#9095A0FF', fontSize:16, lineHeight:22, fontWeight:'400'}}>450</Text>
                             </View>
                         </View>
                         
