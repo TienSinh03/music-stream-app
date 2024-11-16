@@ -1,5 +1,3 @@
-// npm install react-native-image-picker
-
 import React, { useState } from 'react';
 import {
   View,
@@ -12,35 +10,62 @@ import {
 } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
 
-const Register = () => {
+const Register = ({ navigation }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [phone, setPhone] = useState('');
-  const [avatar, setAvatar] = useState(null);
+  const [email, setEmail] = useState('');
+  const [avatar, setAvatar] = useState('https://didongviet.vn/dchannel/wp-content/uploads/2023/08/hinh-nen-3d-hinh-nen-iphone-dep-3d-didongviet-5-576x1024.jpg'); // Default avatar
 
-  const handleRegister = () => {
-    if (!username || !password || !phone || !avatar) {
-      Alert.alert('Lỗi', 'Vui lòng điền đầy đủ thông tin và chọn ảnh đại diện.');
+  const API_URL = 'https://6738930a4eb22e24fca854b6.mockapi.io/users';
+
+  const handleRegister = async () => {
+    if (!username || !password || !phone || !email) {
+      Alert.alert('Lỗi', 'Vui lòng điền đầy đủ thông tin.');
       return;
     }
-    Alert.alert('Thành công', 'Đăng ký tài khoản thành công!');
-    // CHUYỂN sang trang đăng nhập
-    setTimeout(() => {
+
+    try {
+      const response = await fetch(API_URL);
+      const users = await response.json();
+
+      const userExists = users.some((user) => user.account === username);
+      if (userExists) {
+        Alert.alert('Lỗi', 'Tên tài khoản đã tồn tại.');
+        return;
+      }
+
+      // Add new user to the API
+      const newUser = { account: username, password, phone, mail: email, avatar };
+      await fetch(API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newUser),
+      });
+
+      Alert.alert('Thành công', 'Đăng ký tài khoản thành công!');
+      setTimeout(() => {
         navigation.navigate('Login');
-      }, 150);
-    // Xử lý đăng ký tài khoản tại đây (API hoặc lưu dữ liệu)
+      }, 1500);
+    } catch (error) {
+      Alert.alert('Lỗi', 'Không thể kết nối đến API.');
+      console.error(error);
+    }
   };
 
-  const handlePickImage = () => {
+  const handleImagePicker = () => {
     launchImageLibrary(
-      { mediaType: 'photo', quality: 1 },
+      { mediaType: 'photo', includeBase64: false, maxHeight: 200, maxWidth: 200 },
       (response) => {
         if (response.didCancel) {
-          Alert.alert('Hủy', 'Bạn đã hủy chọn ảnh.');
+          console.log('User cancelled image picker');
         } else if (response.errorMessage) {
-          Alert.alert('Lỗi', response.errorMessage);
+          console.log('ImagePicker Error: ', response.errorMessage);
         } else if (response.assets && response.assets.length > 0) {
-          setAvatar(response.assets[0].uri);
+          const selectedImage = response.assets[0].uri;
+          setAvatar(selectedImage);
         }
       }
     );
@@ -78,15 +103,27 @@ const Register = () => {
           onChangeText={setPhone}
         />
       </View>
+      <View style={styles.formGroup}>
+        <Text style={styles.label}>Email</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Nhập email"
+          keyboardType="email-address"
+          value={email}
+          onChangeText={setEmail}
+        />
+      </View>
       <View style={styles.avatarContainer}>
-        <TouchableOpacity onPress={handlePickImage}>
-          <View style={styles.avatarWrapper}>
-            {avatar ? (
-              <Image source={{ uri: avatar }} style={styles.avatar} />
-            ) : (
-              <Text style={styles.avatarPlaceholder}>Chọn ảnh đại diện</Text>
-            )}
-          </View>
+        <Image
+          source={
+            avatar
+              ? { uri: avatar }
+              : require('../assets/icon.png') // Replace with your placeholder image
+          }
+          style={styles.avatar}
+        />
+        <TouchableOpacity style={styles.buttonUpload} onPress={handleImagePicker}>
+          <Text style={styles.buttonUploadText}>Tải Hình Lên</Text>
         </TouchableOpacity>
       </View>
       <TouchableOpacity style={styles.buttonRegister} onPress={handleRegister}>
@@ -131,24 +168,24 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 20,
   },
-  avatarWrapper: {
+  avatar: {
     width: 120,
     height: 120,
     borderRadius: 60,
     borderWidth: 2,
     borderColor: '#ccc',
-    justifyContent: 'center',
-    alignItems: 'center',
-    overflow: 'hidden',
+    marginBottom: 10,
   },
-  avatar: {
-    width: '100%',
-    height: '100%',
+  buttonUpload: {
+    backgroundColor: '#007BFF',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
   },
-  avatarPlaceholder: {
+  buttonUploadText: {
+    color: 'white',
     fontSize: 14,
-    color: '#aaa',
-    textAlign: 'center',
+    fontWeight: 'bold',
   },
   buttonRegister: {
     width: '100%',
