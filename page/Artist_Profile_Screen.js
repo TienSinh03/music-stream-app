@@ -21,7 +21,7 @@ import {
   import IconEnty from "react-native-vector-icons/Entypo";
 
   import { chart_list,songs, artists, albumsSong } from "../data/data_audio";
-  import { getTrackByArtist } from "../component/getDataApi";
+  import { getTrackByArtist, getAlbumsByArtist, getRelatedArtistByArtist } from "../component/getDataApi";
   import { AudioContext } from "../context/AudioContext";
 
   import Footer from '../component/footer';
@@ -63,34 +63,73 @@ import { useMusic } from "../context/FloatingMusicContext";
 )
 
 const Item_Albumn = ({title, artist, image, navigation}) => (
-    <TouchableOpacity style={{width:'30%', marginRight:20}}>
-      <Image source={image} style={{}}/>
+    <TouchableOpacity style={{width:150, marginRight:20}}>
+      <Image source={{uri:image}} style={styles.viewImageList}/>
       <Text style={[styles.textNameMainCate,{marginTop:5}]}>{title}</Text>
       <Text style={styles.nameArists}>{artist}</Text>
     </TouchableOpacity>
   )
 
+  const Item_fanaslo_artists = ({artist,follow,textFollower, navigation}) => (
+
+    <TouchableOpacity style={{width:150, alignItems:'center', marginRight:20}}
+      onPress={() => navigation.navigate('ArtistProfile',
+                {artist: artist})} 
+    >
+      <Image source={{uri: artist.images[0].url}} style={{width:136, height:136, borderRadius:68}}/>
+                  
+      <Text style={[styles.textNameMainCate,{marginVertical:8}]}>{artist.name}</Text>
+                  
+      {/** button follow */}
+      <TouchableOpacity style ={styles.buttonFL} 
+        onPress={follow}
+      >
+        <Text style={styles.textButtonFL}>{textFollower}</Text>
+      </TouchableOpacity>
+    </TouchableOpacity>
+  ) 
+
   export default function Artist_Profile_Screen({ navigation,route }) {
 
-    const soundObject = useContext(AudioContext);
-    const { setDataSongId, setAlbumSongId, setArtistSongId, isPause } = useMusic();
+
+    const [dataArtist, setDataArtist] = useState(route.params?.artist || []);
 
     const [songByArtists, setSongByArtists] = useState([]);
-    const dataArtist = route.params?.artist ? route.params?.artist : null;
+    const [albumsSong, setAlbumsSong] = useState([]);
+    const [artistsFanAslo, setArtistsFanAslo] = useState([]);
 
     const [song, setSong] = useState();
 
     const [selectedPause, setSelectedPause] = useState(isPause);
 
+    const { setDataSongId, setAlbumSongId, setArtistSongId, isPause } = useMusic();
+    const soundObject = useContext(AudioContext);
+
+
     // expand the about
     const [isExpanded, setExpand] = useState(true);
+    // follow the artist
+    const [isFollowing, setIsFollowing] = useState({});
+
+    const toggleFollow = (id) => {
+        setIsFollowing((prevState) => ({
+          ...prevState,
+          [id]: !prevState[id]
+        }));
+      };
     
+
 
     // function view more description
     const viewMoreDescription = () => {
         setExpand(!isExpanded);
     }
 
+    // reload the state after the artist is changed by navigation
+    useEffect(() => {
+        setDataArtist(route.params?.artist);
+    }, [route.params?.artist]);
+    
 
     useEffect(() => {
         setSelectedPause(route.params?.selectedPause);
@@ -104,28 +143,53 @@ const Item_Albumn = ({title, artist, image, navigation}) => (
             setSongByArtists(data.tracks);
         }
         fetchTrackByArtist();
-    },[]);
+    },[dataArtist]);
+
+    //get api ablum by artist
+    useEffect(() => {
+        const fetchAlbumsByArtist = async () => {
+            const data = await getAlbumsByArtist(dataArtist.id);
+            setAlbumsSong(data.items);
+        }
+        fetchAlbumsByArtist();
+    },[dataArtist])
+
+    // get api related artist by artist
+    useEffect(() => {
+        const fetchRelatedArtistByArtist = async () => {
+            const data = await getRelatedArtistByArtist(dataArtist.id);
+            setArtistsFanAslo(data.artists);
+        }
+        fetchRelatedArtistByArtist();
+    },[dataArtist])
 
 
 
     // Find song by id
-    const handelSongByID = async (track) => {
-        setSong(track);
+    const handelSongByID = async  (track) => {
 
+        setSong(track);
         setDataSongId(track);
+
         setAlbumSongId(track.album);
+        console.log("albumn");
+        console.log(track.album);
+
         setArtistSongId(track.artists[0]);
+        console.log("artist");
+        console.log(track.artists[0]);
 
         try {
-            if(soundObject.current) {
-                await soundObject.current.stopAsync(); // stop the current song
-                await soundObject.current.unloadAsync(); // unload the current song
-            } 
-            await soundObject.current.loadAsync({uri: track.preview_url}); // load the preview
-            await soundObject.current.playAsync(); // play the preview
-        } catch (error) {
-            console.log("error", error);
+            if (soundObject.current) {
+                await soundObject.current.stopAsync(); // Dừng nhạc hiện tại
+                await soundObject.current.unloadAsync(); // Gỡ nhạc hiện tại
+            }
+            await soundObject.current.loadAsync({ uri: track.preview_url }); // Tải bài hát mới
+            await soundObject.current.playAsync(); // Phát bài hát mới
+        } catch (e) {
+            console.log(e);
         }
+        
 
         navigation.navigate("PlayanAudio", 
             {   
@@ -207,25 +271,27 @@ const Item_Albumn = ({title, artist, image, navigation}) => (
             </View>
 
             {/**Albumns */}
-            <View style ={{}}>
+            <View style ={{flex:1}}>
                 <Text style={{fontSize: 22, lineHeight:30,fontWeight:'700', color:'#171A1FFF', paddingBottom:5}}>Albums</Text>
 
-                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+                {/* <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}> */}
                     <FlatList
+                    contentContainerStyle={{paddingHorizontal: 10}} // Thêm padding hợp lý
                     data={albumsSong}
                     renderItem={({item}) =>(
                         <Item_Albumn
-                        title={item.title}
-                        artist={item.artist}
-                        image={item.image}
+                        key={item.id}
+                        title={item.name}
+                        artist={item.artists[0].name}
+                        image={item.images[0].url}
                         navigation={navigation}
                         />
                     )}
                     keyExtractor={item => item.id}
-                    numColumns={3}
-                    scrollEnabled={false}
+                    horizontal={true} // Hiển thị danh sách theo chiều ngang
+                    showsHorizontalScrollIndicator={false} // Ẩn thanh cuộn ngang
                     />
-                </ScrollView>       
+                {/* </ScrollView>        */}
           </View>
 
             {/** About */}
@@ -247,22 +313,21 @@ const Item_Albumn = ({title, artist, image, navigation}) => (
             <View style ={{marginBottom:25}}>
                 <Text style={{fontSize: 22, lineHeight:30,fontWeight:'700', color:'#171A1FFF', paddingBottom:5}}>Fan also like</Text>
 
-                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-                    <FlatList
-                    data={albumsSong}
+                <FlatList
+                    data={artistsFanAslo}
                     renderItem={({item}) =>(
-                        <Item_Albumn
-                        title={item.title}
-                        artist={item.artist}
-                        image={item.image}
+                        <Item_fanaslo_artists
+                        key={item.id}
+                        artist={item}
+                        follow = {() => toggleFollow(item.id)}
+                        textFollower={isFollowing[item.id] ? "Following" : "Follow"}
                         navigation={navigation}
                         />
                     )}
                     keyExtractor={item => item.id}
-                    numColumns={3}
-                    scrollEnabled={false}
-                    />
-                </ScrollView>       
+                    horizontal={true} 
+                    showsHorizontalScrollIndicator={false}
+                />
           </View>
             
         </ScrollView>
@@ -289,6 +354,8 @@ const Item_Albumn = ({title, artist, image, navigation}) => (
     textNameMainCate:{
         fontSize:16, lineHeight:24, fontWeight:'500', color:'#171A1FFF'
       },
+      viewImageList:{width:screenWith*0.31,height:screenHeight*0.14, alignItems:'center', justifyContent:'center', borderRadius:10},
+
       nameArists:{fontSize:16, lineHeight:22, fontWeight:'400', color:'#9095A0FF'},
     footer:{display:'flex', flexDirection:'row', justifyContent:'space-between', alignItems:'center',paddingHorizontal:55,paddingVertical:20,backgroundColor:'white', borderTopWidth:1, borderColor:'#C4C4C4'}
 })

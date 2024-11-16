@@ -77,7 +77,7 @@ import {
 
     const [song, setSong] = useState();
 
-    const { setDataSongId, setAlbumSongId, setArtistSongId, isPause } = useMusic();
+    const { setDataSongId, setAlbumSongId, setArtistSongId, isPause, setIsPause } = useMusic();
     
     const [selectedPause, setSelectedPause] = useState(isPause);
 
@@ -90,11 +90,34 @@ import {
         setSelectedPause(route.params?.selectedPause);
     }, [route.params?.selectedPause]);
 
+
+    // play song
+    const handelPlaySong = async (audio) => {
+        try {
+            if (soundObject.current) {
+                await soundObject.current.stopAsync(); // Dừng nhạc hiện tại
+                await soundObject.current.unloadAsync(); // Gỡ nhạc hiện tại
+            }
+            await soundObject.current.loadAsync({ uri: audio }); // Tải bài hát mới
+            await soundObject.current.playAsync(); // Phát bài hát mới
+        } catch (e) {
+            console.log(e);
+        };        
+    }
+
+    useEffect(() => {
+        if (dataSongId) {
+            handelPlaySong(dataSongId.preview_url);
+        }
+    },[dataSongId]);
+
     // Find song by id
     const handelSongByID = async  (track) => {
 
         setSong(track);
         setDataSongId(track);
+        console.log("Track:");
+        console.log(track.preview_url);
 
         setAlbumSongId(track.album);
         console.log("albumn");
@@ -115,6 +138,9 @@ import {
             console.log(e);
         }
 
+        console.log("loadaa ");
+        console.log(track.preview_url);
+
         navigation.navigate("PlayanAudio", 
             {   
                 ...route.params,
@@ -127,24 +153,7 @@ import {
             });
     }
 
-    // play song
-    const handelPlaySong = async () => {
-        try {
-            const status = await soundObject.current.getStatusAsync();
-            if (!status.isLoaded) {
-                console.log("Sound is not loaded yet.");
-                return;
-            }
-            if(selectedPause) {
-                await soundObject.current.pauseAsync();
-            } else {
-                await soundObject.current.playAsync();
-            }
-            setSelectedPause(!selectedPause);
-        } catch (e) {
-            console.log(e);
-        };
-    }
+    
     
     return (
       <SafeAreaView style={styles.container}>
