@@ -27,7 +27,7 @@ import {
     
 
     return (
-        <View style={{position:'absolute', bottom:100, right:0, left:0}}>
+        <View style={{position:'absolute', bottom:85, right:0, left:0}}>
             {showMusicInfo && dataSongId && (
             <TouchableOpacity style ={{backgroundColor:'#171A1FFF', width:'100%', display:'flex', flexDirection:'row', alignItems:'center', justifyContent:'space-between', padding:15}}
                 onPress={() => onPressSmallMusic()}

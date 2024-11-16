@@ -136,7 +136,7 @@ export default function AudioListing_SearchResultsScreen({  navigation,  route})
             style={styles.textInputSearch}
             value={inputText}
             onChangeText={handleSearch}
-            onFocus={() => setIsFocused(true)}
+            // onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
           />
           {inputText.length > 0 ?
@@ -347,7 +347,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderWidth: 1,
     borderColor: "#BCC1CAFF",
-    padding: 10,
+    paddingHorizontal: 10,
     borderRadius: 22,
     marginTop: 11,
     marginHorizontal: 20,

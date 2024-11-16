@@ -12,7 +12,7 @@ import {
     ImageBackground,
     Dimensions,
   } from "react-native";
-  import React, { useEffect, useState } from "react";
+  import React, { useContext, useEffect, useState } from "react";
   
   import IconFe from "react-native-vector-icons/Feather";
   import IconAnt from "react-native-vector-icons/AntDesign";
@@ -21,18 +21,22 @@ import {
   import IconEnty from "react-native-vector-icons/Entypo";
 
   import { chart_list,songs, artists, albumsSong } from "../data/data_audio";
+  import { getTrackByArtist } from "../component/getDataApi";
+  import { AudioContext } from "../context/AudioContext";
+
   import Footer from '../component/footer';
+import { useMusic } from "../context/FloatingMusicContext";
   
   const screenWith = Dimensions.get("window").width;
   const screenHeight = Dimensions.get("window").height;
 
   const Item = ({ title, artist, plays, duration, image,setFindSong }) => (
-    <TouchableOpacity style={{display:'flex', flexDirection:'row', alignItems:'center', justifyContent:'space-between',marginBottom:25}}
+    <TouchableOpacity style={{display:'flex', flexDirection:'row', alignItems:'center', justifyContent:'space-between',marginBottom:15}}
         onPress={() => setFindSong()}
     >
         <View style={{flexDirection:'row', alignItems:'center', gap:15}}>
             {/** Image music */}
-            <Image source={image} style={{width:70, height:70}}/>
+            <Image source={{uri:image}} style={{width:70, height:70}}/>
             {/** The information music */}
             <View style={{flexDirection:'column'}}>
                 {/** Name music */}
@@ -42,11 +46,11 @@ import {
                 {/** views and duration */}
                 <View style={{display:'flex', flexDirection:'row', alignItems:'center', gap:6}}>
                     <IconFe name="play" size={16} color="#9095A0FF"/>
-                    <Text style={{fontSize: 14, lineHeight:24,fontWeight:'400', color:'#565E6CFF', marginRight:8}}>{plays}M</Text>
+                    <Text style={{fontSize: 14, lineHeight:24,fontWeight:'400', color:'#565E6CFF', marginRight:8}}>12M</Text>
                     
                     {/**duration */}
                     <IconFnA name="circle" size={10} color="#9095A0FF"/>
-                    <Text style={{fontSize: 14, lineHeight:24,fontWeight:'400', color:'#565E6CFF'}}>{duration}</Text>
+                    <Text style={{fontSize: 14, lineHeight:24,fontWeight:'400', color:'#565E6CFF'}}>{(duration/1000/60).toFixed(2)}</Text>
                 </View>
             </View>
          </View>
@@ -68,18 +72,19 @@ const Item_Albumn = ({title, artist, image, navigation}) => (
 
   export default function Artist_Profile_Screen({ navigation,route }) {
 
+    const soundObject = useContext(AudioContext);
+    const { setDataSongId, setAlbumSongId, setArtistSongId, isPause } = useMusic();
 
-    const songByArtists = songs.filter((item) => item.artist === route.params?.artist_id);
-    // const charts = chart_list.find((item) => item.id === route.params?.idChart);
-    const dataSongId = route.params?.dataFindId ? route.params?.dataFindId : null;
+    const [songByArtists, setSongByArtists] = useState([]);
     const dataArtist = route.params?.artist ? route.params?.artist : null;
 
     const [song, setSong] = useState();
 
-    const [selectedPause, setSelectedPause] = useState(false);
+    const [selectedPause, setSelectedPause] = useState(isPause);
 
     // expand the about
     const [isExpanded, setExpand] = useState(true);
+    
 
     // function view more description
     const viewMoreDescription = () => {
@@ -92,22 +97,46 @@ const Item_Albumn = ({title, artist, image, navigation}) => (
     }, [route.params?.selectedPause]);
 
 
-    // Find artist by id
-    const handelArtistByID = (id) => {
-        var artist= artists.find((item) => item.id === id);
-        return artist;
-    }
+    // get api track by artist
+    useEffect(() => {
+        const fetchTrackByArtist =  async () => {
+            const data = await getTrackByArtist(dataArtist.id);
+            setSongByArtists(data.tracks);
+        }
+        fetchTrackByArtist();
+    },[]);
+
+
 
     // Find song by id
-    const handelSongByID = (id) => {
-        var song = songs.find((item) => item.id === id);
-        setSong(song);
+    const handelSongByID = async (track) => {
+        setSong(track);
+
+        setDataSongId(track);
+        setAlbumSongId(track.album);
+        setArtistSongId(track.artists[0]);
+
+        try {
+            if(soundObject.current) {
+                await soundObject.current.stopAsync(); // stop the current song
+                await soundObject.current.unloadAsync(); // unload the current song
+            } 
+            await soundObject.current.loadAsync({uri: track.preview_url}); // load the preview
+            await soundObject.current.playAsync(); // play the preview
+        } catch (error) {
+            console.log("error", error);
+        }
+
         navigation.navigate("PlayanAudio", 
-            {   dataFindId: song, 
+            {   
+                ...route.params,
+                dataFindId: track, 
+                songsByChart:songByArtists,
                 selectedPause: selectedPause, 
-                image: song.image, 
-                artist: handelArtistByID(song.artist).artistName,
-                previousScreen: 'ArtistProfile'
+                image: track.album.images[0].url, 
+                artist:track.artists[0].name,
+                previousScreen: 'MainTab',
+                typeScreen: 'ArtistProfile'
             });
     }
 
@@ -152,25 +181,24 @@ const Item_Albumn = ({title, artist, image, navigation}) => (
                     </TouchableOpacity>
                         
                     {/** button play */}
-                    <TouchableOpacity onPress={() => handelSongByID(songByArtists[0].id)}>
+                    <TouchableOpacity onPress={() => handelSongByID(songByArtists[0])}>
                         <Image source={require('../assets/image/Playlist Details - Audio Listing/Icon Button 2.png')} style={{width: 60, height: 60}}/>
                     </TouchableOpacity>
                 </View>
             </View>
 
             {/** List Audio */}
-            <View style ={{marginTop:25, marginRight:20}}>
+            <View style ={{marginTop:15, marginRight:20}}>
                 <FlatList
                     data={songByArtists}
-                    key={item => item.id}
                     renderItem={({ item }) => (
                         <Item 
-                        title={item.title} 
-                        artist={handelArtistByID(item.artist).artistName} 
-                        plays={item.plays} 
-                        duration={item.duration} 
-                        image={item.image}
-                        setFindSong={() => handelSongByID(item.id)}
+                        key={item.id}
+                        title={item.name} 
+                        artist={item.artists[0].name} 
+                        duration={item.duration_ms} 
+                        image={item.album.images[0].url}
+                        setFindSong={() => handelSongByID(item)}
                          />
                     )}
                     keyExtractor={item => item.id}
@@ -238,23 +266,7 @@ const Item_Albumn = ({title, artist, image, navigation}) => (
           </View>
             
         </ScrollView>
-
-         {/** Footer */}
-        <Footer 
-          dataSongId={dataSongId} 
-          onPressSmallMusic = {() => navigation.navigate(
-            "PlayanAudio", 
-            {dataFindId: dataSongId, selectedPause: selectedPause, artist: route.params?.artist, previousScreen: 'ArtistProfile'}
-          )}
-          selectedPause={selectedPause}
-          setSelectedPause={() => setSelectedPause(!selectedPause)}
-          navigatePoptoTop={() => navigation.popToTop()}
-          albumsSong={route.params?.albumsSong}
-          artists={route.params?.artist}
-          navigateToScreen={(screen) => navigation.navigate(screen)}
-          activeScreen={'MyLibrary'}
-          showMusicInfo={true}
-        />
+        
       </SafeAreaView>
     );
   }

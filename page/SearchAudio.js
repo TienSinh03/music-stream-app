@@ -77,7 +77,7 @@ export default function SearchAudio({ navigation, route,}) {
         setSearchResults(combinedResults);
     };
 
-    console.log(searchResults);
+    console.log("he"+searchResults);
 
     const handleEnterSearchResults = () => {
         navigation.navigate('AudioListing_SearchResultsScreen', { query: searchResults, text: inputText });
@@ -92,8 +92,8 @@ export default function SearchAudio({ navigation, route,}) {
           ref={textInputRef}
           placeholder="What you want to listen to"
           style={styles.textInputSearch}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
+          // onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(true)}
           value={inputText}
           onChangeText={handleSearch}
           returnKeyType="done"
@@ -121,13 +121,6 @@ export default function SearchAudio({ navigation, route,}) {
             />
         </View>
       </ScrollView>
-
-      <Footer 
-        
-          navigateToScreen={(screen) => navigation.navigate(screen)}
-          activeScreen={'SearchAudio'}
-          showMusicInfo={false}
-        />
     </SafeAreaView>
   );
 }
@@ -144,7 +137,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderWidth: 1,
     borderColor: "#BCC1CAFF",
-    padding: 10,
+    paddingHorizontal: 10,
     borderRadius: 22,
     marginTop: 11,
     marginHorizontal: 20,

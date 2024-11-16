@@ -41,3 +41,16 @@ export const getTop50= async (PLAYLIST_ID_TOP) => {
     return data;
 }
 
+  export const getTrackByArtist = async (artist) => {
+    const url = `https://api.spotify.com/v1/artists/${artist}/top-tracks`;
+    const options = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+    const response = await fetchWithToken(url, options);
+    const data = await response.json();
+    return data;
+  }
+

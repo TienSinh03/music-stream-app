@@ -36,8 +36,8 @@ const HomeStackScreen = () => {
             <HomeStack.Screen name="Playlist_Details" component={Playlist_Details} options={{ headerShown: false }} />
             <HomeStack.Screen name="ArtistProfile" component={Artist_Profile_Screen} options={{ headerShown: false }} />
             {/* <HomeStack.Screen name="PlayanAudio" component={PlayanAudio} options={{ headerShown: false }} /> */}
-            {/* <HomeStack.Screen name="SearchAudio" component={SearchAudio} options={{ headerShown: false }} />
-            <SearchStack.Screen name="AudioListing_SearchResultsScreen" component={AudioListing_SearchResultsScreen} options={{ headerShown: false }} /> */}
+            <HomeStack.Screen name="SearchAudio" component={SearchAudio} options={{ headerShown: false }} />
+            <HomeStack.Screen name="AudioListing_SearchResultsScreen" component={AudioListing_SearchResultsScreen} options={{ headerShown: false }} />
         </HomeStack.Navigator>
     );
 }
@@ -123,12 +123,12 @@ export default function TabNavigation() {
           tabBarStyle: {
             borderTopWidth: 0,
             elevation: 0,
-            height: 100,
+            height: 85,
           },
           tabBarLabelStyle: {
             fontSize: 14,
             fontWeight: "bold",
-            marginBottom: 30,
+            marginBottom: 20,
             marginTop: -20,
           },
         })}
