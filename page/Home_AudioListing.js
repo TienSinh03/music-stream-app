@@ -24,6 +24,7 @@ import { chart_list,artists,albumsSong } from "../data/data_audio";
 import Footer from '../component/footer';
 
 import { get_Token, fetchWithToken } from "../utils/GetAccessToken";
+import { getTop50,getPopAlbums, getPopArtists } from "../component/getDataApi";
 
 const screenWith = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -38,20 +39,18 @@ const Item_Chart = ({ title, location, likes, duration, description, image,navig
     params: {chartTop50: chart}
   })}>
     {/** Image and name playlist */}
-    <ImageBackground source={{uri: image}} style={styles.viewImageList}>
-        <Text style={styles.textNameList_Image}>{title}</Text>
-        <Text style={{color:'white', fontSize: 15, fontWeight:'400'}}>{location}</Text>
-    </ImageBackground>
+    <Image source={{uri: image}} style={styles.viewImageList}/>
+       
     <Text style={[styles.textDes]}>{description}</Text>
   </TouchableOpacity>
 )
 
 // Items with trending albums
-const Item_Trending = ({title, artist, image, navigation}) => (
-  <TouchableOpacity style={{width:'30%', marginRight:20}}>
-    <Image source={image} style={{}}/>
-    <Text style={[styles.textNameMainCate,{marginTop:5}]}>{title}</Text>
-    <Text style={styles.nameArists}>{artist}</Text>
+const Item_Trending = ({name, artistName, image, navigation}) => (
+  <TouchableOpacity style={{width:'24%', marginRight:20}}>
+    <Image source={{uri:image}} style={styles.viewImageList}/>
+    <Text style={[styles.textNameMainCate,{marginTop:5}]}>{name}</Text>
+    <Text style={styles.nameArists}>{artistName}</Text>
   </TouchableOpacity>
 )
 
@@ -60,11 +59,11 @@ const Item_popular_artists = ({artist,follow,textFollower, navigation}) => (
 
   <TouchableOpacity style={{width:'30%', alignItems:'center', marginRight:20}}
     onPress={() => navigation.navigate('ArtistProfile',
-              {artist_id: artist.id, artist: artist.artistName, artistImage: artist.image})} 
+              {artist: artist})} 
   >
-    <Image source={artist.image} />
+    <Image source={{uri: artist.images[0].url}} style={{width:136, height:136, borderRadius:68}}/>
                 
-    <Text style={[styles.textNameMainCate,{marginVertical:8}]}>{artist.artistName}</Text>
+    <Text style={[styles.textNameMainCate,{marginVertical:8}]}>{artist.name}</Text>
                 
     {/** button follow */}
     <TouchableOpacity style ={styles.buttonFL} 
@@ -75,16 +74,27 @@ const Item_popular_artists = ({artist,follow,textFollower, navigation}) => (
   </TouchableOpacity>
 ) 
 
+const USER_ID =  "317qive5msxoaogrwjuqgm2vwvfy";
+const PLAYLIST_ID_TOP_VN = "37i9dQZEVXbLdGSmz6xilI"
+const PLAYLIST_ID_TOP_USA = "37i9dQZEVXbLRQDuF5jeBp"
+const PLAYLIST_ID_TOP_UK = "37i9dQZEVXbLnolsZ8PSNw"
+
+const ALBUMN_POP_HTH = "4faMbTZifuYsBllYHZsFKJ"
+const ALBUMN_POP_VU = "3pprs1r3mH3UhU23TUHBWJ"
+const ALBUMN_POP_OBT = "03ZYR4zwCrkSsXTROnK2d0"
+
+const ARTISTS_POP_WN = "6NF9Oa4ThQWCj6mogFSrVD"
+const ARTISTS_POP_HTH = "5HZtdKfC4xU0wvhEyYDWiY"
+const ARTISTS_POP_RON = "0dBcEvEklr1jx4uZuhFX5e"
+
 export default function Home_AudioListing({navigation, route}) {
 
-  const USER_ID =  "317qive5msxoaogrwjuqgm2vwvfy";
-  const PLAYLIST_ID_TOP_VN = "37i9dQZEVXbLdGSmz6xilI"
-  const PLAYLIST_ID_TOP_USA = "37i9dQZEVXbLRQDuF5jeBp"
-  const PLAYLIST_ID_TOP_UK = "37i9dQZEVXbLnolsZ8PSNw"
 
   const [isFollowing, setIsFollowing] = useState({});
   const [userProfile, setUserProfile] = useState();
   const [chartTop50, setChartTop50] = useState([]);
+  const [albumnPOP, setAlbumnPOP] = useState([]);
+  const [artistsPOP, setArtistsPOP] = useState([]);
 
   const toggleFollow = (id) => {
     setIsFollowing((prevState) => ({
@@ -116,19 +126,6 @@ export default function Home_AudioListing({navigation, route}) {
     setUserProfile(data);
   }
 
-  // fetch the top 50 songs from spotify api
-  const getTop50= async (PLAYLIST_ID_TOP) => {
-    const url = `https://api.spotify.com/v1/playlists/${PLAYLIST_ID_TOP}`;
-    const options = {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
-    const response = await fetchWithToken(url, options);
-    const data = await response.json();
-    return data;
-  }
 
   useEffect(() => {
     getProfile();
@@ -144,6 +141,28 @@ export default function Home_AudioListing({navigation, route}) {
     fetchData();
   }
   , []);
+
+  // fetch the trending albums from the spotify api
+  useEffect(() =>{
+    const fetchAlbums = async () => {
+      const albumn_hth = await getPopAlbums(ALBUMN_POP_HTH);
+      const albumn_vu = await getPopAlbums(ALBUMN_POP_VU);
+      const albumn_obt = await getPopAlbums(ALBUMN_POP_OBT);
+      setAlbumnPOP([albumn_hth, albumn_vu, albumn_obt]);
+    }
+    fetchAlbums();
+  },[]);
+
+  // fetch the popular artists from the spotify api
+  useEffect(() =>{
+    const fetchArtits = async () => {
+      const artist_hth = await getPopArtists(ARTISTS_POP_HTH);
+      const artist_wn= await getPopArtists(ARTISTS_POP_WN);
+      const artist_ron = await getPopArtists(ARTISTS_POP_RON);
+      setArtistsPOP([artist_hth, artist_wn, artist_ron]);
+    }
+    fetchArtits();
+  },[]);
   
   return (
     <SafeAreaView style={styles.container}>
@@ -260,12 +279,13 @@ export default function Home_AudioListing({navigation, route}) {
           {/** List trending albums */}
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
             <FlatList
-              data={albumsSong}
+              data={albumnPOP}
               renderItem={({item}) =>(
                 <Item_Trending
-                  title={item.title}
-                  artist={item.artist}
-                  image={item.image}
+                  key={item.id}
+                  name={item.name}
+                  artistName={item.artists[0].name}
+                  image={item.images[0].url}
                   navigation={navigation}
                 />
               )}
@@ -278,7 +298,7 @@ export default function Home_AudioListing({navigation, route}) {
         </View>
 
         {/* Popular artists */}
-        <View style ={{marginBottom:30}}>
+        <View style ={{marginBottom:90}}>
 
           {/** Name categories popular artists and button see all */}
           <View style ={styles.viewTitileCate}>
@@ -291,10 +311,10 @@ export default function Home_AudioListing({navigation, route}) {
           {/** List popular artists */}
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
             <FlatList
-              data={artistsPopuplar}
+              data={artistsPOP}
               renderItem={({item}) =>(
                 <Item_popular_artists
-                key={item.id}
+                  key={item.id}
                   artist={item}
                   follow = {() => toggleFollow(item.id)}
                   textFollower={isFollowing[item.id] ? "Following" : "Follow"}
@@ -308,13 +328,6 @@ export default function Home_AudioListing({navigation, route}) {
           </ScrollView>
         </View>
       </ScrollView>
-
-              
-      {/* <Footer 
-          navigateToScreen={(screen) => navigation.navigate(screen)}
-          activeScreen={'Home_AudioListing'}
-          showMusicInfo={false}
-        /> */}
     </SafeAreaView>
   );
 }
@@ -322,7 +335,8 @@ export default function Home_AudioListing({navigation, route}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: StatusBar.currentHeight,
+    // marginTop: StatusBar.currentHeight,
+    
   },
   header: {
     display: "flex",
@@ -347,7 +361,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#BCC1CAFF",
     width: "100%",
-    padding: 10,
+    paddingHorizontal: 10,
     borderRadius: 22,
     marginTop: 11,
   },

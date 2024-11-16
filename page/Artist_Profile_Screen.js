@@ -68,9 +68,11 @@ const Item_Albumn = ({title, artist, image, navigation}) => (
 
   export default function Artist_Profile_Screen({ navigation,route }) {
 
+
     const songByArtists = songs.filter((item) => item.artist === route.params?.artist_id);
     // const charts = chart_list.find((item) => item.id === route.params?.idChart);
     const dataSongId = route.params?.dataFindId ? route.params?.dataFindId : null;
+    const dataArtist = route.params?.artist ? route.params?.artist : null;
 
     const [song, setSong] = useState();
 
@@ -108,6 +110,7 @@ const Item_Albumn = ({title, artist, image, navigation}) => (
                 previousScreen: 'ArtistProfile'
             });
     }
+
     return(
         <SafeAreaView style={styles.container}>
             {/* Header */}
@@ -120,10 +123,10 @@ const Item_Albumn = ({title, artist, image, navigation}) => (
 
             {/** artist info */}
             <View style={{display:'flex',flexDirection:'column', alignItems:'center',justifyContent:'center', marginTop:20, marginRight:20}}>
-                <Image source={route.params?.artistImage} style={{width:screenWith*0.54, height:screenHeight*0.238, borderRadius:120}}/>
+                <Image source={{uri:dataArtist.images[0].url}} style={{width:screenWith*0.54, height:screenHeight*0.238, borderRadius:120}}/>
                 <View style={{marginVertical:25}}>
-                    <Text style={{textAlign:'center',fontSize:40,lineHeight:48, fontWeight:'bold', color:'#171A1FFF'}}>{route.params?.artist}</Text>
-                    <Text style={{textAlign:'center',fontSize:18, fontWeight:'400', color:'#9095A0FF'}}>65.1K Followers</Text>
+                    <Text style={{textAlign:'center',fontSize:40,lineHeight:48, fontWeight:'bold', color:'#171A1FFF'}}>{dataArtist.name}</Text>
+                    <Text style={{textAlign:'center',fontSize:18, fontWeight:'400', color:'#9095A0FF'}}>{dataArtist.followers.total} Followers</Text>
                 </View>
             </View>
 

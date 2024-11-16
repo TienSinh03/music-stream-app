@@ -212,7 +212,7 @@ import {
                 <View style ={styles.viewPlayMusic}>
                     <Text style={styles.nameMusic}>{currentSong.name}</Text>
                     <TouchableOpacity style={{opacity:1}} onPress={() => navigation.navigate('ArtistProfile',
-                        {artist_id: artistBySong.id, artist: artistBySong.name, artistImage: artistBySong.images[0].urle}
+                        {artist: artistBySong}
                     )}>
                         <Text style={styles.nameArtist}>{currentSong.artists[0].name}</Text>
                     </TouchableOpacity>
