@@ -12,7 +12,7 @@ import {
   ImageBackground,
   Dimensions,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
 
 
@@ -27,6 +27,10 @@ import Footer from '../component/footer';
 
 import { songs, artists, albumsSong } from "../data/data_audio";
 import { getDataSearchByQuery } from "../component/getDataApi";
+
+import { useMusic } from "../context/FloatingMusicContext";
+import { AudioContext } from "../context/AudioContext";
+
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -51,6 +55,11 @@ export default function AudioListing_SearchResultsScreen({  navigation,  route})
   // display the song small
   const dataSongId = route.params?.dataFindId ? route.params?.dataFindId : null;
 
+  // set button pause or play 
+  const [selectedPause, setSelectedPause] = useState(isPause);
+
+  const { setDataSongId, setAlbumSongId, setArtistSongId, isPause } = useMusic();
+  const soundObject = useContext(AudioContext);
 
   // Search handle
   const handleSearch = async (text) => {
@@ -112,24 +121,46 @@ export default function AudioListing_SearchResultsScreen({  navigation,  route})
     return artist;
   }
 
-  // set button pause or play 
-  const [selectedPause, setSelectedPause] = useState(false);
+  
 
   useEffect(() => {
         setSelectedPause(route.params?.selectedPause);
   }, [route.params?.selectedPause]);
 
   // Find song by id
-  const handelSongByID = (id) => {
-    var song = songSearch.find((item) => item.id === id);
+  const handelSongByID = async (track) => {
     setSong(song);
+
+    setDataSongId(track);
+
+    setAlbumSongId(track.album);
+    console.log("albumn");
+    console.log(track.album);
+
+    setArtistSongId(track.artists[0]);
+    console.log("artist");
+    console.log(track.artists[0]);
+
+    try {
+      if(soundObject.current) {
+        await soundObject.current.stopAsync(); // dừng bài hát đang phát
+        await soundObject.current.unloadAsync(); // xóa bài hát đang phát
+      }
+      await soundObject.current.loadAsync({uri: track.preview_url});
+      await soundObject.current.playAsync();
+    } catch (error) {
+      console.log(error);
+    }
+
     navigation.navigate("PlayanAudio", 
-        {   dataFindId: song, 
-            idChart: route.params?.idChart,
-            selectedPause: selectedPause, 
-            image: song.image, 
-            artist: handelArtistByID(song.artist).artistName,
-            previousScreen: 'MainTab'
+        {   
+          ...route.params,
+          dataFindId: track, 
+          songsByChart:songSearch,
+          selectedPause: selectedPause, 
+          image: track.album.images[0].url, 
+          artist:track.artists[0].name,
+          previousScreen: 'MainTab',
         });
   }
 
@@ -214,7 +245,7 @@ export default function AudioListing_SearchResultsScreen({  navigation,  route})
                 marginBottom: 25,
               }}
 
-              onPress={() => handelSongByID(item.id)}
+              onPress={() => handelSongByID(item)}
             >
               <View
                 style={{ flexDirection: "row", alignItems: "center", gap: 15 }}
@@ -299,22 +330,6 @@ export default function AudioListing_SearchResultsScreen({  navigation,  route})
         />
       </ScrollView>
 
-      {/** Footer */}
-      <Footer 
-          dataSongId={dataSongId} 
-          onPressSmallMusic = {() => navigation.navigate(
-            "PlayanAudio", 
-            {dataFindId: dataSongId, selectedPause: selectedPause, artist: route.params?.artist, previousScreen: 'AudioListing_SearchResultsScreen'}
-          )}
-          selectedPause={selectedPause}
-          setSelectedPause={() => setSelectedPause(!selectedPause)}
-          navigatePoptoTop={() => navigation.popToTop()}
-          albumsSong={route.params?.albumsSong}
-          artists={route.params?.artist}
-          navigateToScreen={(screen) => navigation.navigate(screen)}
-          activeScreen={'SearchAudio'}
-          showMusicInfo={true}
-        />
     </SafeAreaView>
   );
 }
