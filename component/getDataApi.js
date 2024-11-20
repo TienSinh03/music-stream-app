@@ -80,3 +80,18 @@ export const getTop50= async (PLAYLIST_ID_TOP) => {
     return data;
   }
 
+  export const getDataSearchByQuery = async (query) => {
+    const url = `https://api.spotify.com/v1/search?q=${query}&type=track,artist,album&limit=10`;
+    const options = {
+      method: 'GET',
+      headers:{
+        'Content-Type':'application/json',
+      }
+    }
+    const response = await fetchWithToken(url, options);
+    const data = await response.json();
+    console.log("data search1")
+    console.log(data);
+    return data;
+  };
+

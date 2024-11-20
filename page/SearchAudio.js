@@ -25,6 +25,7 @@ import IconEnty from "react-native-vector-icons/Entypo";
 import Footer from '../component/footer';
 
 import { songs, artists,albumsSong } from "../data/data_audio";
+import { getDataSearchByQuery } from "../component/getDataApi";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -44,7 +45,7 @@ export default function SearchAudio({ navigation, route,}) {
       }
     }, []);
 
-    const handleSearch = (text) => {
+    const handleSearch = async (text) => {
         setInputText(text);
 
         const trimmedInput = text.trim().toLowerCase();
@@ -54,34 +55,29 @@ export default function SearchAudio({ navigation, route,}) {
             return;
         }
 
-        // Tìm kiếm trong danh sách bài hát
-        const filteredSongs = songs.filter((song) =>
-            song.title.toLowerCase().includes(trimmedInput) 
-        );
-
-        // Tìm kiếm trong danh sách nghệ sĩ
-        const filteredArtists = artists.filter((artist) =>
-            artist.artistName.toLowerCase().includes(trimmedInput)
-        );
-        // Tìm kiếm trong danh sách albums
-        const filteredAlbums = albumsSong.filter((albums) =>
-            albums.title.toLowerCase().includes(trimmedInput)
-        );
+        const results = await getDataSearchByQuery(trimmedInput);
 
         const combinedResults = [
-            ...filteredSongs.map((song) => ({ ...song, type: 'song'})),
-            ...filteredAlbums.map((album) => ({ ...album, type: 'album' })),
-            ...filteredArtists.map((artist) => ({ ...artist, type: 'artist' })),
-          ];
+          ...results.tracks.items,
+          ...results.albums.items,
+          ...results.artists.items
+        ];
+
         // Kết hợp kết quả
         setSearchResults(combinedResults);
     };
 
-    console.log("he"+searchResults);
+    useEffect(() => {
+        handleSearch(inputText);
+    },[inputText]);
+
+    console.log(searchResults);
 
     const handleEnterSearchResults = () => {
-        navigation.navigate('AudioListing_SearchResultsScreen', { query: searchResults, text: inputText });
+        navigation.navigate('AudioListing_SearchResultsScreen', { text: inputText });
     }
+
+
 
   return (
     <SafeAreaView style={styles.container}>
@@ -111,12 +107,13 @@ export default function SearchAudio({ navigation, route,}) {
         <View style={{marginTop:20}}>
         <FlatList
                 data={searchResults}
-                keyExtractor={(item, index) => index.toString()}
                 renderItem={({ item }) => (
-                    <Text style={styles.resultText}>
-                        {item.title || item.artistName}
+                    <Text key={item.id} style={styles.resultText}>
+                        {item.name}
                     </Text>
                 )}
+                keyExtractor={(item, index) => index.toString()}
+
                 scrollEnabled={false}
             />
         </View>

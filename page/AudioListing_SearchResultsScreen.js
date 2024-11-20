@@ -26,6 +26,7 @@ import IconOct from "react-native-vector-icons/Octicons";
 import Footer from '../component/footer';
 
 import { songs, artists, albumsSong } from "../data/data_audio";
+import { getDataSearchByQuery } from "../component/getDataApi";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -35,7 +36,7 @@ export default function AudioListing_SearchResultsScreen({  navigation,  route})
   const [isFocused, setIsFocused] = useState(false);
 
   const [inputText, setInputText] = useState(route.params?.text || "");
-  const [searchResults, setSearchResults] = useState(route.params?.query || []);
+  const [searchResults, setSearchResults] = useState( []);
 
   const [songSearch, setSongSearch] = useState([]);
   const [artistSearch, setArtistSearch] = useState([]);
@@ -52,7 +53,7 @@ export default function AudioListing_SearchResultsScreen({  navigation,  route})
 
 
   // Search handle
-  const handleSearch = (text) => {
+  const handleSearch = async (text) => {
     setInputText(text);
 
     const trimmedInput = text.trim().toLowerCase();
@@ -62,39 +63,44 @@ export default function AudioListing_SearchResultsScreen({  navigation,  route})
       return;
     }
 
-    const filteredSongs = songs.filter((song) => song.title.toLowerCase().includes(trimmedInput));
-    const filteredAlbums = albumsSong.filter((album) => album.title.toLowerCase().includes(trimmedInput));
-    const filteredArtists = artists.filter((artist) => artist.artistName.toLowerCase().includes(trimmedInput));
+    const results = await getDataSearchByQuery(trimmedInput);
 
-    const combinedResults = [
-      ...filteredSongs.map((song) => ({ ...song, type: 'song' })),
-      ...filteredAlbums.map((album) => ({ ...album, type: 'album' })),
-      ...filteredArtists.map((artist) => ({ ...artist, type: 'artist'})),
-    ];
-
-    setSearchResults(combinedResults);
+    setSearchResults(results);
   };
+
+  useEffect(() => {
+    handleSearch(inputText);
+  },[inputText]);
 
   // filter the data  by type 
   const filteredDataByType = selectedType === 'All' ?
         searchResults : 
-        searchResults.filter((item) => item.type === selectedType);
-
+        Object.keys(searchResults)
+              .filter((key) => key === selectedType) 
+              .reduce((result, key) => {
+                result[key] = searchResults[key];
+                return result;
+              },{});
+  
+  console.log("filteredDataByType");
+  console.log(filteredDataByType);
+  
+  // filter the data by type
   useEffect(() => {
     const songs =[];
     const artists =[];
     const albums =[];
 
-    filteredDataByType.forEach((result) => {
-      if (result.type === "song") {
-        songs.push(result);
-      } else if (result.type === "artist") {
-        artists.push(result);
-      } else if (result.type === "album") {
-        albums.push(result);
-      }
-    }
-    );
+    // filter each data corresponding to the key
+    Object.keys(filteredDataByType).forEach((key) => {
+      if(key === 'tracks') {
+        songs.push(...filteredDataByType[key].items);
+      } else if(key === 'artists') {
+        artists.push(...filteredDataByType[key].items);
+      } else if(key === 'albums') {
+        albums.push(...filteredDataByType[key].items);
+    }});
+
     setSongSearch(songs);
     setArtistSearch(artists);
     setAlbumSearch(albums);
@@ -149,7 +155,7 @@ export default function AudioListing_SearchResultsScreen({  navigation,  route})
         
         <View style={styles.categoryRow}>
 
-          {["All", "song", "album", "artist"].map((type) => (
+          {["All", "tracks", "albums", "artists"].map((type) => (
             <TouchableOpacity 
               key={type} 
               style={[styles.category, {borderColor: selectedType === type ? '#21c5db' : 'transparent', borderBottomWidth: selectedType === type ? 2 : 0}]}  
@@ -164,24 +170,25 @@ export default function AudioListing_SearchResultsScreen({  navigation,  route})
           data={artistSearch}
           
           renderItem={({ item }) => (
-            <TouchableOpacity style={styles.artistRow} 
+            
+            <TouchableOpacity key={item.id}  style={styles.artistRow} 
           
-            onPress={() => navigation.navigate('ArtistProfile',{artist_id: item.id, artist: item.artistName, artistImage: item.image})}
+            onPress={() => navigation.navigate('ArtistProfile',{artist: item})}
             
             >
               {/* img tac gia */}
               <Image
-                source={item.image}
+                source={{uri: item.images[0].url}}
                 resizeMode="stretch"
                 style={styles.artistImage}
               />
               <View style={styles.artistInfo}>
                 {/* tac gia */}
-                <Text style={styles.artistName}>{item.artistName}</Text>
+                <Text style={styles.artistName}>{item.name}</Text>
                 <View style={styles.followersRow}>
                   <IconAnt name="user" size={15} style={styles.userIcon} />
                   {/* so nguoi theo doi tac gia */}
-                  <Text style={styles.followersText}>1.234K Followers</Text>
+                  <Text style={styles.followersText}>{item.followers.total}K Followers</Text>
                 </View>
               </View>
               <TouchableOpacity style={styles.followButton}>
@@ -213,7 +220,7 @@ export default function AudioListing_SearchResultsScreen({  navigation,  route})
                 style={{ flexDirection: "row", alignItems: "center", gap: 15 }}
               >
                 {/** Image music */}
-                <Image source={item.image} style={{ width: 70, height: 70 }} />
+                <Image source={{uri: item.album.images[0].url}} style={{ width: 70, height: 70 }} />
                 {/** The information music */}
                 <View style={{ flexDirection: "column" }}>
                   {/** Name music */}
@@ -225,7 +232,7 @@ export default function AudioListing_SearchResultsScreen({  navigation,  route})
                       color: "#171A1FFF",
                     }}
                   >
-                    {item.title}
+                    {item.name}
                   </Text>
                   {/* tac gia */}
                   <Text
@@ -236,7 +243,7 @@ export default function AudioListing_SearchResultsScreen({  navigation,  route})
                       color: "#565E6CFF",
                     }}
                   >
-                    {handelArtistByID(item.artist).artistName}
+                    {item.artists[0].name}
                   </Text>
                   {/** views and duration */}
                   <View
@@ -258,7 +265,7 @@ export default function AudioListing_SearchResultsScreen({  navigation,  route})
                         marginRight: 8,
                       }}
                     >
-                      {item.plays}
+                      12M
                     </Text>
 
                     {/**duration */}
@@ -273,7 +280,7 @@ export default function AudioListing_SearchResultsScreen({  navigation,  route})
                         color: "#565E6CFF",
                       }}
                     >
-                      {item.duration}
+                      {(item.duration_ms/1000/60).toFixed(2)}
                     </Text>
                   </View>
                 </View>
