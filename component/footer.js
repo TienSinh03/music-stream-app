@@ -17,6 +17,7 @@ import {
   import IconIon from "react-native-vector-icons/Ionicons";
   import IconFnA from "react-native-vector-icons/FontAwesome";
   import { useMusic } from "../context/FloatingMusicContext";
+  import { MovingText } from "../component/MovingText";
   const Footer = ({dataSongId,onPressSmallMusic, selectedPause, setSelectedPause,albumsSong,artists, activeScreen, showMusicInfo = true}) => {
     
     const getColor = (screenName) => (screenName === activeScreen ? "#21c5db" : "#565E6CFF");
@@ -34,19 +35,28 @@ import {
             >
                 
             {/** Image and infor music playing */}
-            <View style={{display:'flex', flexDirection:'row', alignItems:'center', gap:15}}>
+            <View style={{display:'flex', flexDirection:'row', alignItems:'center', gap:15, flex:1}}>
                 {/** Image music */}
                 <Image source={{uri: dataSongId.album.images[0].url}} style={{width: 50, height: 50}}/>
 
                 {/** Infor */}
                 <View style={{flexDirection:'column'}}>
                     {/* * Name music */}
-                    <Text style={{fontSize: 16, lineHeight:24,fontWeight:'500', color:'white'}}>{dataSongId.name}</Text>
-
+                    <View style={styles.trackTitleContainer}>
+                        <MovingText style={{fontSize: 16, lineHeight:24,fontWeight:'500', color:'white'}} 
+                        text={dataSongId.name ?? ''} 
+                        animationThreshold="25"></MovingText>
+                    </View>
+                    
+                    
                     {/**  */}
                     <View style={{display:'flex', flexDirection:'row', alignItems:'center', gap:6}}>
-                        <Text style={{fontSize: 14, lineHeight:24,fontWeight:'400', color:'white', marginRight:8}}>{albumsSong.name}</Text>
                         
+                        <View style={styles.trackTitleContainer}>   
+                            <MovingText style={{fontSize: 14, lineHeight:24,fontWeight:'400', color:'white'}} 
+                            text={albumsSong.name} 
+                            animationThreshold="25"></MovingText>
+                        </View>
                         <IconFnA name="circle" size={10} color="white"/>
                         <Text style={{fontSize: 14, lineHeight:24,fontWeight:'400', color:'white'}}>{artists.name}</Text>
                     </View>
@@ -92,7 +102,10 @@ import {
   }
 
   const styles = StyleSheet.create({
- 
+    trackTitleContainer: {
+		flex: 1,
+		overflow: 'hidden',
+	},
     footer:{display:'flex', flexDirection:'row', justifyContent:'space-between', alignItems:'center',paddingHorizontal:55,paddingVertical:20,backgroundColor:'white', borderTopWidth:1, borderColor:'#C4C4C4'}
 
 })

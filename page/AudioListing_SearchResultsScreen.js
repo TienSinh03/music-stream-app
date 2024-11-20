@@ -115,13 +115,6 @@ export default function AudioListing_SearchResultsScreen({  navigation,  route})
     setAlbumSearch(albums);
   }, [searchResults, selectedType]);
  
-  
-  const handelArtistByID = (id) => {
-    var artist= artists.find((item) => item.id === id);
-    return artist;
-  }
-
-  
 
   useEffect(() => {
         setSelectedPause(route.params?.selectedPause);

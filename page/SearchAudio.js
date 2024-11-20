@@ -113,8 +113,8 @@ export default function SearchAudio({ navigation, route,}) {
                     </Text>
                 )}
                 keyExtractor={(item, index) => index.toString()}
-
                 scrollEnabled={false}
+                ListEmptyComponent={<Text style={{textAlign:'center', marginTop:20}}>No results found</Text>}
             />
         </View>
       </ScrollView>
