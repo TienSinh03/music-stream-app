@@ -1,12 +1,44 @@
-import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet, Image } from 'react-native';
+import React, { useState } from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Alert,
+  StyleSheet,
+  Image,
+} from 'react-native';
 
 const Login = ({ navigation }) => {
-  const handleLogin = () => {
-    Alert.alert('Đăng nhập thành công!');
-    setTimeout(() => {
-      navigation.navigate('MainTab');
-    }, 150);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const API_URL = 'https://6738930a4eb22e24fca854b6.mockapi.io/users';
+
+  const handleLogin = async () => {
+    try {
+      const response = await fetch(API_URL);
+      if (!response.ok) throw new Error('Failed to fetch data from the server.');
+
+      const users = await response.json();
+      const user = users.find(
+        (user) => user.account === username && user.password === password
+      );
+
+      if (user) {
+        Alert.alert('Đăng nhập thành công!');
+        setTimeout(() => {
+          navigation.navigate('MainTab');
+        }, 150);
+      } else {
+        Alert.alert('Đăng nhập thất bại', 'Tài khoản hoặc mật khẩu không đúng.');
+      }
+    } catch (error) {
+      Alert.alert('Lỗi', 'Không thể kết nối đến máy chủ.');
+    }
+  };
+
+  const handleForgotPassword = () => {
+    navigation.navigate('ForgotPassword');
   };
 
   const handleFacebookLogin = () => {
@@ -23,23 +55,43 @@ const Login = ({ navigation }) => {
         <Text style={styles.title}>Đăng Nhập</Text>
         <View style={styles.formGroup}>
           <Text style={styles.label}>Tài khoản</Text>
-          <TextInput placeholder="Nhập tài khoản" style={styles.input} />
+          <TextInput
+            placeholder="Nhập tài khoản"
+            value={username}
+            onChangeText={setUsername}
+            style={styles.input}
+          />
         </View>
         <View style={styles.formGroup}>
           <Text style={styles.label}>Mật khẩu</Text>
-          <TextInput placeholder="Nhập mật khẩu" secureTextEntry={true} style={styles.input} />
+          <TextInput
+            placeholder="Nhập mật khẩu"
+            secureTextEntry={true}
+            value={password}
+            onChangeText={setPassword}
+            style={styles.input}
+          />
         </View>
+        <TouchableOpacity onPress={handleForgotPassword} style={styles.forgotPassword}>
+          <Text style={styles.forgotPasswordText}>Quên mật khẩu?</Text>
+        </TouchableOpacity>
         <TouchableOpacity style={styles.buttonLogin} onPress={handleLogin}>
           <Text style={styles.buttonText}>Đăng Nhập</Text>
         </TouchableOpacity>
         <Text style={styles.divider}>Hoặc</Text>
         <View style={styles.socialLogin}>
           <TouchableOpacity style={styles.buttonGoogle} onPress={handleGoogleLogin}>
-            <Image source={require('../assets/image/LOGIN-Register/google.jpg')} style={styles.icon} />
+            <Image
+              source={require('../assets/image/LOGIN-Register/google.jpg')}
+              style={styles.icon}
+            />
             <Text style={styles.buttonText}>Sign in with Google</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.buttonFacebook} onPress={handleFacebookLogin}>
-            <Image source={require('../assets/image/LOGIN-Register/face.png')} style={styles.icon} />
+            <Image
+              source={require('../assets/image/LOGIN-Register/face.png')}
+              style={styles.icon}
+            />
             <Text style={styles.buttonText}>Sign in with Facebook</Text>
           </TouchableOpacity>
         </View>
@@ -88,6 +140,14 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     borderRadius: 4,
     backgroundColor: '#f9f9f9',
+  },
+  forgotPassword: {
+    alignSelf: 'flex-end',
+    marginBottom: 15,
+  },
+  forgotPasswordText: {
+    color: '#007BFF',
+    fontSize: 14,
   },
   buttonLogin: {
     width: '100%',
