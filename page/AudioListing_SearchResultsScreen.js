@@ -58,7 +58,7 @@ export default function AudioListing_SearchResultsScreen({  navigation,  route})
   // set button pause or play 
   const [selectedPause, setSelectedPause] = useState(isPause);
 
-  const { setDataSongId, setAlbumSongId, setArtistSongId, isPause } = useMusic();
+  const { setDataSongId, setAlbumSongId, setArtistSongId, isPause, setActiveScreen, setSongsByChart } = useMusic();
   const soundObject = useContext(AudioContext);
 
   // Search handle
@@ -133,6 +133,9 @@ export default function AudioListing_SearchResultsScreen({  navigation,  route})
     setArtistSongId(track.artists[0]);
     console.log("artist");
     console.log(track.artists[0]);
+
+    setActiveScreen('MainTab');
+    setSongsByChart(songSearch);
 
     try {
       if(soundObject.current) {

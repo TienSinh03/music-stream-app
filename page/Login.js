@@ -8,6 +8,8 @@ import {
   StyleSheet,
   Image,
 } from 'react-native';
+import * as AuthSession from 'expo-auth-session';
+
 
 const Login = ({ navigation }) => {
   const [username, setUsername] = useState('');
@@ -49,6 +51,63 @@ const Login = ({ navigation }) => {
     Alert.alert('Đăng nhập nhanh qua Google');
   };
 
+  // const discovery = {
+  //   authorizationEndpoint: 'https://accounts.spotify.com/authorize',
+  //   tokenEndpoint: 'https://accounts.spotify.com/api/token',
+  // };
+
+  // const [request, response, promptAsync] = AuthSession.useAuthRequest({
+  //   clientId: '649ad63aaf4e461795043d6d94289f8b',
+  //   redirectUri: AuthSession.makeRedirectUri({ useProxy: true }),
+  //   scopes: ['user-read-private', 'user-read-email', 'playlist-read-private'],
+  //   usePKCE: true,
+  //   responseType: 'code',
+  // }, discovery);
+  
+
+  // React.useEffect(() => {
+  //   if (response?.type === 'success') {
+  //     const { code } = response.params;
+  //     getAccessToken(code);
+  //     console.log("hh22");
+  //   }
+  //   console.log("hh21");
+  // }, [response]);
+
+  // const getAccessToken = async (code) => {
+  //   try {
+  //     const response = await axios.post('https://accounts.spotify.com/api/token', null, {
+  //       headers: {
+  //         'Content-Type': 'application/x-www-form-urlencoded',
+  //         Authorization: `Basic ${btoa('649ad63aaf4e461795043d6d94289f8b' + ':' + 'c9221b80e1f84628b181da3e4025322c')}`,
+  //       },
+  //       params: {
+  //         code,
+  //         redirect_uri: AuthSession.makeRedirectUri({ useProxy: true }),
+  //         grant_type: 'authorization_code',
+  //       },
+  //     });
+
+  //   const data = await response.data;
+  //   if (data.access_token) {
+
+  //     const currentTime = Math.floor(Date.now() / 1000);
+  //     const expireTime = currentTime + data.expires_in;
+
+  //     await AsyncStorage.setItem('access_token', data.access_token);
+  //     await AsyncStorage.setItem('refresh_token', data.refresh_token);
+  //     await AsyncStorage.setItem('expire_time', expireTime.toString());
+  //     navigation.navigate('MainTab');
+  //   }
+  // }catch (error) {
+  //   console.error('Error exchanging code:', error);
+  //   Alert.alert('Error', 'Failed to authenticate.');
+  // }
+    
+  // }
+
+
+
   return (
     <View style={styles.container}>
       <View style={styles.loginBox}>
@@ -75,7 +134,11 @@ const Login = ({ navigation }) => {
         <TouchableOpacity onPress={handleForgotPassword} style={styles.forgotPassword}>
           <Text style={styles.forgotPasswordText}>Quên mật khẩu?</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.buttonLogin} onPress={handleLogin}>
+        <TouchableOpacity style={styles.buttonLogin} 
+          onPress={() => {
+            handleLogin();
+          }}
+        >
           <Text style={styles.buttonText}>Đăng Nhập</Text>
         </TouchableOpacity>
         <Text style={styles.divider}>Hoặc</Text>

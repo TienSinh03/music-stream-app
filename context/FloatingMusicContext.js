@@ -7,10 +7,12 @@ export const MusicProvider = ({ children }) => {
   const [isPause, setIsPause] = useState(true); // Trạng thái phát/dừng
   const [artistSongId, setArtistSongId] = useState(); //
   const [albumSongId, setAlbumSongId] = useState(); //
+  const [activeScreen, setActiveScreen] = useState(); 
+  const [songsByChart, setSongsByChart] = useState([]);
 
   return (
     <MusicContext.Provider
-      value={{ songId, setDataSongId, isPause, setIsPause, artistSongId, setArtistSongId, albumSongId, setAlbumSongId }}
+      value={{ songId, setDataSongId, isPause, setIsPause, artistSongId, setArtistSongId, albumSongId, setAlbumSongId,activeScreen, setActiveScreen,songsByChart, setSongsByChart }}
     >
       {children}
     </MusicContext.Provider>

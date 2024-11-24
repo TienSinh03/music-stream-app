@@ -93,6 +93,7 @@ const Item_Albumn = ({title, artist, image, navigation}) => (
 
 
     const [dataArtist, setDataArtist] = useState(route.params?.artist || []);
+    
 
     const [songByArtists, setSongByArtists] = useState([]);
     const [albumsSong, setAlbumsSong] = useState([]);
@@ -102,7 +103,7 @@ const Item_Albumn = ({title, artist, image, navigation}) => (
 
     const [selectedPause, setSelectedPause] = useState(isPause);
 
-    const { setDataSongId, setAlbumSongId, setArtistSongId, isPause } = useMusic();
+    const { setDataSongId, setAlbumSongId, setArtistSongId, isPause, setSongsByChart, setActiveScreen } = useMusic();
     const soundObject = useContext(AudioContext);
 
 
@@ -110,15 +111,21 @@ const Item_Albumn = ({title, artist, image, navigation}) => (
     const [isExpanded, setExpand] = useState(true);
     // follow the artist
     const [isFollowing, setIsFollowing] = useState({});
+    const [changedFollow, setChangedFollow] = useState(dataArtist.followers.total);
 
     const toggleFollow = (id) => {
-        setIsFollowing((prevState) => ({
-          ...prevState,
-          [id]: !prevState[id]
-        }));
-      };
+        setIsFollowing((prevState) => {
+          const isCurrentlyFollowing = prevState[id];
+          const newState = { ...prevState, [id]: !isCurrentlyFollowing };
     
-
+          // Cập nhật số lượng người theo dõi
+          setChangedFollow((prevCount) => 
+            isCurrentlyFollowing ? prevCount - 1 : prevCount + 1
+          );
+    
+          return newState;
+        });
+    }
 
     // function view more description
     const viewMoreDescription = () => {
@@ -179,6 +186,9 @@ const Item_Albumn = ({title, artist, image, navigation}) => (
         console.log("artist");
         console.log(track.artists[0]);
 
+        setActiveScreen('MainTab');
+        setSongsByChart(songByArtists);
+
         try {
             if (soundObject.current) {
                 await soundObject.current.stopAsync(); // Dừng nhạc hiện tại
@@ -219,7 +229,7 @@ const Item_Albumn = ({title, artist, image, navigation}) => (
                 <Image source={{uri:dataArtist.images[0].url}} style={{width:screenWith*0.54, height:screenHeight*0.238, borderRadius:120}}/>
                 <View style={{marginVertical:25}}>
                     <Text style={{textAlign:'center',fontSize:40,lineHeight:48, fontWeight:'bold', color:'#171A1FFF'}}>{dataArtist.name}</Text>
-                    <Text style={{textAlign:'center',fontSize:18, fontWeight:'400', color:'#9095A0FF'}}>{dataArtist.followers.total} Followers</Text>
+                    <Text style={{textAlign:'center',fontSize:18, fontWeight:'400', color:'#9095A0FF'}}>{changedFollow} Followers</Text>
                 </View>
             </View>
 
@@ -228,10 +238,12 @@ const Item_Albumn = ({title, artist, image, navigation}) => (
 
                 <View style={{flexDirection:'row', alignItems:'center', justifyContent:'space-between', width:'40%'}}>
                     {/** button follow */}
-                    <TouchableOpacity style ={styles.buttonFL}>
-                        <Text style={styles.textButtonFL}>Follow</Text>
+                    <TouchableOpacity style ={styles.buttonFL} onPress={() => toggleFollow(dataArtist.id)}>
+                        <Text style={styles.textButtonFL}>
+                        {!isFollowing[dataArtist.id] ? 'Follow' : 'Unfollow'}
+                        </Text>
                     </TouchableOpacity>
-                        
+                                        
                     {/** button menu */}
                     <TouchableOpacity>
                         <Image source={require('../assets/image/Playlist Details - Audio Listing/Menu 5 2.png')} style={{width: 35, height: 35}}/>

@@ -24,8 +24,8 @@ const feedData = [
     username: 'Jessica Gonzalez',
     verified: true,
     title: 'FLOWER',
-    image_user: require('../assets/image/Feed - Comment on an Audio/Avatar 13.png'),
-    image: require('../assets/image/Feed - Comment on an Audio/Avatar 13.png'),
+    image_user: require('../assets/image/Feed - Audio Listing/Avatar 4.png'),
+    image: require('../assets/image/Feed - Audio Listing/Image 93.png'),
     plays: 125,
     duration: '05:15',
     likes: 20,
@@ -36,23 +36,26 @@ const feedData = [
       {
         id: '1',
         username: 'Sally Rooney',
-        image_user: require('../assets/image/Feed - Comment on an Audio/Avatar 13.png'),
+        image_user: require('../assets/image/Feed - Comment on an Audio/Avatar 8.png'),
         text: 'Do duis cul 😍',
         time: '17h',
+        likes: 20,
       },
       {
         id: '2',
         username: 'Jason',
-        image_user: require('../assets/image/Feed - Comment on an Audio/Avatar 13.png'),
+        image_user: require('../assets/image/Feed - Comment on an Audio/Avatar 9.png'),
         text: 'Minim magna exc 😍',
         time: '48m',
+        likes: 2,
       },
       {
         id: '3',
         username: 'Michael Key',
-        image_user: require('../assets/image/Feed - Comment on an Audio/Avatar 13.png'),
+        image_user: require('../assets/image/Feed - Comment on an Audio/Avatar 11.png'),
         text: 'Commodo 🔥',
         time: '48m',
+        likes: 15,
       },
     ],
   },
@@ -61,8 +64,8 @@ const feedData = [
     username: 'William King',
     verified: true,
     title: 'Me',
-    image_user: require('../assets/image/Feed - Comment on an Audio/Avatar 13.png'),
-    image: require('../assets/image/Feed - Comment on an Audio/Avatar 13.png'),
+    image_user: require('../assets/image/Feed - Audio Listing/Avatar 5.png'),
+    image: require('../assets/image/Feed - Audio Listing/Image 94.png'),
     plays: 245,
     duration: '05:15',
     likes: 45,
@@ -73,23 +76,26 @@ const feedData = [
       {
         id: '1',
         username: 'Sally Rooney',
-        image_user: require('../assets/image/Feed - Comment on an Audio/Avatar 13.png'),
+        image_user: require('../assets/image/Feed - Comment on an Audio/Avatar 8.png'),
         text: 'Do duis cul 😍',
         time: '17h',
+        likes: 20,
       },
       {
         id: '2',
         username: 'Jason',
-        image_user: require('../assets/image/Feed - Comment on an Audio/Avatar 13.png'),
+        image_user: require('../assets/image/Feed - Comment on an Audio/Avatar 9.png'),
         text: 'Minim magna exc 😍',
         time: '48m',
+        likes: 12,
       },
       {
         id: '3',
         username: 'Michael Key',
-        image_user: require('../assets/image/Feed - Comment on an Audio/Avatar 13.png'),
+        image_user: require('../assets/image/Feed - Comment on an Audio/Avatar 11.png'),
         text: 'Commodo 🔥',
         time: '48m',
+        likes: 22,
       },
     ],
   },
@@ -97,11 +103,54 @@ const feedData = [
 const Feed = ({ navigation }) => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedComments, setSelectedComments] = useState([]);
+  const [feedDatas, setFeedDatas] = useState(feedData);
+  const [isLiked, setIsLiked] = useState({});
+  const [isLikedComment, setIsLikedComment] = useState({});
 
   const openComments = (comments) => {
     setSelectedComments(comments);
     setModalVisible(true);
   };
+
+  const toggleLikePost = (idPost) => {
+    setIsLiked((prev) => {
+      const isCurrentlyLike = prev[idPost];
+      const newState={
+      ...prev, 
+      [idPost]: !prev[idPost],
+      };
+
+      // increment or decrement the number of likes
+      const index = feedDatas.findIndex((feed) => feed.id === idPost);
+      const feedData = feedDatas[index];
+      feedData.likes = isCurrentlyLike ? feedData.likes - 1 : feedData.likes + 1;
+      setFeedDatas((prev) => {
+        const newState = [...prev];
+        newState[index] = feedData;
+        return newState;
+      });
+
+      return newState;
+    });
+  }
+
+  // likes comments
+  const toggleCommentLike = (idComment) => {
+    setIsLikedComment((pre) =>{
+      const isCurrentLike = pre[idComment];
+      const newStateComment = {...pre, [idComment]: !pre[idComment]};
+      
+      const index = selectedComments.findIndex((comment) => comment.id === idComment);
+      const comments = selectedComments[index];
+      comments.likes = isCurrentLike ? comments.likes - 1 : comments.likes + 1;
+      setSelectedComments((pre) => {
+        const newState = [...pre];
+        newState[index] = comments;
+        return newState;
+      })
+      return newStateComment;
+    })
+  }
 
   {/* Header */ }
   const renderHeader = () => (
@@ -154,10 +203,14 @@ const Feed = ({ navigation }) => {
       </View>
       <View style={styles.actions}>
         <View style={{flexDirection:'row',alignItems: 'center', gap:20}}>
-          <TouchableOpacity style={styles.actionButton}>
-            <Icon name="heart-outline" size={20} color="#9095A0FF" />
+
+          <TouchableOpacity style={styles.actionButton}
+            onPress={() => toggleLikePost(item.id)}
+          >
+            <Icon name="heart-outline" size={20} color={isLiked[item.id]?"#21c5db":"#9095A0FF"} />
             <Text style={styles.actionText}>{item.likes}</Text>
           </TouchableOpacity>
+
           <TouchableOpacity
             style={styles.actionButton}
             onPress={() => openComments(item.commentsData)}>
@@ -218,11 +271,13 @@ const Feed = ({ navigation }) => {
 
                     <View style={styles.commentInfo}>
                       <Text style={styles.commentTime}>{comment.time}</Text>
-                      <Text style={styles.commentActions}>1 like</Text>
+                      <Text style={styles.commentActions}>{comment.likes}</Text>
                       <Text style={styles.commentActions}>Reply</Text>
                     </View>
                   </View>
-                  <Icon name="heart-outline" size={18} color="#000" />
+                  <TouchableOpacity onPress={() => toggleCommentLike(comment.id)}>
+                    <Icon name="heart-outline" size={18} color={isLikedComment[comment.id] ? "#21c5db":"#9095A0FF"} />
+                  </TouchableOpacity>
                 </View>
               ))}
             </ScrollView>

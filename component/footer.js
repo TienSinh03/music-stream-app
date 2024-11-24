@@ -18,20 +18,28 @@ import {
   import IconFnA from "react-native-vector-icons/FontAwesome";
   import { useMusic } from "../context/FloatingMusicContext";
   import { MovingText } from "../component/MovingText";
-  const Footer = ({dataSongId,onPressSmallMusic, selectedPause, setSelectedPause,albumsSong,artists, activeScreen, showMusicInfo = true}) => {
+import { useNavigation } from "@react-navigation/native";
+  const Footer = ({dataSongId,songsByChart, selectedPause, setSelectedPause,albumsSong,artists, activeScreen, showMusicInfo = true}) => {
     
-    const getColor = (screenName) => (screenName === activeScreen ? "#21c5db" : "#565E6CFF");
     console.log("footer");
     console.log(dataSongId);
     console.log("helloa"+artists);
     console.log("hellon"+albumsSong);
+    const navigation = useNavigation();
     
 
     return (
         <View style={{position:'absolute', bottom:85, right:0, left:0}}>
             {showMusicInfo && dataSongId && (
             <TouchableOpacity style ={{backgroundColor:'#171A1FFF', width:'100%', display:'flex', flexDirection:'row', alignItems:'center', justifyContent:'space-between', padding:15}}
-                onPress={() => onPressSmallMusic()}
+                onPress={() => navigation.navigate('PlayanAudio', {
+                    dataFindId: dataSongId,
+                    songsByChart: songsByChart,
+                    selectedPause: selectedPause,
+                    image: dataSongId.album.images[0].url, 
+                    artist: dataSongId.artists[0].name,
+                    previousScreen: activeScreen,
+                })}
             >
                 
             {/** Image and infor music playing */}

@@ -77,7 +77,7 @@ import {
 
     const [song, setSong] = useState();
 
-    const { setDataSongId, setAlbumSongId, setArtistSongId, isPause, setIsPause } = useMusic();
+    const { setDataSongId, setAlbumSongId, setArtistSongId, isPause, setIsPause, setActiveScreen,setSongsByChart } = useMusic();
     
     const [selectedPause, setSelectedPause] = useState(isPause);
 
@@ -126,6 +126,8 @@ import {
         setArtistSongId(track.artists[0]);
         console.log("artist");
         console.log(track.artists[0]);
+        setActiveScreen('MainTab');
+        setSongsByChart(songsByChart);
 
         try {
             if (soundObject.current) {
