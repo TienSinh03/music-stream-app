@@ -26,6 +26,8 @@ import Register from './page/Register';
 
 import Feed from './page/Feed';
 
+import ChatBox from './page/ChatBox';
+
 const Stack = createStackNavigator();
 export default function App() {
   return (
@@ -58,6 +60,7 @@ export default function App() {
           <Stack.Screen name="MainTab" component={TabNavigation} options={{ headerShown: false }} />
           <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
           <Stack.Screen name="Register" component={Register} options={{ headerShown: false }} />
+          <Stack.Screen name="ChatBox" component={ChatBox} options={{ headerShown: false }} />
 
         </Stack.Navigator>
       </NavigationContainer>

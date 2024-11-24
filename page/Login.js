@@ -131,9 +131,7 @@ const Login = ({ navigation }) => {
             style={styles.input}
           />
         </View>
-        <TouchableOpacity onPress={handleForgotPassword} style={styles.forgotPassword}>
-          <Text style={styles.forgotPasswordText}>Quên mật khẩu?</Text>
-        </TouchableOpacity>
+
         <TouchableOpacity style={styles.buttonLogin} 
           onPress={() => {
             handleLogin();
