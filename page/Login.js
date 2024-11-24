@@ -146,7 +146,7 @@ const Login = ({ navigation }) => {
               source={require('../assets/image/LOGIN-Register/google.jpg')}
               style={styles.icon}
             />
-            <Text style={styles.buttonText}>Sign in with Google</Text>
+            <Text style={styles.buttonText}>Signin with Google</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.buttonFacebook} onPress={handleFacebookLogin}>
             <Image
