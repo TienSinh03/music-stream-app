@@ -175,13 +175,7 @@ export default function Home_AudioListing({navigation, route}) {
               source={require("../assets/image/Home - Audio Listing/Image 36.png")}
             />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('ChatBox')}>
-            {/* https://png.pngtree.com/png-clipart/20230923/original/pngtree-comicstyle-qa-illustration-with-speech-bubble-and-splash-effect-vector-png-image_12834468.png */}
-          
-            <Image source={{uri: 'https://png.pngtree.com/png-clipart/20230923/original/pngtree-comicstyle-qa-illustration-with-speech-bubble-and-splash-effect-vector-png-image_12834468.png'}} style={{width: 40, height: 40}} />
-          
-          </TouchableOpacity>
-
+        
           <View style={styles.headerLeft}>
             <IconFe
               name="bell"

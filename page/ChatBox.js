@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TextInput, Button, ScrollView, ActivityIndicator, StyleSheet, TouchableOpacity, Image } from "react-native";
+import { View, Text, TextInput, StatusBar, ScrollView, ActivityIndicator, StyleSheet, TouchableOpacity, Image } from "react-native";
 import * as GoogleGenerativeAI from "@google/generative-ai";
 
 export default function ChatBox() {
@@ -49,7 +49,7 @@ export default function ChatBox() {
 
   return (
     <View style={styles.container}>
-      <ScrollView style={styles.chatContainer}>
+      <ScrollView style={styles.chatContainer} showsVerticalScrollIndicator={false}>
         {messages.map((msg, index) => (
           <View key={index} style={[styles.messageContainer, msg.user ? styles.userMessage : styles.botMessage]}>
             <View style={styles.imageContainer}>
@@ -89,6 +89,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     justifyContent: "flex-end",
+    marginTop: StatusBar.currentHeight || 0,
   },
   chatContainer: {
     flex: 1,

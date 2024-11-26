@@ -5,7 +5,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import IconAnt from "react-native-vector-icons/AntDesign";
 import IconFe from "react-native-vector-icons/Feather";
 import IconIon from "react-native-vector-icons/Ionicons";
-import { View, Text, Image, TouchableOpacity } from "react-native";
+import IconFo from "react-native-vector-icons/Fontisto";
 
 
 import Home_AudioListing from '../page/Home_AudioListing';
@@ -17,6 +17,7 @@ import MyLibrary_Playlist from '../page/MyLibrary_Playlist';
 import Artist_Profile_Screen from '../page/Artist_Profile_Screen';
 import PlayanAudio from '../page/Play_an_AudioScreen';
 import Feed from '../page/Feed';
+import ChatBox from '../page/ChatBox';
 
 import Footer from '../component/footer';
 import { useMusic } from "../context/FloatingMusicContext";
@@ -116,6 +117,9 @@ export default function TabNavigation() {
             } else if (route.name === 'Library') {
               iconName = 'library-outline';
               return <IconIon name={iconName} size={size} color={color} />;
+            } else if (route.name === 'ChatBox') {
+              iconName = 'hipchat';
+              return <IconFo name={iconName} size={size} color={color} />;
             }
           },
           tabBarActiveTintColor: '#21c5db',
@@ -137,6 +141,7 @@ export default function TabNavigation() {
         <Tab.Screen name="Search" component={SearchStackScreen} options={{ headerShown: false }} />
         <Tab.Screen name="Feed" component={Feed} options={{ headerShown: false }} />
         <Tab.Screen name="Library" component={LibraryScreen} options={{ headerShown: false }} />
+        <Tab.Screen name="ChatBox" component={ChatBox} options={{ headerShown: false }} />
         {/* <Tab.Screen name="Artist_Profile_Screen" component={Artist_Profile_Screen} options={{ tabBarStyle: {display:'none'} }} />
         <Tab.Screen name="AudioListing_SearchResultsScreen" component={AudioListing_SearchResultsScreen} options={{ tabBarStyle: {display:'none'} }} />
         <Tab.Screen name="MyLibrary_Playlist" component={MyLibrary_Playlist} options={{ tabBarStyle: {display:'none'} }} />
