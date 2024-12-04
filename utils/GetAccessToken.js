@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const CLIENT_ID = "649ad63aaf4e461795043d6d94289f8b";
-const CLIENT_SECRET = "c9221b80e1f84628b181da3e4025322c";
+const CLIENT_ID = "1b97400f08ab46b8a9b0bff2b8a8c6d2";
+const CLIENT_SECRET = "15411a1ed88a4c789ecaa47f4f687f85";
 const REDIRECT_URI = "exp://192.168.1.13:8081";
  
 export const get_Token = async () => {

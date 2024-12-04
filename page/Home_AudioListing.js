@@ -19,12 +19,13 @@ import IconFe from "react-native-vector-icons/Feather";
 import IconAnt from "react-native-vector-icons/AntDesign";
 import IconIon from "react-native-vector-icons/Ionicons";
 
-import { chart_list,artists,albumsSong } from "../data/data_audio";
+import { chart_list,artists,albumsSong,audio } from "../data/data_audio";
 
 import Footer from '../component/footer';
 
 import { get_Token, fetchWithToken } from "../utils/GetAccessToken";
 import { getTop50,getPopAlbums, getPopArtists } from "../component/getDataApi";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const screenWith = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -34,7 +35,7 @@ const screenHeight = Dimensions.get("window").height;
 // Items with charts
 const Item_Chart = ({ title, location, likes, duration, description, image,navigation,chart }) => (
   
-  <TouchableOpacity style={{width:'10%', marginRight:20}} onPress={() => navigation.navigate({
+  <TouchableOpacity style={{width:'22%', marginRight:20}} onPress={() => navigation.navigate({
     name:'Playlist_Details',
     params: {chartTop50: chart}
   })}>
@@ -74,10 +75,10 @@ const Item_popular_artists = ({artist,follow,textFollower, navigation}) => (
   </TouchableOpacity>
 ) 
 
-const USER_ID =  "317qive5msxoaogrwjuqgm2vwvfy";
-const PLAYLIST_ID_TOP_VN = "37i9dQZEVXbLdGSmz6xilI"
-const PLAYLIST_ID_TOP_USA = "37i9dQZEVXbLRQDuF5jeBp"
-const PLAYLIST_ID_TOP_UK = "37i9dQZEVXbLnolsZ8PSNw"
+const USER_ID =  "315u7q3yq2aobt2jugfdp3cze6le";
+const PLAYLIST_ID_TOP_VN = "0aiBKNSqiPnhtcw1QlXK5s"
+const PLAYLIST_ID_TOP_USA = "4Sc2pbm1xcIX9QbDzSrDQy"
+const PLAYLIST_ID_TOP_UK = "3og1qgu9haRwEqRvqTWAv8"
 
 const ALBUMN_POP_HTH = "4faMbTZifuYsBllYHZsFKJ"
 const ALBUMN_POP_VU = "3pprs1r3mH3UhU23TUHBWJ"
@@ -103,14 +104,6 @@ export default function Home_AudioListing({navigation, route}) {
     }));
   };
 
-  // get random artists
-  const getPopularArtists = (artistsList) => {
-    return artistsList.slice(0, 3);
-  };
-  
-  const artistsPopuplar = getPopularArtists(artists);
-  console.log(artistsPopuplar);
-
 
   // fetch users from spotify api
   const getProfile = async () => {
@@ -123,12 +116,16 @@ export default function Home_AudioListing({navigation, route}) {
     }
     const response = await fetchWithToken(url, options);
     const data = await response.json();
+    console.log(data);
+    await AsyncStorage.setItem("avatar", userProfile?.images[0]?.url);
+    await AsyncStorage.setItem("name", userProfile?.display_name);
     setUserProfile(data);
   }
 
 
   useEffect(() => {
     getProfile();
+    console.log(userProfile);
   }, []);
 
   useEffect(() => {
@@ -254,7 +251,7 @@ export default function Home_AudioListing({navigation, route}) {
                       <Item_Chart 
                         key={item.id}
                         chart={item}                    
-                        description={item.description} 
+                        description={item.name} 
                         image={item.images[0].url} 
                         navigation={navigation}/>
                     )}

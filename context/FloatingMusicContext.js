@@ -9,10 +9,11 @@ export const MusicProvider = ({ children }) => {
   const [albumSongId, setAlbumSongId] = useState(); //
   const [activeScreen, setActiveScreen] = useState(); 
   const [songsByChart, setSongsByChart] = useState([]);
+  const [audioFooter, setAudioFooter] = useState();
 
   return (
     <MusicContext.Provider
-      value={{ songId, setDataSongId, isPause, setIsPause, artistSongId, setArtistSongId, albumSongId, setAlbumSongId,activeScreen, setActiveScreen,songsByChart, setSongsByChart }}
+      value={{ songId, setDataSongId, isPause, setIsPause, artistSongId, setArtistSongId, albumSongId, setAlbumSongId,activeScreen, setActiveScreen,songsByChart, setSongsByChart, audioFooter, setAudioFooter }}
     >
       {children}
     </MusicContext.Provider>

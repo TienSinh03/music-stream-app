@@ -19,7 +19,7 @@ import {
   import { useMusic } from "../context/FloatingMusicContext";
   import { MovingText } from "../component/MovingText";
 import { useNavigation } from "@react-navigation/native";
-  const Footer = ({dataSongId,songsByChart, selectedPause, setSelectedPause,albumsSong,artists, activeScreen, showMusicInfo = true}) => {
+  const Footer = ({dataSongId,songsByChart, selectedPause, setSelectedPause,albumsSong,artists, activeScreen, audioFooter, showMusicInfo = true}) => {
     
     console.log("footer");
     console.log(dataSongId);
@@ -35,6 +35,7 @@ import { useNavigation } from "@react-navigation/native";
                 onPress={() => navigation.navigate('PlayanAudio', {
                     dataFindId: dataSongId,
                     songsByChart: songsByChart,
+                    audio: audioFooter,
                     selectedPause: selectedPause,
                     image: dataSongId.album.images[0].url, 
                     artist: dataSongId.artists[0].name,
@@ -60,11 +61,11 @@ import { useNavigation } from "@react-navigation/native";
                     {/**  */}
                     <View style={{display:'flex', flexDirection:'row', alignItems:'center', gap:6}}>
                         
-                        <View style={styles.trackTitleContainer}>   
-                            <MovingText style={{fontSize: 14, lineHeight:24,fontWeight:'400', color:'white'}} 
-                            text={albumsSong.name} 
-                            animationThreshold="25"></MovingText>
-                        </View>
+                        {/* <View style={styles.trackTitleContainer}>    */}
+                            <Text style={{fontSize: 14, lineHeight:24,fontWeight:'400', color:'white'}} 
+                            text={albumsSong?.name} 
+                           ></Text>
+                        {/* </View> */}
                         <IconFnA name="circle" size={10} color="white"/>
                         <Text style={{fontSize: 14, lineHeight:24,fontWeight:'400', color:'white'}}>{artists.name}</Text>
                     </View>

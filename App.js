@@ -34,7 +34,7 @@ export default function App() {
     <MusicProvider>
     <AudioProvider>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="LanchScreen">
+        <Stack.Navigator initialRouteName="MainTab">
           <Stack.Screen name="LanchScreen" component={LanchScreen} options={{ headerShown: false }} />
           <Stack.Screen name="Home_AudioListing" component={Home_AudioListing} options={{ headerShown: false }} />
           <Stack.Screen name="Playlist_Details" component={Playlist_Details} options={{ headerShown: false, gestureDirection: 'vertical', }} />  

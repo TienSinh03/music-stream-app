@@ -16,6 +16,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import IconFe from 'react-native-vector-icons/Feather';
 import { FontAwesome, MaterialIcons, AntDesign } from '@expo/vector-icons';
 import Footer from "../component/footer";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { height } = Dimensions.get('window');
 const feedData = [
@@ -106,9 +107,12 @@ const Feed = ({ navigation }) => {
   const [feedDatas, setFeedDatas] = useState(feedData);
   const [isLiked, setIsLiked] = useState({});
   const [isLikedComment, setIsLikedComment] = useState({});
+  const [textComment, setTextComment] = useState('');
+  const [idFeed, setIdFeed] = useState('');
 
-  const openComments = (comments) => {
+  const openComments = (id,comments) => {
     setSelectedComments(comments);
+    setIdFeed(id);
     setModalVisible(true);
   };
 
@@ -150,6 +154,27 @@ const Feed = ({ navigation }) => {
       })
       return newStateComment;
     })
+  }
+
+  // add comments to the feed
+  const addComment = async (idPost, textComment) => {
+    const index = feedDatas.findIndex((feed) => feed.id === idPost);
+    const avatar = AsyncStorage.getItem('avatar');
+    const name = await AsyncStorage.getItem('name');
+    const comment = {
+      id: selectedComments.length + 1,
+      username: name,
+      image_user: require('../assets/image/Feed - Comment on an Audio/Avatar 8.png'),
+      text: textComment,
+      time: 'now',
+      likes:0
+    };
+
+    console.log(comment);
+    const feedData = feedDatas[index];
+    feedData.commentsData = [...feedData.commentsData, comment];
+    feedData.comments = feedData.comments + 1;
+    setSelectedComments((pre) => [...pre, comment]);
   }
 
   {/* Header */ }
@@ -213,9 +238,9 @@ const Feed = ({ navigation }) => {
 
           <TouchableOpacity
             style={styles.actionButton}
-            onPress={() => openComments(item.commentsData)}>
+            onPress={() => openComments(item.id,item.commentsData)}>
             <Icon name="chatbubble-outline" size={20} color="#9095A0FF" />
-            <Text style={styles.actionText}>{item.comments}</Text>
+            <Text style={styles.actionText}>{item.commentsData.length}</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.actionButton}>
             <Icon name="repeat-outline" size={20} color="#9095A0FF" />
@@ -247,7 +272,7 @@ const Feed = ({ navigation }) => {
           <View style={styles.modalContent}>
             
             <View style={{display:'flex', flexDirection:'row', alignItems:'center', justifyContent:'space-between', marginBottom:10}}>
-              <Text style={styles.commentTitle}>3 comments</Text>
+              <Text style={styles.commentTitle}>{selectedComments.length} comments</Text>
               <TouchableOpacity onPress={() => setModalVisible(false)}>
                 <AntDesign name="down" size={30} color="#000" />
               </TouchableOpacity>
@@ -286,8 +311,10 @@ const Feed = ({ navigation }) => {
               <TextInput
                 placeholder="Write a comment..."
                 style={styles.input}
+                value={textComment}
+                onChangeText={setTextComment}
               />
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => addComment(idFeed,textComment)}>
                 <Icon name="send" size={20} color="#007AFF" />
               </TouchableOpacity>
             </View>

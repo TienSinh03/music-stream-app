@@ -22,7 +22,7 @@ import {
   import IconFnA from "react-native-vector-icons/FontAwesome";
   import IconEnty from "react-native-vector-icons/Entypo";
 
-  import { albumsSong, artists } from "../data/data_audio";
+  import { albumsSong, artists,audios } from "../data/data_audio";
     import Icon from "react-native-vector-icons/Feather";
 
     import { Audio } from 'expo-av';
@@ -41,6 +41,7 @@ import {
     const [selectedPause, setSelectedPause] = useState(route.params?.selectedPause || true);
 
     const [currentSong, setCurrentSong] = useState(route.params?.dataFindId);
+    const [currentAudio, setCurrentAudio] = useState(route.params?.audio);
     const [artistBySong, setArtistBySong] = useState();
 
     const songs = route.params?.songsByChart || [];
@@ -51,7 +52,7 @@ import {
     console.log(route.params?.previousScreen);
 
     const soundObject = useContext(AudioContext);
-    const {setIsPause} = useMusic();
+    const {setIsPause, setDataSongId, setAlbumSongId, setArtistSongId, setAudioFooter} = useMusic();
 
     const handlePlayPause = async () => {
         try {
@@ -82,7 +83,9 @@ import {
             return;
         }
 
-        const currentIndex = songs.findIndex(s => s.track.id === currentSong.id);
+        
+
+        const currentIndex = audios.findIndex(s => s.id === currentAudio.id);
         console.log("index"+currentIndex);
 
         if (currentIndex === -1 || currentIndex === songs.length - 1) {
@@ -90,18 +93,25 @@ import {
             return;
         }
 
-        const nextSong = songs[currentIndex + 1];
-        console.log("nextSong"+nextSong.track.name);
+        const nextSong = audios[currentIndex + 1];
+        const nextSong_2 = songs[currentIndex + 1];
+
+        // console.log("nextSong"+nextSong.track.name);
         try {
             // dừng bài hát hiện tại
             await soundObject.current.stopAsync();
             await soundObject.current.unloadAsync();
 
             // load và phát bài hát tiếp theo
-            await soundObject.current.loadAsync({ uri: nextSong.track.preview_url });
+            await soundObject.current.loadAsync({ uri: nextSong.url });
             await soundObject.current.playAsync();
 
-            setCurrentSong(nextSong.track);
+            setCurrentSong(nextSong_2.track);
+            setCurrentAudio(nextSong);
+            setAudioFooter(nextSong);
+
+            setDataSongId(nextSong_2.track);
+
             setSelectedPause(true);
         } catch (error) {
             console.log("next"+error);
@@ -116,14 +126,17 @@ import {
             return;
         }
 
-        const currentIndex = songs.findIndex(s => s.track.id === currentSong.id);
+        // const currentIndex = songs.findIndex(s => s.track.id === currentSong.id);
+        const currentIndex = audios.findIndex(s => s.id === currentAudio.id);
+
 
         if (currentIndex === -1 || currentIndex === 0) {
             console.error("No next song available.");
             return;
         }
 
-        const previousSong  = songs[currentIndex - 1];
+        const previousSong = audios[currentIndex + 1];
+        const previousSong_2  = songs[currentIndex - 1];
         try {
             
             // dừng bài hát hiện tại
@@ -131,10 +144,14 @@ import {
             await soundObject.current.unloadAsync();
 
             // Tải và phát bài hát trước đó
-            await soundObject.current.loadAsync({uri: previousSong.track.preview_url});
+            await soundObject.current.loadAsync({uri: previousSong.url});
             await soundObject.current.playAsync();
 
-            setCurrentSong(previousSong.track);
+            setCurrentSong(previousSong_2.track);
+            setCurrentAudio(previousSong);
+            setAudioFooter(previousSong);
+
+            setDataSongId(previousSong_2.track);
             setSelectedPause(true);
         } catch (e) {
             console.log("back"+e);
@@ -142,10 +159,11 @@ import {
     }    
 
     useEffect(() => {
+        console.log(route.params.audio);
         async function loadAudio() {
             if (!route.params?.soundObject) {
                 try {
-                    await soundObject.current.loadAsync({ uri: currentSong.preview_url });
+                    await soundObject.current.loadAsync({ uri: currentAudio.url });
                     await soundObject.current.playAsync();
                 } catch (error) {
                     console.log("load"+error);

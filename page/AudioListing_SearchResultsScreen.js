@@ -25,7 +25,7 @@ import IconOct from "react-native-vector-icons/Octicons";
 
 import Footer from '../component/footer';
 
-import { songs, artists, albumsSong } from "../data/data_audio";
+import { songs, artists, albumsSong, audios } from "../data/data_audio";
 import { getDataSearchByQuery } from "../component/getDataApi";
 
 import { useMusic } from "../context/FloatingMusicContext";
@@ -58,7 +58,7 @@ export default function AudioListing_SearchResultsScreen({  navigation,  route})
   // set button pause or play 
   const [selectedPause, setSelectedPause] = useState(isPause);
 
-  const { setDataSongId, setAlbumSongId, setArtistSongId, isPause, setActiveScreen, setSongsByChart } = useMusic();
+  const { setDataSongId, setAlbumSongId, setArtistSongId, isPause, setActiveScreen, setSongsByChart,setAudioFooter } = useMusic();
   const soundObject = useContext(AudioContext);
 
   // Search handle
@@ -121,7 +121,7 @@ export default function AudioListing_SearchResultsScreen({  navigation,  route})
   }, [route.params?.selectedPause]);
 
   // Find song by id
-  const handelSongByID = async (track) => {
+  const handelSongByID = async (track, index) => {
     setSong(song);
 
     setDataSongId(track);
@@ -137,12 +137,18 @@ export default function AudioListing_SearchResultsScreen({  navigation,  route})
     setActiveScreen('MainTab');
     setSongsByChart(songSearch);
 
+    let audio = audios.find((item) => item.id === index.toString());
+        console.log("audio");
+        console.log(audio);
+
+        setAudioFooter(audio);
+
     try {
       if(soundObject.current) {
         await soundObject.current.stopAsync(); // dừng bài hát đang phát
         await soundObject.current.unloadAsync(); // xóa bài hát đang phát
       }
-      await soundObject.current.loadAsync({uri: track.preview_url});
+      await soundObject.current.loadAsync({uri: audio.url});
       await soundObject.current.playAsync();
     } catch (error) {
       console.log(error);
@@ -153,6 +159,7 @@ export default function AudioListing_SearchResultsScreen({  navigation,  route})
           ...route.params,
           dataFindId: track, 
           songsByChart:songSearch,
+          audio: audio,
           selectedPause: selectedPause, 
           image: track.album.images[0].url, 
           artist:track.artists[0].name,
@@ -231,7 +238,7 @@ export default function AudioListing_SearchResultsScreen({  navigation,  route})
         <FlatList
           data={songSearch}
           key={(item) => item.id}
-          renderItem={({ item }) => (
+          renderItem={({ item, index }) => (
             <TouchableOpacity
               style={{
                 display: "flex",
@@ -241,7 +248,7 @@ export default function AudioListing_SearchResultsScreen({  navigation,  route})
                 marginBottom: 25,
               }}
 
-              onPress={() => handelSongByID(item)}
+              onPress={() => handelSongByID(item, index+1)}
             >
               <View
                 style={{ flexDirection: "row", alignItems: "center", gap: 15 }}

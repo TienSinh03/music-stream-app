@@ -64,7 +64,7 @@ const LibraryScreen = () => {
 
 // TabNavigator component
 export default function TabNavigation() {
-  const { songId, isPause, setIsPause, artistSongId,albumSongId, songsByChart, activeScreen } = useMusic(); 
+  const { songId, isPause, setIsPause, artistSongId,albumSongId, songsByChart, activeScreen, audioFooter } = useMusic(); 
   const soundObject = useContext(AudioContext);
 
 
@@ -159,6 +159,7 @@ export default function TabNavigation() {
           activeScreen={'MainTab'}
           showMusicInfo={true}
           songsByChart={songsByChart}
+          audioFooter={audioFooter}
         />
 
       )}

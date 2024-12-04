@@ -20,7 +20,7 @@ import {
   import IconFnA from "react-native-vector-icons/FontAwesome";
   import IconEnty from "react-native-vector-icons/Entypo";
 
-  import { chart_list,songs, artists,albumsSong } from "../data/data_audio";
+  import { chart_list,songs, artists,albumsSong,audios } from "../data/data_audio";
   import Footer from '../component/footer';
 
   import { Audio } from "expo-av";
@@ -77,7 +77,7 @@ import {
 
     const [song, setSong] = useState();
 
-    const { setDataSongId, setAlbumSongId, setArtistSongId, isPause, setIsPause, setActiveScreen,setSongsByChart } = useMusic();
+    const { setDataSongId, setAlbumSongId, setArtistSongId, isPause, setIsPause, setActiveScreen,setSongsByChart, setAudioFooter } = useMusic();
     
     const [selectedPause, setSelectedPause] = useState(isPause);
 
@@ -98,7 +98,7 @@ import {
                 await soundObject.current.stopAsync(); // Dừng nhạc hiện tại
                 await soundObject.current.unloadAsync(); // Gỡ nhạc hiện tại
             }
-            await soundObject.current.loadAsync({ uri: audio }); // Tải bài hát mới
+            await soundObject.current.loadAsync({ uri: 'https://drive.google.com/uc?export=download&id=1c4iAyqzRND2TnM3GO0iGh5N3DOJLwmh3' }); // Tải bài hát mới
             await soundObject.current.playAsync(); // Phát bài hát mới
         } catch (e) {
             console.log(e);
@@ -112,12 +112,12 @@ import {
     },[dataSongId]);
 
     // Find song by id
-    const handelSongByID = async  (track) => {
+    const handelSongByID = async  (track, index) => {
 
         setSong(track);
         setDataSongId(track);
         console.log("Track:");
-        console.log(track.preview_url);
+        console.log(track);
 
         setAlbumSongId(track.album);
         console.log("albumn");
@@ -129,14 +129,26 @@ import {
         setActiveScreen('MainTab');
         setSongsByChart(songsByChart);
 
+        console.log(index);
+        console.log("audios");
+        console.log(audios);
+
+        let audio = audios.find((item) => item.id === index.toString());
+        console.log("audio");
+        console.log(audio);
+
+        setAudioFooter(audio);
+
+
         try {
             if (soundObject.current) {
                 await soundObject.current.stopAsync(); // Dừng nhạc hiện tại
                 await soundObject.current.unloadAsync(); // Gỡ nhạc hiện tại
             }
-            await soundObject.current.loadAsync({ uri: track.preview_url }); // Tải bài hát mới
+            await soundObject.current.loadAsync({ uri: audio.url}); // Tải bài hát mới
             await soundObject.current.playAsync(); // Phát bài hát mới
         } catch (e) {
+
             console.log(e);
         }
 
@@ -148,6 +160,7 @@ import {
                 ...route.params,
                 dataFindId: track, 
                 songsByChart: songsByChart,
+                audio: audio,
                 selectedPause: selectedPause, 
                 image: track.album.images[0].url, 
                 artist: track.artists[0].name,
@@ -232,13 +245,13 @@ import {
                 <FlatList
                     data={songsByChart}
                     key={item => item.track.id}
-                    renderItem={({ item }) => (
+                    renderItem={({ item, index }) => (
                         <Item 
                         title={item.track.name} 
                         artist={item.track.artists[0].name} 
                         duration={item.track.duration_ms} 
                         image={item.track.album.images[0].url}
-                        setFindSong={() => handelSongByID(item.track)}
+                        setFindSong={() => handelSongByID(item.track, index+1)}
                          />
                     )}
                     keyExtractor={item => item.track.id}
