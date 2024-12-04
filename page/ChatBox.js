@@ -14,6 +14,7 @@ export default function ChatBox() {
       try {
         const genAI = new GoogleGenerativeAI.GoogleGenerativeAI(API_KEY);
         const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+		
 
         setMessages([
           { text: "Xin chào! Tôi có thể giúp gì cho bạn?", user: false }
