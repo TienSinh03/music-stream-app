@@ -73,7 +73,9 @@ import {
               </TouchableOpacity>
             </TouchableOpacity>
           )}
-
+ 
+ 
+ 
           keyExtractor={(item) => item.id}
           scrollEnabled={false}        
         />
