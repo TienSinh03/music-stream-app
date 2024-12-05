@@ -135,7 +135,7 @@ import {
             return;
         }
 
-        const previousSong = audios[currentIndex + 1];
+        const previousSong = audios[currentIndex - 1];
         const previousSong_2  = songs[currentIndex - 1];
         try {
             

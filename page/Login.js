@@ -139,7 +139,7 @@ const Login = ({ navigation }) => {
         >
           <Text style={styles.buttonText}>Đăng Nhập</Text>
         </TouchableOpacity>
-        <Text style={styles.divider}>Hoặc</Text>
+        {/* <Text style={styles.divider}>Hoặc</Text>
         <View style={styles.socialLogin}>
           <TouchableOpacity style={styles.buttonGoogle} onPress={handleGoogleLogin}>
             <Image
@@ -155,7 +155,7 @@ const Login = ({ navigation }) => {
             />
             <Text style={styles.buttonText}>Sign in with Facebook</Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
       </View>
     </View>
   );
